@@ -2,8 +2,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { makeReading, type Scenario } from "../domain/readings";
 import { Outbox, type QueueSummary } from "./outbox";
+import type { DemoRun } from "../domain/demo";
 
-export function useSimulator(onReading: () => Promise<void>) {
+export function useSimulator(onReading: () => Promise<void>, run: DemoRun) {
   const [outbox] = useState(() => new Outbox());
   const [summary, setSummary] = useState<QueueSummary>({
     pending: 0,
@@ -11,7 +12,11 @@ export function useSimulator(onReading: () => Promise<void>) {
     blocked: false,
   });
   const [ready, setReady] = useState(false);
-  const [scenario, updateScenario] = useState<Scenario>("stable");
+  const [scenario, updateScenario] = useState<Scenario>(
+    run.scenario === "deteriorating" || run.scenario === "no-response"
+      ? "deteriorating"
+      : "stable",
+  );
   const [running, setRunning] = useState(false);
   const [sending, setSending] = useState(false);
   const [message, setMessage] = useState(
@@ -73,7 +78,7 @@ export function useSimulator(onReading: () => Promise<void>) {
   );
   useEffect(() => {
     let active = true;
-    void outbox.summary().then(
+    void outbox.configureRun(run.id).then(
       (value) => {
         if (active) {
           setSummary(value);
@@ -101,7 +106,7 @@ export function useSimulator(onReading: () => Promise<void>) {
       clearInterval(timer);
       window.removeEventListener("online", reconnect);
     };
-  }, [outbox, sync]);
+  }, [outbox, sync, run.id]);
   const send = useCallback(async () => {
     if (generating.current || !ready) return;
     generating.current = true;
@@ -110,8 +115,9 @@ export function useSimulator(onReading: () => Promise<void>) {
       const reading = makeReading(
         sequence.current,
         scenario,
-        new Date(),
+        new Date(Date.now() + run.clockOffsetMs),
         crypto.randomUUID(),
+        run.id,
       );
       await outbox.enqueue(reading);
       sequence.current++;
@@ -139,7 +145,7 @@ export function useSimulator(onReading: () => Promise<void>) {
       generating.current = false;
       setSending(false);
     }
-  }, [outbox, ready, scenario, sync]);
+  }, [outbox, ready, scenario, sync, run.clockOffsetMs, run.id]);
   useEffect(() => {
     if (!running) return;
     const timer = setInterval(() => {

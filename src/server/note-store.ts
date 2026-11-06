@@ -10,6 +10,7 @@ import { CareStore } from "./care-store";
 import { evaluateCare } from "./care-assessment";
 import type { NoteProvider } from "./note-provider";
 import { noteFromRow, type NoteRow } from "./note-history";
+import { getRun, runTime } from "./run-context";
 
 export class NoteStore {
   constructor(private readonly db: PGlite) {}
@@ -33,6 +34,14 @@ export class NoteStore {
         401,
         "Activate a demo caregiver session before adding notes.",
       );
+    const wall = now;
+    const run = await getRun(this.db);
+    if (parsed.data.runId && parsed.data.runId !== run.id)
+      throw new CareError(
+        409,
+        "The active run changed. Refresh before saving this observation.",
+      );
+    now = runTime(run, wall);
     const claimed = await this.db.transaction(async (tx) => {
       const prior = await tx.query<NoteRow>(
         "SELECT * FROM caregiver_notes WHERE id=$1 FOR UPDATE",
@@ -40,6 +49,8 @@ export class NoteStore {
       );
       if (prior.rows.length) {
         const note = noteFromRow(prior.rows[0]);
+        if (prior.rows[0].run_id !== run.id)
+          throw new CareError(409, "This note belongs to an archived run.");
         if (note.text !== text || note.authorId !== actor.id)
           throw new CareError(
             409,
@@ -48,24 +59,27 @@ export class NoteStore {
         if (
           note.status === "Complete" ||
           (note.status === "Pending" &&
-            now.getTime() - prior.rows[0].analysis_started_at.getTime() < 30000)
+            wall.getTime() - prior.rows[0].analysis_started_at.getTime() <
+              30000)
         )
           return false;
         await tx.query(
           "UPDATE caregiver_notes SET status='Pending', analysis_started_at=$2, failure_reason=NULL WHERE id=$1",
-          [id, now.toISOString()],
+          [id, wall.toISOString()],
         );
       } else {
         await tx.query(
-          `INSERT INTO caregiver_notes(id,text,author_id,author_name,recorded_at,analysis_started_at,status,prompt_version)
-          VALUES($1,$2,$3,$4,$5,$5,'Pending',$6)`,
+          `INSERT INTO caregiver_notes(id,text,author_id,author_name,recorded_at,analysis_started_at,status,prompt_version,run_id)
+          VALUES($1,$2,$3,$4,$5,$6,'Pending',$7,$8)`,
           [
             id,
             text,
             actor.id,
             actor.name,
             now.toISOString(),
+            wall.toISOString(),
             NOTE_PROMPT_VERSION,
+            run.id,
           ],
         );
       }
@@ -101,7 +115,9 @@ export class NoteStore {
             failureReason,
           ],
         );
-        await evaluateCare(tx, clock());
+        const sourceRun = await getRun(tx, run.id);
+        if (sourceRun.active)
+          await evaluateCare(tx, runTime(sourceRun, clock()), run.id);
       });
     }
     const saved = await this.db.query<NoteRow>(

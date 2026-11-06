@@ -5,6 +5,9 @@ test("simulator persists readings through the API and survives browser reload", 
 }) => {
   const failures: string[] = [];
   page.on("pageerror", (error) => failures.push(error.message));
+  page.on("console", (message) => {
+    if (message.text().includes("same key")) failures.push(message.text());
+  });
   await page.goto("/");
   await expect(
     page.getByText("Awaiting first reading", { exact: true }),
@@ -315,6 +318,80 @@ test("durable sensor queue survives refresh and actual transport failure without
   ).toHaveCount(0);
   await page.screenshot({
     path: "documents/verification/recovered-queue.png",
+    fullPage: true,
+  });
+});
+
+test("two repeatable demo cycles isolate history and synchronize the accelerated clock", async ({
+  page,
+  context,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Activate identity" }).click();
+  await expect(
+    page.getByText("Ananya Shah · Primary caregiver", { exact: true }),
+  ).toBeVisible();
+  let previousRun = "local";
+  for (let cycle = 0; cycle < 2; cycle++) {
+    await page
+      .getByRole("combobox", { name: "New run scenario" })
+      .selectOption("no-response");
+    await page.getByRole("button", { name: "New demo run" }).click();
+    await expect(page.getByTestId("run-id")).not.toHaveText(previousRun);
+    previousRun = (await page.getByTestId("run-id").textContent())!;
+    await expect(
+      page.getByText("0 recent / 0 stored", { exact: true }),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "Load stable baseline" }).click();
+    await expect(page.getByTestId("concern-level")).toHaveText("Low");
+    await page
+      .getByRole("button", { name: "Load deterioration", exact: true })
+      .click();
+    await expect(page.getByTestId("concern-level")).toHaveText("High");
+    await expect(page.getByText("1 active", { exact: true })).toBeVisible();
+    await page.getByRole("button", { name: "Advance 130 seconds" }).click();
+    await expect(page.getByTestId("concern-level")).toHaveText("Unknown");
+    await expect(
+      page.getByText(/Escalated in-app to Ravi Menon at/),
+    ).toBeVisible();
+    await page
+      .getByRole("combobox", { name: "Demo identity" })
+      .selectOption("backup");
+    await page.getByRole("button", { name: "Activate identity" }).click();
+    await expect(
+      page.getByRole("heading", { name: "Coordinator inbox" }),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "Acknowledge alert" }).click();
+    await expect(
+      page.getByLabel("Caregiver action", { exact: true }),
+    ).toBeVisible();
+    await page
+      .getByRole("combobox", { name: "Demo identity" })
+      .selectOption("primary");
+    await page.getByRole("button", { name: "Activate identity" }).click();
+    await expect(
+      page.getByText("Ananya Shah · Primary caregiver", { exact: true }),
+    ).toBeVisible();
+  }
+  const runs = (await (await context.request.get("/api/demo")).json()).runs;
+  expect(runs.filter((run: { active: boolean }) => run.active)).toHaveLength(1);
+  const archived = runs.find(
+    (run: { active: boolean; id: string }) => !run.active && run.id !== "local",
+  );
+  expect(archived.readingCount).toBe(6);
+  await page.getByText("Previous runs", { exact: true }).click();
+  const archive = context.waitForEvent("page");
+  await page.getByRole("link", { name: "View archived run" }).first().click();
+  const archivePage = await archive;
+  await expect(
+    archivePage.getByText("READ-ONLY DEMO ARCHIVE", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    archivePage.getByText("Acknowledged", { exact: false }).first(),
+  ).toBeVisible();
+  await archivePage.close();
+  await page.screenshot({
+    path: "documents/verification/repeatable-demo.png",
     fullPage: true,
   });
 });

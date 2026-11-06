@@ -1,7 +1,18 @@
 import { describe, expect, it } from "vitest";
 import { localRequestAllowed, readBoundedJson } from "../src/server/http";
+import { isCareError } from "../src/domain/care";
 
 describe("local API boundary", () => {
+  it("recognizes branded care errors across independently bundled module instances", () => {
+    const equivalent = Object.assign(new Error("Session required"), {
+      kind: "wardzero-care-error",
+      status: 401,
+    });
+    expect(isCareError(equivalent)).toBe(true);
+    expect(
+      isCareError(Object.assign(new Error("Unexpected"), { status: 401 })),
+    ).toBe(false);
+  });
   it("uses the validated local Host when Next.js normalizes the internal request URL", () => {
     const request = new Request("http://localhost:3100/api/readings/batch", {
       headers: {

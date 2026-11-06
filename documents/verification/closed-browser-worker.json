@@ -1,8 +1,8 @@
 {
-  "verifiedAt": "2026-11-06T23:03:50.859Z",
+  "verifiedAt": "2026-11-06T23:23:35.944Z",
   "browserClosedForMs": 4000,
-  "deadlineAt": "2026-11-06T23:03:46.567Z",
-  "escalatedAt": "2026-11-06T23:03:47.488Z",
-  "workerLastTickAt": "2026-11-06T23:03:48.499Z",
+  "deadlineAt": "2026-11-06T23:23:33.021Z",
+  "escalatedAt": "2026-11-06T23:23:33.842Z",
+  "workerLastTickAt": "2026-11-06T23:23:34.852Z",
   "escalationEvents": 1
 }

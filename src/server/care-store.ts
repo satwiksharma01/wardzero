@@ -8,6 +8,7 @@ import {
   type AlertState,
   type DemoRole,
 } from "../domain/care";
+import { getRun, runTime } from "./run-context";
 
 export const SESSION_SECONDS = 8 * 3600;
 const hashToken = (token: string) =>
@@ -72,16 +73,21 @@ export class CareStore {
       const actor = await actorForSession(tx, token, now);
       if (!actor)
         throw new CareError(401, "Activate a demo caregiver session first.");
+      const run = await getRun(tx);
+      const eventTime = runTime(run, now);
       const alert = await tx.query<{
         state: AlertState;
         assigned_actor_id: string;
         backup_actor_id: string;
         escalated_at: Date | null;
+        run_id: string;
       }>(
-        "SELECT state, assigned_actor_id, backup_actor_id, escalated_at FROM care_alerts WHERE id = $1 FOR UPDATE",
+        "SELECT state, assigned_actor_id, backup_actor_id, escalated_at, run_id FROM care_alerts WHERE id = $1 FOR UPDATE",
         [alertId],
       );
       if (!alert.rows.length) throw new CareError(404, "Alert not found.");
+      if (alert.rows[0].run_id !== run.id)
+        throw new CareError(409, "Archived demo runs are read-only.");
       if (
         alert.rows[0].assigned_actor_id !== actor.id &&
         !(
@@ -134,13 +140,13 @@ export class CareStore {
           actor.name,
           action.action,
           text,
-          now.toISOString(),
+          eventTime.toISOString(),
           JSON.stringify(action),
         ],
       );
       await tx.query(
         "UPDATE care_alerts SET state = $2, updated_at = $3 WHERE id = $1",
-        [alertId, nextState[action.action], now.toISOString()],
+        [alertId, nextState[action.action], eventTime.toISOString()],
       );
       return { status: "recorded" as const };
     });

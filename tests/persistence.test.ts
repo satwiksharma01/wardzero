@@ -38,6 +38,11 @@ it("preserves readings and observation time after closing and reopening the data
       null,
       () => highTime,
     );
+    await store.demo.advance(
+      token,
+      { id: "persisted-clock", runId: "local", seconds: 130 },
+      highTime,
+    );
     await db.close();
     db = new PGlite(directory);
     store = new ReadingStore(db);
@@ -47,6 +52,7 @@ it("preserves readings and observation time after closing and reopening the data
     expect(snapshot.latest?.eventId).toBe("persisted-high");
     expect(snapshot.latest?.observedAt).toBe(highTime.toISOString());
     expect(snapshot.monitoring).toBe("Offline");
+    expect(snapshot.run.clockOffsetMs).toBe(130000);
     expect(snapshot.care.alerts[0].id).toBe(alert.id);
     expect(snapshot.care.alerts[0].state).toBe("Acknowledged");
     expect(snapshot.care.alerts[0].events.at(-1)?.id).toBe("persisted-ack");

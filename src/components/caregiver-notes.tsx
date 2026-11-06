@@ -9,10 +9,12 @@ export function CaregiverNotes({
   notes,
   disconnected,
   onChange,
+  runId,
 }: {
   notes: CareNote[];
   disconnected: boolean;
   onChange: () => Promise<void>;
+  runId: string;
 }) {
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
@@ -26,7 +28,7 @@ export function CaregiverNotes({
       const response = await fetch("/api/notes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(input),
+        body: JSON.stringify({ ...input, runId }),
         signal: AbortSignal.timeout(22000),
       });
       const result = await response.json();

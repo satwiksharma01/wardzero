@@ -34,6 +34,12 @@ export const noteInputSchema = z
       .max(80)
       .regex(/^[a-zA-Z0-9_-]+$/),
     text: z.string().trim().min(5).max(2000),
+    runId: z
+      .string()
+      .min(1)
+      .max(80)
+      .regex(/^[a-zA-Z0-9_-]+$/)
+      .optional(),
   })
   .strict();
 

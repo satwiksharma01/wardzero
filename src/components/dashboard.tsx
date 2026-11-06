@@ -23,6 +23,7 @@ import { Simulator } from "./simulator";
 import { CareContext } from "./care-context";
 import { CareResponse } from "./care-response";
 import { CaregiverNotes } from "./caregiver-notes";
+import { DemoControls } from "./demo-controls";
 import {
   metricDefinitions,
   timeLabel,
@@ -52,7 +53,7 @@ export function Dashboard() {
   const [metric, setMetric] = useState<Metric>("oxygenPct");
   const acceptSnapshot = useCallback((data: Snapshot) => {
     setSnapshot((previous) =>
-      previous && Date.parse(previous.serverTime) > Date.parse(data.serverTime)
+      previous && Date.parse(previous.wallTime) > Date.parse(data.wallTime)
         ? previous
         : data,
     );
@@ -149,6 +150,8 @@ export function Dashboard() {
           <span className="demo-badge">
             <FlaskConical size={13} />
             DEMONSTRATION
+            {(snapshot?.run.clockOffsetMs ?? 0) > 0 &&
+              ` · CLOCK +${Math.round(snapshot!.run.clockOffsetMs / 1000)}s`}
           </span>
         </header>
         <main id="main" tabIndex={-1}>
@@ -315,11 +318,25 @@ export function Dashboard() {
             onChange={refresh}
           />
           <CaregiverNotes
+            key={`notes-${snapshot?.run.id ?? "loading"}`}
+            runId={snapshot?.run.id ?? "local"}
             notes={snapshot?.care.notes ?? []}
             disconnected={!!error}
             onChange={refresh}
           />
-          <Simulator onReading={refresh} />
+          <DemoControls
+            run={snapshot?.run}
+            serverTime={snapshot?.serverTime}
+            disconnected={!!error}
+            onChange={refresh}
+          />
+          {snapshot && (
+            <Simulator
+              key={`simulator-${snapshot.run.id}`}
+              run={snapshot.run}
+              onReading={refresh}
+            />
+          )}
           <section
             className="panel readings-panel"
             aria-labelledby="readings-title"

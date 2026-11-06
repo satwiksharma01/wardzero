@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { CareSnapshot } from "./care";
+import type { DemoRun } from "./demo";
 
 export const PATIENT_ID = "patient-001";
 export const FUTURE_SKEW_MS = 5000;
@@ -11,6 +12,12 @@ export const readingSchema = z
       .max(80)
       .regex(/^[a-zA-Z0-9_-]+$/),
     patientId: z.literal(PATIENT_ID),
+    runId: z
+      .string()
+      .min(1)
+      .max(80)
+      .regex(/^[a-zA-Z0-9_-]+$/)
+      .default("local"),
     deviceId: z.literal("simulator-001"),
     sequence: z.number().int().min(0).max(10000000),
     observedAt: z.iso.datetime(),
@@ -41,6 +48,8 @@ export type Snapshot = {
   monitoring: Monitoring;
   serverTime: string;
   care: CareSnapshot;
+  run: DemoRun;
+  wallTime: string;
 };
 
 export function monitoringStatus(
@@ -59,12 +68,14 @@ export function makeReading(
   scenario: Scenario,
   now: Date,
   eventId: string,
+  runId = "local",
 ): Reading {
   const step = scenario === "deteriorating" ? Math.min(sequence, 12) : 0;
   const variation = [0, 1, -1, 0, 1][sequence % 5];
   return {
     eventId,
     patientId: PATIENT_ID,
+    runId,
     deviceId: "simulator-001",
     sequence,
     observedAt: now.toISOString(),

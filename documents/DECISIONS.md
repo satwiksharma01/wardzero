@@ -14,8 +14,8 @@ Prepared: 7 November 2026. Implementation status is tracked in TASKS.md and date
 | D06 | Implemented locally | Separate concern, freshness, and response lifecycle. | Missing data, patient condition, and acknowledgement mean different things. |
 | D07 | Implemented locally | Browser simulator with IndexedDB outbox and idempotent ingestion. | Verified refresh, real transport failure, lost acknowledgement, capacity, and replay; browser eviction remains a limit. |
 | D08 | Proposed | In-app coordinator escalation as initial channel. | Avoid notification-service setup; do not imply external delivery. |
-| D09 | Proposed | Shared virtual clock for deterministic demos. | Deadline and observation-time behavior remain coherent during acceleration. |
-| D10 | Proposed | Polling first; scheduled evaluator for autonomous escalation. | Simpler UI transport; background execution still needs hosting support. |
+| D09 | Implemented locally | Shared virtual clock for deterministic demos. | Deadline and observation-time behavior remain coherent during acceleration. |
+| D10 | Implemented locally | Polling and a one-second Node evaluator for autonomous escalation. | Simpler UI transport; background execution still needs hosting support. |
 | D11 | Confirmed user instruction | Define → Plan → Build → Verify → Review → Ship. | Apply to each feature slice; see WORKFLOW.md. |
 
 When accepted, capture expensive-to-reverse choices as sequential ADRs under `documents/decisions/`, including alternatives and consequences. Do not delete superseded decisions.

@@ -26,9 +26,13 @@ type AlertRow = {
   assessment: SavedAssessment;
 };
 
-export async function evaluateCare(tx: Transaction, now: Date) {
-  const history = await readHistory(tx);
-  const notes = await readNotes(tx);
+export async function evaluateCare(
+  tx: Transaction,
+  now: Date,
+  runId = "local",
+) {
+  const history = await readHistory(tx, runId);
+  const notes = await readNotes(tx, runId);
   const assessment: SavedAssessment = {
     ...fuseNotes(assess(history, now), notes, now),
     id: randomUUID(),
@@ -44,12 +48,13 @@ export async function evaluateCare(tx: Transaction, now: Date) {
         .map((note) => Date.parse(note.recordedAt)),
     ),
   ).toISOString();
-  await tx.query("INSERT INTO assessments(id, payload) VALUES($1, $2::jsonb)", [
-    assessment.id,
-    JSON.stringify(assessment),
-  ]);
+  await tx.query(
+    "INSERT INTO assessments(id, payload, run_id) VALUES($1, $2::jsonb, $3)",
+    [assessment.id, JSON.stringify(assessment), runId],
+  );
   const active = await tx.query<AlertRow>(
-    "SELECT * FROM care_alerts WHERE state <> 'Resolved' FOR UPDATE",
+    "SELECT * FROM care_alerts WHERE state <> 'Resolved' AND run_id=$1 FOR UPDATE",
+    [runId],
   );
   const alert = active.rows[0];
   if (alert) {
@@ -76,7 +81,8 @@ export async function evaluateCare(tx: Transaction, now: Date) {
   }
   if (assessment.concern !== "Medium" && assessment.concern !== "High") return;
   const resolved = await tx.query<{ latest: Date | null }>(
-    "SELECT MAX(evidence_at) AS latest FROM care_alerts WHERE state = 'Resolved'",
+    "SELECT MAX(evidence_at) AS latest FROM care_alerts WHERE state = 'Resolved' AND run_id=$1",
+    [runId],
   );
   if (
     resolved.rows[0].latest &&
@@ -85,8 +91,8 @@ export async function evaluateCare(tx: Transaction, now: Date) {
     return;
   const id = randomUUID();
   await tx.query(
-    `INSERT INTO care_alerts(id, patient_id, severity, state, assigned_actor_id, opened_at, updated_at, evidence_at, assessment, acknowledgement_due_at)
-    VALUES($1,$2,$3,'Open',$4,$5,$5,$6,$7::jsonb,$8)`,
+    `INSERT INTO care_alerts(id, patient_id, severity, state, assigned_actor_id, opened_at, updated_at, evidence_at, assessment, acknowledgement_due_at, run_id)
+    VALUES($1,$2,$3,'Open',$4,$5,$5,$6,$7::jsonb,$8,$9)`,
     [
       id,
       PATIENT_ID,
@@ -96,6 +102,7 @@ export async function evaluateCare(tx: Transaction, now: Date) {
       evidenceAt,
       JSON.stringify(assessment),
       new Date(now.getTime() + acknowledgementDelayMs()).toISOString(),
+      runId,
     ],
   );
   await tx.query(
@@ -114,16 +121,19 @@ export async function readCare(
   tx: Transaction,
   history: StoredReading[],
   now: Date,
+  runId = "local",
 ): Promise<CareSnapshot> {
   const saved = await tx.query<{ payload: SavedAssessment }>(
-    "SELECT payload FROM assessments ORDER BY sequence DESC LIMIT 1",
+    "SELECT payload FROM assessments WHERE run_id=$1 ORDER BY sequence DESC LIMIT 1",
+    [runId],
   );
-  const notes = await readNotes(tx);
+  const notes = await readNotes(tx, runId);
   const heartbeat = await tx.query<{ last_tick_at: Date }>(
     "SELECT last_tick_at FROM worker_heartbeat WHERE id=1",
   );
   const rows = await tx.query<AlertRow>(
-    "SELECT * FROM care_alerts ORDER BY (state = 'Resolved'), opened_at DESC, id DESC LIMIT 5",
+    "SELECT * FROM care_alerts WHERE run_id=$1 ORDER BY (state = 'Resolved'), opened_at DESC, id DESC LIMIT 5",
+    [runId],
   );
   const events = await tx.query<{
     id: string;

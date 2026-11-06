@@ -32,6 +32,8 @@ Run only one app instance per database name. Stop the dev server before running 
 | `npm run test:e2e` | Isolated Chrome tests on port 3100 with a new database. |
 | `npm run test:ai-live` | Opt-in real Gemini cases using `.env.local`; makes provider requests. |
 | `npm run test:e2e-live` | Opt-in real Gemini app journey on port 3102; makes provider requests. |
+| `npm run test:worker` | Browser-closed deadline check with a two-second test deadline, port 3103. |
+| `npm run test:worker:production` | Same check against the compiled server; run `npm run build` first. |
 | `npm run lint` | ESLint and React/Next.js checks. |
 | `npm run typecheck` | TypeScript checking. |
 | `npm run build` | Production compilation. |
@@ -51,7 +53,7 @@ Units are encoded in metric names: `pulseBpm`, `oxygenPct`, `temperatureC`, `res
 
 ## Current limits
 
-The app implements explained demo concern, live AI notes, persistent alerts, local demo sessions, caregiver response, and a durable browser outbox. Escalation, production sign-in, isolated demo runs, and deployment remain pending. Do not use real patient data or expose this local milestone publicly.
+The app implements monitoring, explained concern, live AI notes, caregiver response, durable browser outbox, autonomous in-app escalation, and isolated demo runs. The full release audit, submission package, production sign-in, and optional public deployment remain pending. Do not use real patient data or expose this local milestone publicly.
 
 ## Try the care loop
 
@@ -86,3 +88,13 @@ Normal browser tests use an explicitly named local mock HTTP provider on port 31
 ## Try offline recovery
 
 Disconnect sensor transport in Simulation lab, generate several readings, and refresh. The durable queue and disconnected setting remain. Reconnect to sync the backlog with original times. The dashboard stays online during this simulated sensor outage. Real network failures also retain queued readings and retry with backoff. Capacity is 500 entries; conflicts/rejections are retained for inspection and count toward capacity.
+
+## Repeatable demo and escalation
+
+Activate the primary caregiver, then use Demo control room to create a new run. Load a stable baseline or deterioration, disconnect/reconnect the sensor, and advance demo time by 35/130 seconds to show staleness and overdue acknowledgement. Select the backup identity to inspect Coordinator inbox and respond to an escalated alert.
+
+A new run archives earlier evidence without deleting it. Previous runs opens read-only archives. Pending sensor entries retain their source run. The visible clock offset is synthetic; sessions expire by actual wall time.
+
+The Node server evaluates deadlines every second while it runs, even with no browser open. Default acknowledgement interval is 120 seconds; optional `WARDZERO_ACK_DEADLINE_MS` accepts 1000–900000 ms for a labeled test/demo. Deadlines and clock offsets persist across restart. In-app escalation does not send SMS/calls and cannot continue while the server/computer is off.
+
+`GET /api/demo` lists ten recent runs. `POST /api/demo` accepts authorized, idempotent reset/seed/advance commands. `GET /archive/:id` is read-only. New readings include runId; absent runId maps to the original local run.

@@ -59,6 +59,21 @@ const migrations = [
     CREATE TABLE worker_heartbeat(id INT PRIMARY KEY CHECK(id=1), last_tick_at TIMESTAMPTZ NOT NULL);
   `,
   },
+  {
+    version: 5,
+    sql: `
+    CREATE TABLE demo_runs(id TEXT PRIMARY KEY, scenario TEXT NOT NULL, created_at TIMESTAMPTZ NOT NULL DEFAULT now(), clock_offset_ms BIGINT NOT NULL DEFAULT 0, active BOOLEAN NOT NULL);
+    CREATE UNIQUE INDEX one_active_run ON demo_runs(active) WHERE active;
+    INSERT INTO demo_runs(id,scenario,active) VALUES('local','stable',true);
+    ALTER TABLE readings ADD COLUMN run_id TEXT NOT NULL DEFAULT 'local' REFERENCES demo_runs(id);
+    UPDATE readings SET payload=payload || jsonb_build_object('runId',run_id);
+    CREATE INDEX reading_run_time ON readings(run_id,observed_at DESC);
+    ALTER TABLE assessments ADD COLUMN run_id TEXT NOT NULL DEFAULT 'local' REFERENCES demo_runs(id);
+    ALTER TABLE caregiver_notes ADD COLUMN run_id TEXT NOT NULL DEFAULT 'local' REFERENCES demo_runs(id);
+    ALTER TABLE care_alerts ADD CONSTRAINT alert_run_reference FOREIGN KEY(run_id) REFERENCES demo_runs(id);
+    CREATE TABLE demo_commands(id TEXT PRIMARY KEY, run_id TEXT NOT NULL REFERENCES demo_runs(id), request JSONB NOT NULL, payload JSONB, created_at TIMESTAMPTZ NOT NULL);
+  `,
+  },
 ];
 
 export async function migrate(db: PGlite) {

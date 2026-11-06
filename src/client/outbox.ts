@@ -135,6 +135,18 @@ export class Outbox {
       );
     });
   }
+  async configureRun(runId: string) {
+    await this.transaction("readwrite", async (tx) => {
+      const settings = tx.objectStore("settings");
+      const prior: { value: string } | undefined = await requestValue(
+        settings.get("runId"),
+      );
+      if (prior && prior.value !== runId)
+        await requestValue(settings.put({ key: "blocked", value: false }));
+      await requestValue(settings.put({ key: "runId", value: runId }));
+    });
+    return this.summary();
+  }
   async acknowledge(batch: QueueEntry[], rawResults: unknown) {
     const results = resultSchema.parse(rawResults);
     if (

@@ -99,4 +99,4 @@ If the full recovery mechanism cannot be completed, report its limitation honest
 
 ## Next action
 
-Building was authorized on 7 November 2026. Follow [WORKFLOW.md](WORKFLOW.md) for every slice. T02–T09 now implement ingestion, persistence, explained assessment, live Gemini note interpretation, alert ownership, caregiver response, and durable sensor recovery. Gate B is verified against live inference. Next: T10 timed escalation and T11 isolated repeatable demo runs, then the full release audit and submission package. Registration is confirmed; exact cutoff and submission fields remain open in T00.
+Building was authorized on 7 November 2026. Follow [WORKFLOW.md](WORKFLOW.md) for every slice. T02–T09 now implement ingestion, persistence, explained assessment, live Gemini note interpretation, alert ownership, caregiver response, and durable sensor recovery. Gate B is verified against live inference. T10 timed escalation and T11 isolated repeatable demo runs are now verified, including closed-browser production execution. Next: T12 full release audit and T13 submission package. Registration is confirmed; exact cutoff and submission fields remain open in T00.

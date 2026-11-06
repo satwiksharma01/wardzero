@@ -1,5 +1,5 @@
 import type { NextRequest } from "next/server";
-import { CareError } from "@/domain/care";
+import { isCareError } from "@/domain/care";
 import { getStore } from "@/server/database";
 import { localRequestAllowed, readBoundedJson } from "@/server/http";
 import { configuredNoteProvider } from "@/server/note-provider";
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     );
     return Response.json({ note });
   } catch (error) {
-    if (error instanceof CareError)
+    if (isCareError(error))
       return Response.json({ error: error.message }, { status: error.status });
     console.error("caregiver_note_failed");
     return Response.json(

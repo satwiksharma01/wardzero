@@ -62,10 +62,24 @@ export type CareSnapshot = {
 };
 
 export class CareError extends Error {
+  readonly kind = "wardzero-care-error";
   constructor(
     public readonly status: number,
     message: string,
   ) {
     super(message);
   }
+}
+
+// Instrumentation and route handlers can load separate module instances in Next.js.
+// A stable brand preserves expected HTTP errors across those entry points.
+export function isCareError(error: unknown): error is CareError {
+  return (
+    error instanceof Error &&
+    "kind" in error &&
+    error.kind === "wardzero-care-error" &&
+    "status" in error &&
+    typeof error.status === "number" &&
+    [400, 401, 403, 404, 409].includes(error.status)
+  );
 }

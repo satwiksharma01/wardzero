@@ -1,6 +1,6 @@
 # Implementation checklist
 
-Status: T02–T09 implemented for the fixed local demo, with live Gemini integration verified. T10 escalation is verified; T11–T13 remain open. T00/T01 remain partially complete. Production identity and run isolation remain prerequisites for later hosting/demo reset. Budgets are in [ROADMAP.md](ROADMAP.md). Follow [WORKFLOW.md](WORKFLOW.md) for each slice.
+Status: T02–T09 implemented for the fixed local demo, with live Gemini integration verified. T10 escalation and T11 isolated demos are verified; T12/T13 remain open. T00/T01 remain partially complete. Production identity and run isolation remain prerequisites for later hosting/demo reset. Budgets are in [ROADMAP.md](ROADMAP.md). Follow [WORKFLOW.md](WORKFLOW.md) for each slice.
 
 ## T00 — Confirm participation and constraints
 
@@ -112,9 +112,9 @@ Dependencies: T06. Verification: before/at/after deadline, acknowledged alert, r
 
 ## T11 — Make the demo repeatable
 
-- [ ] Protect reset and seed a new isolated run with synchronized virtual time.
-- [ ] Provide stable, deterioration, outage, and no-response controls.
-- [ ] Show scenario/run identity clearly and reset without deleting unrelated runs.
+- [x] Protect reset and seed a new isolated run with synchronized virtual time.
+- [x] Provide stable, deterioration, outage, and no-response controls.
+- [x] Show scenario/run identity clearly and reset without deleting unrelated runs.
 
 Dependencies: T07, T09, T10. Verification: execute the full script twice with identical expected outcomes. Proposed files: demo route/service, scenario controls, browser test. Scope: medium.
 

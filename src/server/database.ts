@@ -12,7 +12,10 @@ export function getStore(): Promise<ReadingStore> {
     const name = process.env.WARDZERO_DATA_NAME || "wardzero";
     if (!/^[a-zA-Z0-9_-]+$/.test(name))
       throw new Error("Invalid local database name");
-    const database = new PGlite(path.join(process.cwd(), ".data", name));
+    // The database is runtime state, not a build dependency (including instrumentation traces).
+    const database = new PGlite(
+      path.join(/* turbopackIgnore: true */ process.cwd(), ".data", name),
+    );
     const store = new ReadingStore(database);
     await store.initialize();
     return store;

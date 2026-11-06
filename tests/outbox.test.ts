@@ -6,6 +6,17 @@ import { makeReading } from "../src/domain/readings";
 const reading = (id: string) =>
   makeReading(0, "stable", new Date("2026-11-07T08:00:00Z"), id);
 describe("durable sensor outbox", () => {
+  it("preserves queued data while resetting transport controls only for a different run", async () => {
+    const queue = new Outbox(`run-${crypto.randomUUID()}`);
+    await queue.configureRun("first");
+    await queue.enqueue(reading("old-run-data"));
+    await queue.setBlocked(true);
+    expect((await queue.configureRun("first")).blocked).toBe(true);
+    const next = await queue.configureRun("second");
+    expect(next.blocked).toBe(false);
+    expect(next.pending).toBe(1);
+    await queue.close();
+  });
   it("survives reopening, retains original times, and removes only confirmed deliveries", async () => {
     const name = `outbox-${crypto.randomUUID()}`;
     const first = new Outbox(name);

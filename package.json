@@ -6,7 +6,8 @@
   "packageManager": "npm@11.4.0",
   "scripts": {
     "dev": "next dev --hostname 127.0.0.1",
-    "build": "next build",
+    "build": "next build && node scripts/verify-build.mjs",
+    "verify:artifact": "node scripts/verify-build.mjs",
     "start": "next start --hostname 127.0.0.1",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -14,6 +15,7 @@
     "test:ai-live": "vitest run --config vitest.live.config.ts",
     "test:e2e-live": "playwright test --config playwright.live.config.ts",
     "test:worker": "playwright test --config playwright.worker.config.ts",
+    "test:worker:production": "playwright test --config playwright.worker.production.config.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint ."
   },

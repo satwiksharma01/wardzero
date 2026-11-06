@@ -3,6 +3,7 @@ import type { CareNote } from "../domain/notes";
 
 export type NoteRow = {
   id: string;
+  run_id: string;
   text: string;
   author_id: string;
   author_name: string;
@@ -29,9 +30,11 @@ export const noteFromRow = (row: NoteRow): CareNote => ({
 
 export async function readNotes(
   tx: Pick<Transaction, "query">,
+  runId = "local",
 ): Promise<CareNote[]> {
   const result = await tx.query<NoteRow>(
-    "SELECT * FROM caregiver_notes ORDER BY recorded_at DESC, id DESC LIMIT 20",
+    "SELECT * FROM caregiver_notes WHERE run_id=$1 ORDER BY recorded_at DESC, id DESC LIMIT 20",
+    [runId],
   );
   return result.rows.map(noteFromRow);
 }

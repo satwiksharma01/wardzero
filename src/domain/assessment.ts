@@ -41,6 +41,7 @@ export function assess(history: StoredReading[], now: Date): Assessment {
     .sort(
       (a, b) =>
         Date.parse(a.observedAt) - Date.parse(b.observedAt) ||
+        a.sequence - b.sequence ||
         a.eventId.localeCompare(b.eventId),
     );
   const latest = eligible.at(-1);

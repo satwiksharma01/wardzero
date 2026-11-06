@@ -1,6 +1,7 @@
 "use client";
 
 import { useSimulator } from "@/client/use-simulator";
+import type { DemoRun } from "@/domain/demo";
 import {
   ArrowUpRight,
   FlaskConical,
@@ -12,7 +13,13 @@ import {
 } from "lucide-react";
 import type { Scenario } from "@/domain/readings";
 
-export function Simulator({ onReading }: { onReading: () => Promise<void> }) {
+export function Simulator({
+  onReading,
+  run,
+}: {
+  onReading: () => Promise<void>;
+  run: DemoRun;
+}) {
   const {
     scenario,
     setScenario,
@@ -26,7 +33,7 @@ export function Simulator({ onReading }: { onReading: () => Promise<void> }) {
     send,
     sync,
     toggleTransport,
-  } = useSimulator(onReading);
+  } = useSimulator(onReading, run);
 
   return (
     <section

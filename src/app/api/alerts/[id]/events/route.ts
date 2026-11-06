@@ -1,5 +1,5 @@
 import type { NextRequest } from "next/server";
-import { CareError } from "@/domain/care";
+import { isCareError } from "@/domain/care";
 import { getStore } from "@/server/database";
 import { localRequestAllowed, readBoundedJson } from "@/server/http";
 
@@ -37,7 +37,7 @@ export async function POST(
     );
     return Response.json(result);
   } catch (error) {
-    if (error instanceof CareError)
+    if (isCareError(error))
       return Response.json({ error: error.message }, { status: error.status });
     console.error("care_event_failed");
     return Response.json(

@@ -47,3 +47,11 @@ The overview's job is to make the last received evidence legible. Its primary de
 - Verify: 37 automated tests, six mock-provider browser tests, four real Gemini cases, and a full live Gemini browser journey.
 - Review: source-context validation, unique evidence IDs, retry identity, old-backlog safety, and credential isolation.
 - Ship: local preview; next cycle is T10 escalation and T11 repeatable demo runs.
+
+## Completed cycle: autonomous escalation and isolated demos
+
+- Define/Plan: ESCALATION_DEMO_PLAN.md.
+- Build: persisted deadlines, in-process evaluator, coordinator inbox, run-scoped evidence, shared demo time, protected presets/reset, and read-only archives.
+- Verify: 45 automated tests, seven browser tests, two repeated demo cycles, and browser-closed checks in development and production.
+- Review: cross-bundle error identity, snapshot ordering across clock reset, pending-data preservation, and late AI completion isolation.
+- Ship: local milestone. Next cycle: full release audit and submission artifacts.

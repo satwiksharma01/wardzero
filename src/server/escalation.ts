@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { PGlite } from "@electric-sql/pglite";
+import { getRun, runTime } from "./run-context";
 import { DEMO_ACTORS } from "../domain/care";
 
 export function acknowledgementDelayMs() {
@@ -11,10 +12,13 @@ export function acknowledgementDelayMs() {
 
 export async function evaluateDeadlines(db: PGlite, now: Date) {
   return db.transaction(async (tx) => {
+    const wall = now;
+    const run = await getRun(tx);
+    now = runTime(run, wall);
     const overdue = await tx.query<{ id: string }>(
       `UPDATE care_alerts SET escalated_at=$1, updated_at=$1
-      WHERE state='Open' AND escalated_at IS NULL AND acknowledgement_due_at <= $1 RETURNING id`,
-      [now.toISOString()],
+      WHERE state='Open' AND escalated_at IS NULL AND acknowledgement_due_at <= $1 AND run_id=$2 RETURNING id`,
+      [now.toISOString(), run.id],
     );
     for (const alert of overdue.rows) {
       await tx.query(
@@ -31,7 +35,7 @@ export async function evaluateDeadlines(db: PGlite, now: Date) {
     await tx.query(
       `INSERT INTO worker_heartbeat(id,last_tick_at) VALUES(1,$1)
       ON CONFLICT(id) DO UPDATE SET last_tick_at=EXCLUDED.last_tick_at`,
-      [now.toISOString()],
+      [wall.toISOString()],
     );
     return overdue.rows.length;
   });
