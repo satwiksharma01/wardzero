@@ -8,6 +8,8 @@ import {
 } from "../domain/care";
 import { PATIENT_ID, type StoredReading } from "../domain/readings";
 import { readHistory } from "./reading-history";
+import { readNotes } from "./note-history";
+import { fuseNotes } from "../domain/notes";
 
 type AlertRow = {
   id: string;
@@ -22,10 +24,22 @@ type AlertRow = {
 
 export async function evaluateCare(tx: Transaction, now: Date) {
   const history = await readHistory(tx);
+  const notes = await readNotes(tx);
   const assessment: SavedAssessment = {
-    ...assess(history, now),
+    ...fuseNotes(assess(history, now), notes, now),
     id: randomUUID(),
   };
+  const supportingNotes = new Set(
+    assessment.reasons.flatMap((reason) => reason.noteIds ?? []),
+  );
+  const evidenceAt = new Date(
+    Math.max(
+      Date.parse(assessment.latestObservedAt ?? now.toISOString()),
+      ...notes
+        .filter((note) => supportingNotes.has(note.id))
+        .map((note) => Date.parse(note.recordedAt)),
+    ),
+  ).toISOString();
   await tx.query("INSERT INTO assessments(id, payload) VALUES($1, $2::jsonb)", [
     assessment.id,
     JSON.stringify(assessment),
@@ -42,7 +56,7 @@ export async function evaluateCare(tx: Transaction, now: Date) {
       severity = $3, assessment = $4::jsonb, updated_at = $5 WHERE id = $1`,
       [
         alert.id,
-        assessment.latestObservedAt ?? alert.evidence_at.toISOString(),
+        evidenceAt,
         raised ? "High" : alert.severity,
         JSON.stringify(matchesPeak ? assessment : alert.assessment),
         now.toISOString(),
@@ -62,8 +76,7 @@ export async function evaluateCare(tx: Transaction, now: Date) {
   );
   if (
     resolved.rows[0].latest &&
-    Date.parse(assessment.latestObservedAt!) <=
-      resolved.rows[0].latest.getTime()
+    Date.parse(evidenceAt) <= resolved.rows[0].latest.getTime()
   )
     return;
   const id = randomUUID();
@@ -76,7 +89,7 @@ export async function evaluateCare(tx: Transaction, now: Date) {
       assessment.concern,
       DEMO_ACTORS.primary.id,
       now.toISOString(),
-      assessment.latestObservedAt,
+      evidenceAt,
       JSON.stringify(assessment),
     ],
   );
@@ -100,6 +113,7 @@ export async function readCare(
   const saved = await tx.query<{ payload: SavedAssessment }>(
     "SELECT payload FROM assessments ORDER BY sequence DESC LIMIT 1",
   );
+  const notes = await readNotes(tx);
   const rows = await tx.query<AlertRow>(
     "SELECT * FROM care_alerts ORDER BY (state = 'Resolved'), opened_at DESC, id DESC LIMIT 5",
   );
@@ -116,8 +130,9 @@ export async function readCare(
     [rows.rows.map((row) => row.id)],
   );
   return {
-    currentAssessment: assess(history, now),
+    currentAssessment: fuseNotes(assess(history, now), notes, now),
     lastAssessment: saved.rows[0]?.payload ?? null,
+    notes,
     alerts: rows.rows.map((row) => ({
       id: row.id,
       severity: row.severity,

@@ -99,4 +99,4 @@ If the full recovery mechanism cannot be completed, report its limitation honest
 
 ## Next action
 
-Building was authorized on 7 November 2026. Follow [WORKFLOW.md](WORKFLOW.md) for every slice. T02–T06 now implement live ingestion, persistence, explained demo assessment, alert ownership, and caregiver response for the fixed local patient. T07 AI note interpretation is next. Deadline/registration and AI credentials remain open items in T00/T01; they do not block independent local work. Gate B still requires actual AI note integration.
+Building was authorized on 7 November 2026. Follow [WORKFLOW.md](WORKFLOW.md) for every slice. T02–T09 now implement ingestion, persistence, explained assessment, live Gemini note interpretation, alert ownership, caregiver response, and durable sensor recovery. Gate B is verified against live inference. Next: T10 timed escalation and T11 isolated repeatable demo runs, then the full release audit and submission package. Registration is confirmed; exact cutoff and submission fields remain open in T00.

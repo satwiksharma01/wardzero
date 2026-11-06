@@ -5,6 +5,7 @@ export type EvidenceReason = {
   code: string;
   message: string;
   eventIds: string[];
+  noteIds?: string[];
 };
 export type Assessment = {
   concern: Concern;

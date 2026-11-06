@@ -28,6 +28,16 @@ it("preserves readings and observation time after closing and reopening the data
       { eventId: "persisted-ack", action: "acknowledge" },
       highTime,
     );
+    await store.notes.submit(
+      token,
+      {
+        id: "persisted-note",
+        text: "Caregiver observation retained across restart.",
+      },
+      highTime,
+      null,
+      () => highTime,
+    );
     await db.close();
     db = new PGlite(directory);
     store = new ReadingStore(db);
@@ -40,6 +50,8 @@ it("preserves readings and observation time after closing and reopening the data
     expect(snapshot.care.alerts[0].id).toBe(alert.id);
     expect(snapshot.care.alerts[0].state).toBe("Acknowledged");
     expect(snapshot.care.alerts[0].events.at(-1)?.id).toBe("persisted-ack");
+    expect(snapshot.care.notes[0].id).toBe("persisted-note");
+    expect(snapshot.care.notes[0].status).toBe("Unavailable");
     expect((await store.care.actorForSession(token, highTime))?.id).toBe(
       "caregiver-primary",
     );

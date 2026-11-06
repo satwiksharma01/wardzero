@@ -32,7 +32,10 @@ export function CareContext({
       </div>
       {assessment?.reasons
         .filter(
-          (reason, index) => index === 0 || reason.code === "combined-trend",
+          (reason, index) =>
+            index === 0 ||
+            reason.code === "combined-trend" ||
+            reason.code === "caregiver-context",
         )
         .map((reason) => (
           <p className="assessment-reason" key={reason.code}>
@@ -58,7 +61,7 @@ export function CareContext({
               <strong>{reason.code}</strong>
               <p>{reason.message}</p>
               <ul>
-                {reason.eventIds.map((id) => (
+                {[...reason.eventIds, ...(reason.noteIds ?? [])].map((id) => (
                   <li key={id}>
                     <code>{id}</code>
                   </li>

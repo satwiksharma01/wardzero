@@ -10,11 +10,15 @@ import { migrate } from "./migrations";
 import { readHistory } from "./reading-history";
 import { evaluateCare, readCare } from "./care-assessment";
 import { CareStore } from "./care-store";
+import { NoteStore } from "./note-store";
 
 export class ReadingStore {
   constructor(private readonly db: PGlite) {}
   get care() {
     return new CareStore(this.db);
+  }
+  get notes() {
+    return new NoteStore(this.db);
   }
 
   async initialize() {

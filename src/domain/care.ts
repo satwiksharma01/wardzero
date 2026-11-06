@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { Assessment, SavedAssessment } from "./assessment";
+import type { CareNote } from "./notes";
 
 export const DEMO_ACTORS = {
   primary: {
@@ -53,6 +54,7 @@ export type CareSnapshot = {
   currentAssessment: Assessment;
   lastAssessment: SavedAssessment | null;
   alerts: AlertEpisode[];
+  notes: CareNote[];
 };
 
 export class CareError extends Error {

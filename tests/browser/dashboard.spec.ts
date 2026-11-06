@@ -110,6 +110,39 @@ test("API reports duplicate/conflict and rejects cross-origin mutations", async 
   expect(blocked.status()).toBe(403);
 });
 
+test("caregiver notes pass through the HTTP adapter and contribute evidence to concern", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(page.getByTestId("concern-level")).toHaveText("Low");
+  await page.getByRole("button", { name: "Activate identity" }).click();
+  await expect(
+    page.getByText("Ananya Shah · Primary caregiver", { exact: true }),
+  ).toBeVisible();
+  await page
+    .getByLabel("Patient observation", { exact: true })
+    .fill("More tired today and barely ate lunch.");
+  await page.getByRole("button", { name: "Save observation" }).click();
+  await expect(
+    page.getByText("AI analysis: Complete", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByTestId("concern-level")).toHaveText("Medium");
+  await expect(
+    page.getByText("mock-protocol-fixture", { exact: false }).first(),
+  ).toBeVisible();
+  await page
+    .getByLabel("Patient observation", { exact: true })
+    .fill("[MOCK_FAILURE] Unable to analyze this note.");
+  await page.getByRole("button", { name: "Save observation" }).click();
+  await expect(
+    page.getByText("AI analysis: Failed", { exact: true }),
+  ).toBeVisible();
+  await page.reload();
+  await expect(
+    page.getByText("AI analysis: Complete", { exact: true }),
+  ).toBeVisible();
+});
+
 test("deterioration opens one alert and the assigned caregiver completes a persistent response", async ({
   page,
   context,
@@ -208,4 +241,80 @@ test("deterioration opens one alert and the assigned caregiver completes a persi
     fullPage: true,
   });
   expect(failures).toEqual([]);
+});
+
+test("durable sensor queue survives refresh and actual transport failure without duplicate readings", async ({
+  page,
+  context,
+}) => {
+  await page.goto("/");
+  const before = (await (await context.request.get("/api/patient")).json())
+    .total;
+  await page
+    .getByRole("button", { name: "Disconnect sensor", exact: true })
+    .click();
+  for (let index = 1; index <= 3; index++) {
+    await page.getByRole("button", { name: "Send one reading" }).click();
+    await expect(page.getByTestId("queue-count")).toContainText(
+      `${index} queued`,
+    );
+  }
+  await page.reload();
+  await expect(page.getByTestId("queue-count")).toContainText("3 queued");
+  await expect(
+    page.getByText("Sensor transport offline", { exact: true }),
+  ).toBeVisible();
+  expect((await (await context.request.get("/api/patient")).json()).total).toBe(
+    before,
+  );
+  await page
+    .getByRole("button", { name: "Reconnect sensor", exact: true })
+    .click();
+  await expect(page.getByTestId("queue-count")).toContainText("0 queued");
+  expect((await (await context.request.get("/api/patient")).json()).total).toBe(
+    before + 3,
+  );
+  await page.route("**/api/readings/batch", (route) =>
+    route.abort("connectionfailed"),
+  );
+  await page.getByRole("button", { name: "Send one reading" }).click();
+  await expect(page.getByTestId("queue-count")).toContainText("1 queued");
+  await expect(page.getByRole("status")).toContainText("saved in this browser");
+  await page.unroute("**/api/readings/batch");
+  await page.getByRole("button", { name: "Retry queued readings" }).click();
+  await expect(page.getByTestId("queue-count")).toContainText("0 queued");
+  expect((await (await context.request.get("/api/patient")).json()).total).toBe(
+    before + 4,
+  );
+  await page.route("**/api/readings/batch", async (route) => {
+    await route.fetch();
+    await route.abort("connectionfailed");
+  });
+  await page.getByRole("button", { name: "Send one reading" }).click();
+  await expect(page.getByTestId("queue-count")).toContainText("1 queued");
+  expect((await (await context.request.get("/api/patient")).json()).total).toBe(
+    before + 5,
+  );
+  await page.unroute("**/api/readings/batch");
+  await page.getByRole("button", { name: "Retry queued readings" }).click();
+  await expect(page.getByTestId("queue-count")).toContainText("0 queued");
+  expect((await (await context.request.get("/api/patient")).json()).total).toBe(
+    before + 5,
+  );
+  await page.route("**/api/patient", (route) =>
+    route.abort("connectionfailed"),
+  );
+  await expect(
+    page.getByRole("alert").filter({ hasText: "Connection unavailable" }),
+  ).toBeVisible({ timeout: 12000 });
+  await expect(page.getByTestId("concern-level")).toHaveText("Unavailable");
+  await page.unroute("**/api/patient");
+  await page.getByRole("button", { name: "Retry", exact: true }).click();
+  await expect(
+    page.getByRole("alert").filter({ hasText: "Connection unavailable" }),
+  ).toHaveCount(0);
+  await page.screenshot({
+    path: "documents/verification/recovered-queue.png",
+    fullPage: true,
+  });
 });

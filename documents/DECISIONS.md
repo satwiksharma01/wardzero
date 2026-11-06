@@ -10,9 +10,9 @@ Prepared: 7 November 2026. Implementation status is tracked in TASKS.md and date
 | D02 | Confirmed context | Solo implementation. | Limit breadth and external service dependencies. |
 | D03 | Proposed | One synthetic post-discharge patient and two response roles. | Demonstrates ownership and escalation without a hospital management suite. |
 | D04 | Accepted stack; local implementation | Next.js/TypeScript and PostgreSQL. | User confirmed. Local PGlite persists to disk; hosted PostgreSQL provisioning remains open. See decisions/001-local-postgres.md. |
-| D05 | Partly implemented | Deterministic concern engine plus planned bounded AI note extraction. | Versioned synthetic rules implemented; AI remains T07; no clinical forecasting claim. |
+| D05 | Implemented locally | Deterministic concern engine plus bounded live Gemini extraction. | Structured output and source excerpts verified; no clinical forecasting claim. |
 | D06 | Implemented locally | Separate concern, freshness, and response lifecycle. | Missing data, patient condition, and acknowledgement mean different things. |
-| D07 | Proposed | Browser simulator with IndexedDB outbox and idempotent ingestion. | Demonstrable recovery without hardware; browser storage has explicit capacity/availability limits. |
+| D07 | Implemented locally | Browser simulator with IndexedDB outbox and idempotent ingestion. | Verified refresh, real transport failure, lost acknowledgement, capacity, and replay; browser eviction remains a limit. |
 | D08 | Proposed | In-app coordinator escalation as initial channel. | Avoid notification-service setup; do not imply external delivery. |
 | D09 | Proposed | Shared virtual clock for deterministic demos. | Deadline and observation-time behavior remain coherent during acceleration. |
 | D10 | Proposed | Polling first; scheduled evaluator for autonomous escalation. | Simpler UI transport; background execution still needs hosting support. |

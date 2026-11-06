@@ -22,6 +22,7 @@ import type { Snapshot } from "@/domain/readings";
 import { Simulator } from "./simulator";
 import { CareContext } from "./care-context";
 import { CareResponse } from "./care-response";
+import { CaregiverNotes } from "./caregiver-notes";
 import {
   metricDefinitions,
   timeLabel,
@@ -309,6 +310,11 @@ export function Dashboard() {
 
           <CareResponse
             alerts={snapshot?.care.alerts ?? []}
+            disconnected={!!error}
+            onChange={refresh}
+          />
+          <CaregiverNotes
+            notes={snapshot?.care.notes ?? []}
             disconnected={!!error}
             onChange={refresh}
           />

@@ -234,7 +234,10 @@ function AlertCard({
         <ul>
           {[
             ...new Set(
-              alert.assessment.reasons.flatMap((reason) => reason.eventIds),
+              alert.assessment.reasons.flatMap((reason) => [
+                ...reason.eventIds,
+                ...(reason.noteIds ?? []),
+              ]),
             ),
           ].map((id) => (
             <li key={id}>

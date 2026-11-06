@@ -19,7 +19,7 @@ Open [http://127.0.0.1:3000](http://127.0.0.1:3000). Initial state is intentiona
 
 `.npmrc` disables dependency lifecycle scripts. Installed platform packages supply the Next.js compiler and test tooling; the verified build does not require blanket enabling scripts.
 
-The database persists in `.data/wardzero`, which is ignored by Git. No database account or AI key is needed for this slice. Optionally set `WARDZERO_DATA_NAME` in `.env.local` to a name containing letters, digits, underscores, or hyphens. Each name creates a separate database under `.data/`.
+The database persists in `.data/wardzero`, which is ignored by Git. No database account is needed for local storage. Live AI interpretation requires the provider configuration below. Optionally set `WARDZERO_DATA_NAME` in `.env.local` to a name containing letters, digits, underscores, or hyphens. Each name creates a separate database under `.data/`.
 
 Run only one app instance per database name. Stop the dev server before running a production server against the same database.
 
@@ -30,6 +30,8 @@ Run only one app instance per database name. Stop the dev server before running 
 | `npm run dev` | Local development server bound to 127.0.0.1. |
 | `npm test` | Domain, ingestion, API-boundary, and disk-persistence tests. |
 | `npm run test:e2e` | Isolated Chrome tests on port 3100 with a new database. |
+| `npm run test:ai-live` | Opt-in real Gemini cases using `.env.local`; makes provider requests. |
+| `npm run test:e2e-live` | Opt-in real Gemini app journey on port 3102; makes provider requests. |
 | `npm run lint` | ESLint and React/Next.js checks. |
 | `npm run typecheck` | TypeScript checking. |
 | `npm run build` | Production compilation. |
@@ -49,7 +51,7 @@ Units are encoded in metric names: `pulseBpm`, `oxygenPct`, `temperatureC`, `res
 
 ## Current limits
 
-The app now implements explained demo concern, persistent alerts, local demo sessions, and caregiver response in addition to monitoring. AI notes, durable browser outbox, escalation, production sign-in, isolated demo runs, and deployment remain pending. The simulator retains a failed reading only in memory for retry; it does not yet survive a tab reload. Do not use real patient data or expose this local milestone publicly.
+The app implements explained demo concern, live AI notes, persistent alerts, local demo sessions, caregiver response, and a durable browser outbox. Escalation, production sign-in, isolated demo runs, and deployment remain pending. Do not use real patient data or expose this local milestone publicly.
 
 ## Try the care loop
 
@@ -64,3 +66,23 @@ The backup identity can inspect but cannot respond to an alert assigned to the p
 `GET/POST /api/demo/session` reads/activates the local demo session. `POST /api/alerts/:id/events` accepts a unique eventId with action `acknowledge`, `record-action`, or `resolve`; the last two require text. The actor comes from the HttpOnly session cookie. Errors distinguish malformed input (400), missing/expired session (401), unassigned actor (403), missing alert (404), and transition/idempotency conflicts (409).
 
 Schema migrations run automatically on store initialization and preserve readings from the first milestone. Assessment parameters and limitations are recorded in [CARE_LOOP_PLAN.md](CARE_LOOP_PLAN.md).
+
+## Configure Gemini
+
+Store these in ignored `.env.local` and restart the server:
+
+```dotenv
+WARDZERO_AI_PROVIDER=gemini
+WARDZERO_AI_MODEL=gemini-3.5-flash-lite
+WARDZERO_AI_API_KEY=your-private-key
+```
+
+The Gemini endpoint defaults to Google's OpenAI-compatible endpoint. Optional `WARDZERO_AI_BASE_URL` changes the server-side base URL; use HTTPS except for loopback development. No API key is exposed to the browser. Never put real keys in `.env.example` or commit them.
+
+Activate a caregiver identity, enter an English observation, and save it. The app records Pending/Complete/Failed/Unavailable analysis and source excerpts. Missing/failed AI does not stop reading-based assessment. Retry analysis reuses the note identity.
+
+Normal browser tests use an explicitly named local mock HTTP provider on port 3111; live tests are separate opt-in commands and use the actual configured model.
+
+## Try offline recovery
+
+Disconnect sensor transport in Simulation lab, generate several readings, and refresh. The durable queue and disconnected setting remain. Reconnect to sync the backlog with original times. The dashboard stays online during this simulated sensor outage. Real network failures also retain queued readings and retry with backoff. Capacity is 500 entries; conflicts/rejections are retained for inspection and count toward capacity.

@@ -11,6 +11,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "test:ai-live": "vitest run --config vitest.live.config.ts",
+    "test:e2e-live": "playwright test --config playwright.live.config.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint ."
   },
@@ -29,6 +31,7 @@
     "@types/react-dom": "19.3.0",
     "eslint": "9.39.5",
     "eslint-config-next": "16.4.5",
+    "fake-indexeddb": "6.2.7",
     "prettier": "3.9.10",
     "typescript": "5.9.3",
     "vitest": "5.1.0"

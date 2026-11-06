@@ -14,11 +14,13 @@ All project documentation belongs in `documents/`, including plans, specificatio
 8. [Project workflow](WORKFLOW.md): Define → Plan → Build → Verify → Review → Ship for every slice.
 9. [Local setup](SETUP.md): run the application and its checks.
 10. [Care loop plan](CARE_LOOP_PLAN.md): assessment and caregiver-response rules and scope.
+11. [Notes and recovery plan](NOTES_AND_RECOVERY_PLAN.md): AI boundaries and durable queue behavior.
+12. [Entry evidence](HACKATHON_ENTRY.md): registration and unresolved submission details.
 
 ## Status and maintenance
 
 - Prepared: 7 November 2026, Asia/Kolkata.
-- Stage: local monitoring and care-response loop built; see [latest verification](verification/2026-11-07-care-loop.md). Public deployment remains pending.
+- Stage: local monitoring, live Gemini notes, care response, and durable recovery built; see [latest verification](verification/2026-11-07-notes-recovery.md). Final roadmap tasks and submission remain pending.
 - Working project name: WardZero; subject to participant approval.
 - Participant: solo builder.
 - Update task status only after its acceptance criteria are verified.

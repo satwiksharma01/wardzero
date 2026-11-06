@@ -16,7 +16,10 @@ export function localRequestAllowed(
   );
 }
 
-export async function readBoundedJson(request: Request): Promise<unknown> {
+export async function readBoundedJson(
+  request: Pick<Request, "body">,
+  limit = 128000,
+): Promise<unknown> {
   const reader = request.body?.getReader();
   if (!reader) throw new Error("Missing body");
   const chunks: Uint8Array[] = [];
@@ -25,7 +28,7 @@ export async function readBoundedJson(request: Request): Promise<unknown> {
     const { value, done } = await reader.read();
     if (done) break;
     size += value.byteLength;
-    if (size > 128000) {
+    if (size > limit) {
       await reader.cancel();
       throw new Error("Body too large");
     }

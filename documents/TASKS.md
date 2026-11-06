@@ -1,8 +1,10 @@
 # Implementation checklist
 
-Status: T02–T06 implemented for the fixed local demo. T00/T01 remain partially complete. Production identity and run isolation remain prerequisites for later hosting/demo reset. Budgets are in [ROADMAP.md](ROADMAP.md). Follow [WORKFLOW.md](WORKFLOW.md) for each slice.
+Status: T02–T09 implemented for the fixed local demo, with live Gemini integration verified. T10–T13 remain open. T00/T01 remain partially complete. Production identity and run isolation remain prerequisites for later hosting/demo reset. Budgets are in [ROADMAP.md](ROADMAP.md). Follow [WORKFLOW.md](WORKFLOW.md) for each slice.
 
 ## T00 — Confirm participation and constraints
+
+Registration is confirmed by saved entry WZ-95CMQ; see HACKATHON_ENTRY.md. Exact cutoff and expanded submission fields remain unverified.
 
 - [ ] Record registration status, actual submission cutoff/timezone, submission fields, and any additional rules.
 - [ ] Confirm familiar stack, available AI credentials, hosting access, and actual work budget.
@@ -14,7 +16,7 @@ Dependencies: none. Verification: inspect authenticated submission requirements 
 
 - [x] Scaffold the chosen application and locked dependency installation.
 - [x] Demonstrate database write/read across close/reopen using filesystem-backed embedded PostgreSQL.
-- [ ] Complete one schema-validated live AI extraction probe when provider access is available.
+- [x] Complete a schema-validated live Gemini probe; four cases and a full live app journey passed.
 - [x] Record exact working setup/build/test commands in documents/SETUP.md.
 
 Dependencies: T00. Verification: run the clean build, restart persistence probe, and AI success/failure probes. Proposed files: package/config, database schema/client, environment example. Scope: medium; split scaffolding from probes if needed.
@@ -68,30 +70,30 @@ Dependencies: T05. Verification: complete journey, invalid transition, unauthori
 
 ## T07 — Add bounded AI note interpretation
 
-- [ ] Persist notes and analysis status; extract allowlisted observations with verified source excerpts.
-- [ ] Incorporate validated observations into assessment while preserving evidence provenance.
-- [ ] Handle negation, history, unrelated text, instructions in notes, timeout, and invalid output explicitly.
+- [x] Persist notes and analysis status; extract allowlisted observations with verified source excerpts.
+- [x] Incorporate validated observations into assessment while preserving evidence provenance.
+- [x] Handle negation, history, unrelated text, instructions in notes, timeout, and invalid output explicitly.
 
 Dependencies: T04, T06. Verification: deterministic mocked-provider tests plus recorded live-provider smoke test; note-only changes must demonstrate actual contribution. Proposed files: note route/service, AI adapter/schema, note UI, tests. Scope: medium; split provider adapter from integration if necessary.
 
 ## Checkpoint B
 
-- [ ] Demonstrate sensor → platform → AI-supported assessment → alert → recorded response.
-- [ ] Verify reasons match stored evidence and no clinical validation claims appear.
+- [x] Demonstrate sensor → platform → AI-supported assessment → alert → recorded response.
+- [x] Verify reasons match stored evidence and no clinical validation claims appear.
 
 ## T08 — Persist the simulator outbox
 
-- [ ] Save events before transmission; retain pending events across reload.
-- [ ] Implement bounded retry, batch acknowledgement, rejection inspection, and queue capacity behavior.
-- [ ] Expose disconnect/reconnect and queue depth in demo controls.
+- [x] Save events before transmission; retain pending events across reload.
+- [x] Implement bounded retry, batch acknowledgement, rejection inspection, and queue capacity behavior.
+- [x] Expose disconnect/reconnect and queue depth in demo controls.
 
 Dependencies: T03. Verification: actual request failure, reload, reconnect, duplicate acknowledgement, and capacity edge case. Proposed files: outbox store, transport, simulator UI, tests. Scope: medium.
 
 ## T09 — Verify replay correctness and outage UI
 
-- [ ] Replay backlog with original observation times and no duplicate persistence.
-- [ ] Show delayed/offline monitoring without converting unknown evidence into low concern.
-- [ ] Distinguish simulator transport outage from dashboard network loss.
+- [x] Replay backlog with original observation times and no duplicate persistence.
+- [x] Show delayed/offline monitoring without converting unknown evidence into low concern.
+- [x] Distinguish simulator transport outage from dashboard network loss.
 
 Dependencies: T04, T08. Verification: fixed-clock recovery integration test and browser outage journey. Proposed files: replay integration, connectivity indicator, history/snapshot handling, tests. Scope: medium.
 

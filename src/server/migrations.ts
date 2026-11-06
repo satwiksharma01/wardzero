@@ -36,6 +36,18 @@ const migrations = [
     );
   `,
   },
+  {
+    version: 3,
+    sql: `
+    CREATE TABLE caregiver_notes (
+      id TEXT PRIMARY KEY, text TEXT NOT NULL, author_id TEXT NOT NULL, author_name TEXT NOT NULL,
+      recorded_at TIMESTAMPTZ NOT NULL, analysis_started_at TIMESTAMPTZ NOT NULL,
+      status TEXT NOT NULL CHECK (status IN ('Pending','Complete','Failed','Unavailable')),
+      observations JSONB NOT NULL DEFAULT '[]', model TEXT, prompt_version TEXT NOT NULL, failure_reason TEXT
+    );
+    CREATE INDEX caregiver_notes_time ON caregiver_notes(recorded_at DESC, id DESC);
+  `,
+  },
 ];
 
 export async function migrate(db: PGlite) {
