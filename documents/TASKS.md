@@ -1,6 +1,6 @@
 # Implementation checklist
 
-Status: T02–T09 implemented for the fixed local demo, with live Gemini integration verified. T10–T13 remain open. T00/T01 remain partially complete. Production identity and run isolation remain prerequisites for later hosting/demo reset. Budgets are in [ROADMAP.md](ROADMAP.md). Follow [WORKFLOW.md](WORKFLOW.md) for each slice.
+Status: T02–T09 implemented for the fixed local demo, with live Gemini integration verified. T10 escalation is verified; T11–T13 remain open. T00/T01 remain partially complete. Production identity and run isolation remain prerequisites for later hosting/demo reset. Budgets are in [ROADMAP.md](ROADMAP.md). Follow [WORKFLOW.md](WORKFLOW.md) for each slice.
 
 ## T00 — Confirm participation and constraints
 
@@ -99,16 +99,16 @@ Dependencies: T04, T08. Verification: fixed-clock recovery integration test and 
 
 ## T10 — Escalate unanswered alerts
 
-- [ ] Persist configurable acknowledgement deadlines and backup role.
-- [ ] Run an idempotent evaluator and stop acknowledgement escalation when acknowledged.
-- [ ] Demonstrate autonomous evaluation or label any request-driven demo fallback precisely.
+- [x] Persist configurable acknowledgement deadlines and backup role.
+- [x] Run an idempotent evaluator and stop acknowledgement escalation when acknowledged.
+- [x] Demonstrate autonomous evaluation or label any request-driven demo fallback precisely.
 
 Dependencies: T06. Verification: before/at/after deadline, acknowledged alert, repeated worker run, and closed-browser execution where supported. Proposed files: escalation evaluator, scheduler entry, coordinator view, tests. Scope: medium.
 
 ## Checkpoint C
 
-- [ ] Durable recovery, stale-state behavior, AI failure, and escalation scenarios pass.
-- [ ] Record exact limits of connectivity/power recovery and notification delivery.
+- [x] Durable recovery, stale-state behavior, AI failure, and escalation scenarios pass.
+- [x] Record exact limits of connectivity/power recovery and notification delivery.
 
 ## T11 — Make the demo repeatable
 

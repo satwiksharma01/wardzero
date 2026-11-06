@@ -1426,3 +1426,23 @@ tr:last-child td {
     font-size: 10px;
   }
 }
+
+.worker-status {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+.deadline-label {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+.escalation-banner {
+  font-size: 11px;
+  background: #fff0dc;
+  color: #7c531d;
+  border: 1px solid #ead6b7;
+  padding: 10px;
+  border-radius: 6px;
+  margin-top: 12px;
+}

@@ -11,6 +11,7 @@ import { readHistory } from "./reading-history";
 import { evaluateCare, readCare } from "./care-assessment";
 import { CareStore } from "./care-store";
 import { NoteStore } from "./note-store";
+import { evaluateDeadlines } from "./escalation";
 
 export class ReadingStore {
   constructor(private readonly db: PGlite) {}
@@ -23,6 +24,9 @@ export class ReadingStore {
 
   async initialize() {
     await migrate(this.db);
+  }
+  evaluateDeadlines(now: Date) {
+    return evaluateDeadlines(this.db, now);
   }
 
   async ingest(events: unknown[], now: Date): Promise<IngestResult[]> {

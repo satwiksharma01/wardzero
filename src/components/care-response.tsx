@@ -21,15 +21,21 @@ export function CareResponse({
   alerts,
   disconnected,
   onChange,
+  workerLastTickAt,
 }: {
   alerts: AlertEpisode[];
   disconnected: boolean;
   onChange: () => Promise<void>;
+  workerLastTickAt: string | null;
 }) {
   const [actor, setActor] = useState<Actor | null>(null);
   const [role, setRole] = useState<DemoRole>("primary");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const coordinator = actor?.id === DEMO_ACTORS.backup.id;
+  const visibleAlerts = coordinator
+    ? alerts.filter((alert) => alert.escalatedAt)
+    : alerts;
   useEffect(() => {
     let active = true;
     void readActor().then(
@@ -72,14 +78,23 @@ export function CareResponse({
       <div className="section-heading">
         <div className="heading-with-icon">
           <BellRing size={19} />
-          <h2 id="response-title">Care response</h2>
+          <h2 id="response-title">
+            {coordinator ? "Coordinator inbox" : "Care response"}
+          </h2>
         </div>
         <span className="tag">
-          {alerts.filter((alert) => alert.state !== "Resolved").length} active
+          {visibleAlerts.filter((alert) => alert.state !== "Resolved").length}{" "}
+          active
         </span>
       </div>
       <p className="section-description">
         A concern needs an owner, a recorded action, and a clear outcome.
+      </p>
+      <p className="worker-status">
+        {workerLastTickAt
+          ? `Deadline worker checked ${timeLabel(workerLastTickAt)}`
+          : "Waiting for deadline worker"}{" "}
+        · In-app escalation only
       </p>
       <div className="demo-identity">
         <UserCheck size={18} />
@@ -116,11 +131,15 @@ export function CareResponse({
           {error}
         </p>
       )}
-      {!alerts.length && (
+      {!visibleAlerts.length && (
         <div className="care-empty">
           <CheckCircle2 size={22} />
           <div>
-            <strong>No care alerts yet</strong>
+            <strong>
+              {coordinator
+                ? "No escalations in your inbox"
+                : "No care alerts yet"}
+            </strong>
             <p>
               An alert appears when fresh evidence reaches Medium or High demo
               concern.
@@ -128,7 +147,7 @@ export function CareResponse({
           </div>
         </div>
       )}
-      {alerts.map((alert) => (
+      {visibleAlerts.map((alert) => (
         <AlertCard
           key={alert.id}
           alert={alert}
@@ -156,7 +175,9 @@ function AlertCard({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const pending = useRef<CareAction | null>(null);
-  const assigned = actor?.id === alert.assignedActorId;
+  const assigned =
+    actor?.id === alert.assignedActorId ||
+    (!!alert.escalatedAt && actor?.id === alert.backupActorId);
   const resolved = alert.state === "Resolved";
   const action =
     alert.state === "Open"
@@ -221,6 +242,20 @@ function AlertCard({
       <p className="alert-owner">
         Assigned to {DEMO_ACTORS.primary.name} · Primary caregiver
       </p>
+      {alert.escalatedAt ? (
+        <p className="escalation-banner">
+          Escalated in-app to {DEMO_ACTORS.backup.name} at{" "}
+          {timeLabel(alert.escalatedAt)}. The coordinator can now respond.
+        </p>
+      ) : alert.state === "Open" ? (
+        <p className="deadline-label">
+          Acknowledge by {timeLabel(alert.acknowledgementDueAt)}
+        </p>
+      ) : (
+        <p className="deadline-label">
+          Acknowledgement recorded · deadline timer stopped
+        </p>
+      )}
       <ul className="alert-reasons">
         {alert.assessment.reasons.map((reason) => (
           <li key={reason.code}>{reason.message}</li>

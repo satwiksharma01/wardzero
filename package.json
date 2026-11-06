@@ -13,6 +13,7 @@
     "test:e2e": "playwright test",
     "test:ai-live": "vitest run --config vitest.live.config.ts",
     "test:e2e-live": "playwright test --config playwright.live.config.ts",
+    "test:worker": "playwright test --config playwright.worker.config.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint ."
   },

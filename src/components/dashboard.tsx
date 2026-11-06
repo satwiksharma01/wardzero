@@ -309,6 +309,7 @@ export function Dashboard() {
           </div>
 
           <CareResponse
+            workerLastTickAt={snapshot?.care.workerLastTickAt ?? null}
             alerts={snapshot?.care.alerts ?? []}
             disconnected={!!error}
             onChange={refresh}

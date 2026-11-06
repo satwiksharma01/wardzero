@@ -45,6 +45,9 @@ export type AlertEpisode = {
   severity: "Medium" | "High";
   state: AlertState;
   assignedActorId: string;
+  backupActorId: string;
+  acknowledgementDueAt: string;
+  escalatedAt: string | null;
   openedAt: string;
   updatedAt: string;
   assessment: SavedAssessment;
@@ -55,6 +58,7 @@ export type CareSnapshot = {
   lastAssessment: SavedAssessment | null;
   alerts: AlertEpisode[];
   notes: CareNote[];
+  workerLastTickAt: string | null;
 };
 
 export class CareError extends Error {

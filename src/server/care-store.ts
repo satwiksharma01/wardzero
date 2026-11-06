@@ -75,12 +75,20 @@ export class CareStore {
       const alert = await tx.query<{
         state: AlertState;
         assigned_actor_id: string;
+        backup_actor_id: string;
+        escalated_at: Date | null;
       }>(
-        "SELECT state, assigned_actor_id FROM care_alerts WHERE id = $1 FOR UPDATE",
+        "SELECT state, assigned_actor_id, backup_actor_id, escalated_at FROM care_alerts WHERE id = $1 FOR UPDATE",
         [alertId],
       );
       if (!alert.rows.length) throw new CareError(404, "Alert not found.");
-      if (alert.rows[0].assigned_actor_id !== actor.id)
+      if (
+        alert.rows[0].assigned_actor_id !== actor.id &&
+        !(
+          alert.rows[0].escalated_at &&
+          alert.rows[0].backup_actor_id === actor.id
+        )
+      )
         throw new CareError(
           403,
           "Only the assigned caregiver can record a response.",

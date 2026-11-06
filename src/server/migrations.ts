@@ -48,6 +48,17 @@ const migrations = [
     CREATE INDEX caregiver_notes_time ON caregiver_notes(recorded_at DESC, id DESC);
   `,
   },
+  {
+    version: 4,
+    sql: `
+    ALTER TABLE care_alerts ADD COLUMN acknowledgement_due_at TIMESTAMPTZ;
+    UPDATE care_alerts SET acknowledgement_due_at=opened_at+interval '120 seconds';
+    ALTER TABLE care_alerts ALTER COLUMN acknowledgement_due_at SET NOT NULL;
+    ALTER TABLE care_alerts ADD COLUMN backup_actor_id TEXT NOT NULL DEFAULT 'coordinator-backup';
+    ALTER TABLE care_alerts ADD COLUMN escalated_at TIMESTAMPTZ;
+    CREATE TABLE worker_heartbeat(id INT PRIMARY KEY CHECK(id=1), last_tick_at TIMESTAMPTZ NOT NULL);
+  `,
+  },
 ];
 
 export async function migrate(db: PGlite) {

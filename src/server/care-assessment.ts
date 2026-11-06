@@ -10,12 +10,16 @@ import { PATIENT_ID, type StoredReading } from "../domain/readings";
 import { readHistory } from "./reading-history";
 import { readNotes } from "./note-history";
 import { fuseNotes } from "../domain/notes";
+import { acknowledgementDelayMs } from "./escalation";
 
 type AlertRow = {
   id: string;
   severity: AlertEpisode["severity"];
   state: AlertEpisode["state"];
   assigned_actor_id: string;
+  backup_actor_id: string;
+  acknowledgement_due_at: Date;
+  escalated_at: Date | null;
   opened_at: Date;
   updated_at: Date;
   evidence_at: Date;
@@ -81,8 +85,8 @@ export async function evaluateCare(tx: Transaction, now: Date) {
     return;
   const id = randomUUID();
   await tx.query(
-    `INSERT INTO care_alerts(id, patient_id, severity, state, assigned_actor_id, opened_at, updated_at, evidence_at, assessment)
-    VALUES($1,$2,$3,'Open',$4,$5,$5,$6,$7::jsonb)`,
+    `INSERT INTO care_alerts(id, patient_id, severity, state, assigned_actor_id, opened_at, updated_at, evidence_at, assessment, acknowledgement_due_at)
+    VALUES($1,$2,$3,'Open',$4,$5,$5,$6,$7::jsonb,$8)`,
     [
       id,
       PATIENT_ID,
@@ -91,6 +95,7 @@ export async function evaluateCare(tx: Transaction, now: Date) {
       now.toISOString(),
       evidenceAt,
       JSON.stringify(assessment),
+      new Date(now.getTime() + acknowledgementDelayMs()).toISOString(),
     ],
   );
   await tx.query(
@@ -114,6 +119,9 @@ export async function readCare(
     "SELECT payload FROM assessments ORDER BY sequence DESC LIMIT 1",
   );
   const notes = await readNotes(tx);
+  const heartbeat = await tx.query<{ last_tick_at: Date }>(
+    "SELECT last_tick_at FROM worker_heartbeat WHERE id=1",
+  );
   const rows = await tx.query<AlertRow>(
     "SELECT * FROM care_alerts ORDER BY (state = 'Resolved'), opened_at DESC, id DESC LIMIT 5",
   );
@@ -133,11 +141,15 @@ export async function readCare(
     currentAssessment: fuseNotes(assess(history, now), notes, now),
     lastAssessment: saved.rows[0]?.payload ?? null,
     notes,
+    workerLastTickAt: heartbeat.rows[0]?.last_tick_at.toISOString() ?? null,
     alerts: rows.rows.map((row) => ({
       id: row.id,
       severity: row.severity,
       state: row.state,
       assignedActorId: row.assigned_actor_id,
+      backupActorId: row.backup_actor_id,
+      acknowledgementDueAt: row.acknowledgement_due_at.toISOString(),
+      escalatedAt: row.escalated_at?.toISOString() ?? null,
       openedAt: row.opened_at.toISOString(),
       updatedAt: row.updated_at.toISOString(),
       assessment: row.assessment,
