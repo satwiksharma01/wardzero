@@ -1,0 +1,52 @@
+# Decisions, assumptions, and risk register
+
+Prepared: 7 November 2026. Implementation status is tracked in TASKS.md and dated verification reports.
+
+## Decisions and proposals
+
+| ID | Status | Choice | Rationale / consequence |
+|---|---|---|---|
+| D01 | Confirmed user instruction | Store all substantive documentation in documents/. | One discoverable source of project context. |
+| D02 | Confirmed context | Solo implementation. | Limit breadth and external service dependencies. |
+| D03 | Proposed | One synthetic post-discharge patient and two response roles. | Demonstrates ownership and escalation without a hospital management suite. |
+| D04 | Accepted stack; local implementation | Next.js/TypeScript and PostgreSQL. | User confirmed. Local PGlite persists to disk; hosted PostgreSQL provisioning remains open. See decisions/001-local-postgres.md. |
+| D05 | Proposed | Deterministic concern engine plus bounded AI note extraction. | Testable rules with meaningful AI contribution; no clinical forecasting claim. |
+| D06 | Proposed | Separate concern, freshness, and response lifecycle. | Missing data, patient condition, and acknowledgement mean different things. |
+| D07 | Proposed | Browser simulator with IndexedDB outbox and idempotent ingestion. | Demonstrable recovery without hardware; browser storage has explicit capacity/availability limits. |
+| D08 | Proposed | In-app coordinator escalation as initial channel. | Avoid notification-service setup; do not imply external delivery. |
+| D09 | Proposed | Shared virtual clock for deterministic demos. | Deadline and observation-time behavior remain coherent during acceleration. |
+| D10 | Proposed | Polling first; scheduled evaluator for autonomous escalation. | Simpler UI transport; background execution still needs hosting support. |
+| D11 | Confirmed user instruction | Define → Plan → Build → Verify → Review → Ship. | Apply to each feature slice; see WORKFLOW.md. |
+
+When accepted, capture expensive-to-reverse choices as sequential ADRs under `documents/decisions/`, including alternatives and consequences. Do not delete superseded decisions.
+
+## Questions to resolve first
+
+1. What is the actual submission deadline and timezone, distinct from registration?
+2. Is registration complete and what fields/assets does the submission flow require?
+3. Which stack does the participant know best, and what is the actual available build time?
+4. Which AI provider credentials and hosting/database accounts are available?
+5. Does the deployment support persistent storage and scheduled execution?
+6. Do additional rules govern AI assistance, preexisting code, external datasets, or repository visibility?
+7. Are in-app alerts sufficient? The public SMS/call question is unanswered; no requirement should be invented.
+
+## Risk register
+
+| Risk | Impact | Mitigation and decision point |
+|---|---|---|
+| Ambiguous cutoff | Missed entry | Resolve T00 before scheduling; reserve at least two hours for packaging. |
+| Scope exceeds solo budget | Incomplete care loop | Use roadmap compression sequence and feature freeze. |
+| New stack slows delivery | Lost build time | Select familiar equivalent before scaffolding. |
+| AI credentials/unreliable output | Missing deliverable or unsafe explanation | Probe early, validate schema/excerpts, use bounded retries and explicit failure status. |
+| Overclaiming prediction | Weak clinical credibility | Report synthetic outcomes and limits; do not invent validation. |
+| Late data appears current | Incorrect live assessment | Separate observed/received time, enforce freshness eligibility, test backlog replay. |
+| Concurrent retries | Duplicate alerts/actions | Unique identities and transactional episode/action updates. |
+| Scheduler unavailable | Escalation only works while UI open | Verify hosting early; label demo evaluator fallback accurately. |
+| Ephemeral database | Lost history | Restart/persistence probe before UI expansion. |
+| Browser queue storage fails/fills | Lost readings | Visible error/backpressure and bounded queue policy; do not promise unlimited durability. |
+| Public demo mutations | Corrupted demo or AI costs | Server authorization, protected reset, rate limits, read-only public mode if needed. |
+| Video/link/setup failure | Work cannot be evaluated | Rehearse twice, reproduce setup, check links and retain submission receipt. |
+
+## Evidence provenance
+
+Published facts come from the [challenge](https://wooble.org/companies/nursio-innovation-pvt-ltd-2/challenges/operation-ward-zero), [organizer profile](https://wooble.org/companies/nursio-innovation-pvt-ltd-2), and [submission policy](https://wooble.org/submission-and-ip-policy), inspected in this conversation. Implementation strategies, time estimates, data contracts, and scenario expectations are proposals authored for this solo project.
