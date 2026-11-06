@@ -4,30 +4,21 @@ import {
   monitoringStatus,
   readingSchema,
   type IngestResult,
-  type Reading,
   type Snapshot,
-  type StoredReading,
 } from "../domain/readings";
-
-type Row = { payload: Reading; received_at: Date | string };
-const fromRow = (row: Row): StoredReading => ({
-  ...row.payload,
-  receivedAt: new Date(row.received_at).toISOString(),
-});
+import { migrate } from "./migrations";
+import { readHistory } from "./reading-history";
+import { evaluateCare, readCare } from "./care-assessment";
+import { CareStore } from "./care-store";
 
 export class ReadingStore {
   constructor(private readonly db: PGlite) {}
+  get care() {
+    return new CareStore(this.db);
+  }
 
   async initialize() {
-    await this.db.exec(`
-      CREATE TABLE IF NOT EXISTS readings (
-        event_id TEXT PRIMARY KEY,
-        observed_at TIMESTAMPTZ NOT NULL,
-        received_at TIMESTAMPTZ NOT NULL,
-        payload JSONB NOT NULL
-      );
-      CREATE INDEX IF NOT EXISTS readings_time ON readings (observed_at DESC, event_id DESC);
-    `);
+    await migrate(this.db);
   }
 
   async ingest(events: unknown[], now: Date): Promise<IngestResult[]> {
@@ -64,7 +55,12 @@ export class ReadingStore {
             JSON.stringify(reading),
           ],
         );
-        if (inserted.rows.length) return "accepted" as const;
+        if (inserted.rows.length) {
+          // Historic replay is retained without generating a new current-care episode.
+          const age = now.getTime() - Date.parse(reading.observedAt);
+          if (age >= 0 && age < 90000) await evaluateCare(tx, now);
+          return "accepted" as const;
+        }
         // JSONB equality ignores key order while detecting an identity reused for different evidence.
         const same = await tx.query<{ equal: boolean }>(
           "SELECT payload = $2::jsonb AS equal FROM readings WHERE event_id = $1",
@@ -87,13 +83,10 @@ export class ReadingStore {
 
   async snapshot(now: Date): Promise<Snapshot> {
     return this.db.transaction(async (tx) => {
-      const result = await tx.query<Row>(
-        "SELECT payload, received_at FROM readings ORDER BY observed_at DESC, event_id DESC LIMIT 60",
-      );
       const count = await tx.query<{ total: number }>(
         "SELECT COUNT(*)::int AS total FROM readings",
       );
-      const history = result.rows.map(fromRow).reverse();
+      const history = await readHistory(tx);
       const latest = history.at(-1) ?? null;
       return {
         latest,
@@ -101,6 +94,7 @@ export class ReadingStore {
         total: count.rows[0].total,
         monitoring: monitoringStatus(latest?.observedAt ?? null, now),
         serverTime: now.toISOString(),
+        care: await readCare(tx, history, now),
       };
     });
   }

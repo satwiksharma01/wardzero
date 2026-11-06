@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { CareSnapshot } from "./care";
 
 export const PATIENT_ID = "patient-001";
 export const FUTURE_SKEW_MS = 5000;
@@ -39,6 +40,7 @@ export type Snapshot = {
   total: number;
   monitoring: Monitoring;
   serverTime: string;
+  care: CareSnapshot;
 };
 
 export function monitoringStatus(

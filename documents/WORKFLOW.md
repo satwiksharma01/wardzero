@@ -15,7 +15,7 @@ Confirmed by the participant on 7 November 2026. Apply this sequence to each mea
 
 These slash names describe our workflow; they do not assert that custom slash commands have been installed. Repeat Verify and Review after relevant fixes. A local slice can be ready for handoff while public deployment remains pending; never label that as a live release.
 
-## Current cycle: first persisted patient slice
+## Completed cycle: first persisted patient slice
 
 - Define: use the existing single-patient synthetic-data spec.
 - Plan: implement T01 foundation (excluding unavailable live AI probe), T02 contracts, T03 ingestion and display, and freshness from T04.
@@ -25,6 +25,14 @@ These slash names describe our workflow; they do not assert that custom slash co
 - Ship: local runnable milestone; public deployment, AI, risk scoring, and caregiver response remain later tasks.
 
 Deadline and registration verification remain open external questions and do not block reversible local implementation. The user has now authorized building the roadmap.
+
+## Current cycle: explained concern and caregiver response
+
+- Define/Plan: [CARE_LOOP_PLAN.md](CARE_LOOP_PLAN.md) specifies T04–T06 and rule assumptions.
+- Build: versioned assessment, transactional episodes, local demo sessions, caregiver transitions, and audit UI.
+- Verify: domain/storage/session/migration/persistence tests plus real-browser response journey and mobile checks.
+- Review: evidence provenance, no automatic resolution, idempotency, stale behavior, and authorization regression experiment.
+- Ship: refreshed local preview; AI notes, offline outbox, autonomous escalation, and public identity/deployment remain pending.
 
 ## UI design contract
 

@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 const config: NextConfig = {
   serverExternalPackages: ["@electric-sql/pglite"],
+  // Runtime databases are writable state, not deployable application assets.
+  outputFileTracingExcludes: { "/*": ["./.data/**/*"] },
   poweredByHeader: false,
   async headers() {
     return [

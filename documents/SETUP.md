@@ -41,7 +41,7 @@ Browser test data is isolated under `.data/browser-*`. Screenshots live in `docu
 
 ## Current API
 
-`GET /api/patient` returns `{ latest, history, total, monitoring, serverTime }`. History is limited to the latest 60 events and sorted by observation time. The reading log displays five recent rows.
+`GET /api/patient` returns `{ latest, history, total, monitoring, serverTime, care }`. Care contains the current assessment, last stored assessment, and up to five alert episodes with their response history. History is limited to the latest 60 readings and sorted by observation time. The reading log displays five recent rows.
 
 `POST /api/readings/batch` accepts `{ readings: [...] }` with 1–100 entries, a JSON body under 128 KB, and a same-origin local request. Each result is accepted, duplicate, conflict, or rejected. Duplicate identity with a changed payload is never silently overwritten.
 
@@ -49,4 +49,18 @@ Units are encoded in metric names: `pulseBpm`, `oxygenPct`, `temperatureC`, `res
 
 ## Current limits
 
-This slice implements readings, trends, freshness, and persistence. Risk scoring, AI notes, alert ownership, caregiver actions, durable browser outbox, escalation, authentication, and deployment are still pending. The simulator retains a failed reading only in memory for retry; it does not yet survive a tab reload. Do not use real patient data or expose this local milestone publicly.
+The app now implements explained demo concern, persistent alerts, local demo sessions, and caregiver response in addition to monitoring. AI notes, durable browser outbox, escalation, production sign-in, isolated demo runs, and deployment remain pending. The simulator retains a failed reading only in memory for retry; it does not yet survive a tab reload. Do not use real patient data or expose this local milestone publicly.
+
+## Try the care loop
+
+1. Choose Gradual deterioration in Simulation lab and stream readings, or send thirteen readings manually from step zero.
+2. Inspect Medium/High concern, reasons, and evidence IDs. An alert appears in Care response.
+3. Select Ananya, the primary caregiver, and activate the local demo identity.
+4. Acknowledge the alert, record an action of at least five characters, then record a separate resolution reason.
+5. Refresh: the action history remains. Resolution does not change the measured concern. Pausing readings eventually makes current concern Unknown while preserving the alert history.
+
+The backup identity can inspect but cannot respond to an alert assigned to the primary caregiver. Demo role activation is not production sign-in.
+
+`GET/POST /api/demo/session` reads/activates the local demo session. `POST /api/alerts/:id/events` accepts a unique eventId with action `acknowledge`, `record-action`, or `resolve`; the last two require text. The actor comes from the HttpOnly session cookie. Errors distinguish malformed input (400), missing/expired session (401), unassigned actor (403), missing alert (404), and transition/idempotency conflicts (409).
+
+Schema migrations run automatically on store initialization and preserve readings from the first milestone. Assessment parameters and limitations are recorded in [CARE_LOOP_PLAN.md](CARE_LOOP_PLAN.md).

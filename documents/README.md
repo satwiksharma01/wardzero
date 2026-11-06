@@ -13,11 +13,12 @@ All project documentation belongs in `documents/`, including plans, specificatio
 7. [Decisions and risks](DECISIONS.md): proposed decisions, unresolved questions, and mitigations.
 8. [Project workflow](WORKFLOW.md): Define → Plan → Build → Verify → Review → Ship for every slice.
 9. [Local setup](SETUP.md): run the application and its checks.
+10. [Care loop plan](CARE_LOOP_PLAN.md): assessment and caregiver-response rules and scope.
 
 ## Status and maintenance
 
 - Prepared: 7 November 2026, Asia/Kolkata.
-- Stage: first local application slice built; see [verification](verification/2026-11-07-first-slice.md). Public deployment remains pending.
+- Stage: local monitoring and care-response loop built; see [latest verification](verification/2026-11-07-care-loop.md). Public deployment remains pending.
 - Working project name: WardZero; subject to participant approval.
 - Participant: solo builder.
 - Update task status only after its acceptance criteria are verified.

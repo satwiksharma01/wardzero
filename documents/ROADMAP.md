@@ -99,4 +99,4 @@ If the full recovery mechanism cannot be completed, report its limitation honest
 
 ## Next action
 
-Building was authorized on 7 November 2026. Follow [WORKFLOW.md](WORKFLOW.md) for every slice. The first slice implements live simulator ingestion, persistent local storage, and the patient dashboard. Complete T04 assessment logic and proceed to T05/T06 alert ownership and caregiver response next. Deadline/registration and AI credentials remain open items in T00/T01; they do not block local reversible work.
+Building was authorized on 7 November 2026. Follow [WORKFLOW.md](WORKFLOW.md) for every slice. T02–T06 now implement live ingestion, persistence, explained demo assessment, alert ownership, and caregiver response for the fixed local patient. T07 AI note interpretation is next. Deadline/registration and AI credentials remain open items in T00/T01; they do not block independent local work. Gate B still requires actual AI note integration.

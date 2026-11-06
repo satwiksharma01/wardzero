@@ -1,0 +1,65 @@
+import { z } from "zod";
+import type { Assessment, SavedAssessment } from "./assessment";
+
+export const DEMO_ACTORS = {
+  primary: {
+    id: "caregiver-primary",
+    name: "Ananya Shah",
+    role: "Primary caregiver",
+  },
+  backup: {
+    id: "coordinator-backup",
+    name: "Ravi Menon",
+    role: "Backup coordinator",
+  },
+} as const;
+export type Actor = (typeof DEMO_ACTORS)[keyof typeof DEMO_ACTORS];
+export type DemoRole = keyof typeof DEMO_ACTORS;
+const identity = z
+  .string()
+  .min(1)
+  .max(80)
+  .regex(/^[a-zA-Z0-9_-]+$/);
+const text = z.string().trim().min(5).max(1000);
+export const careActionSchema = z.discriminatedUnion("action", [
+  z.object({ eventId: identity, action: z.literal("acknowledge") }).strict(),
+  z
+    .object({ eventId: identity, action: z.literal("record-action"), text })
+    .strict(),
+  z.object({ eventId: identity, action: z.literal("resolve"), text }).strict(),
+]);
+export type CareAction = z.infer<typeof careActionSchema>;
+export type AlertState =
+  "Open" | "Acknowledged" | "ActionRecorded" | "Resolved";
+export type AuditEvent = {
+  id: string;
+  action: string;
+  actorId: string;
+  actorName: string;
+  text: string;
+  occurredAt: string;
+};
+export type AlertEpisode = {
+  id: string;
+  severity: "Medium" | "High";
+  state: AlertState;
+  assignedActorId: string;
+  openedAt: string;
+  updatedAt: string;
+  assessment: SavedAssessment;
+  events: AuditEvent[];
+};
+export type CareSnapshot = {
+  currentAssessment: Assessment;
+  lastAssessment: SavedAssessment | null;
+  alerts: AlertEpisode[];
+};
+
+export class CareError extends Error {
+  constructor(
+    public readonly status: number,
+    message: string,
+  ) {
+    super(message);
+  }
+}

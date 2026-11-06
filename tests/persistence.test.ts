@@ -15,15 +15,34 @@ it("preserves readings and observation time after closing and reopening the data
     let store = new ReadingStore(db);
     await store.initialize();
     await store.ingest([makeReading(0, "stable", now, "persisted-event")], now);
+    const highTime = new Date(now.getTime() + 1000);
+    await store.ingest(
+      [makeReading(12, "deteriorating", highTime, "persisted-high")],
+      highTime,
+    );
+    const alert = (await store.snapshot(highTime)).care.alerts[0];
+    const { token } = await store.care.createSession("primary", highTime);
+    await store.care.recordEvent(
+      alert.id,
+      token,
+      { eventId: "persisted-ack", action: "acknowledge" },
+      highTime,
+    );
     await db.close();
     db = new PGlite(directory);
     store = new ReadingStore(db);
     await store.initialize();
-    const snapshot = await store.snapshot(new Date(now.getTime() + 90000));
-    expect(snapshot.total).toBe(1);
-    expect(snapshot.latest?.eventId).toBe("persisted-event");
-    expect(snapshot.latest?.observedAt).toBe(now.toISOString());
+    const snapshot = await store.snapshot(new Date(now.getTime() + 91000));
+    expect(snapshot.total).toBe(2);
+    expect(snapshot.latest?.eventId).toBe("persisted-high");
+    expect(snapshot.latest?.observedAt).toBe(highTime.toISOString());
     expect(snapshot.monitoring).toBe("Offline");
+    expect(snapshot.care.alerts[0].id).toBe(alert.id);
+    expect(snapshot.care.alerts[0].state).toBe("Acknowledged");
+    expect(snapshot.care.alerts[0].events.at(-1)?.id).toBe("persisted-ack");
+    expect((await store.care.actorForSession(token, highTime))?.id).toBe(
+      "caregiver-primary",
+    );
   } finally {
     await db.close();
     // Delete only the directory created by this test inside its verified workspace root.

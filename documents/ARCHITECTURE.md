@@ -1,6 +1,6 @@
 # Proposed architecture
 
-Status: Next.js/TypeScript/PostgreSQL stack confirmed by the participant on 7 November 2026. Local milestone uses filesystem-backed PGlite (embedded PostgreSQL) because no PostgreSQL server or Docker was installed. Hosted PostgreSQL, AI, roles, and scheduler remain planned. Actual versions are pinned in package.json/package-lock.json. See [ADR-001](decisions/001-local-postgres.md).
+Status: Next.js/TypeScript/PostgreSQL stack confirmed by the participant on 7 November 2026. Local milestone uses filesystem-backed PGlite (embedded PostgreSQL). Local assessment, alerts, demo sessions, and caregiver response are implemented. Hosted PostgreSQL, AI, production identity, and scheduler remain planned. Actual versions are pinned in package.json/package-lock.json. See [ADR-001](decisions/001-local-postgres.md) and [ADR-002](decisions/002-explained-care-loop.md).
 
 ## Default stack proposal
 
@@ -51,7 +51,7 @@ Store measurements with explicit units and preserve observation/receipt times se
 
 ## Proposed API contract
 
-Current local slice implements `POST /api/readings/batch` and `GET /api/patient` (one fixed synthetic patient). The latter returns the latest reading and a bounded 60-reading history in one snapshot transaction. Patient-scoped routing, assessment, notes, and care actions below remain planned.
+Current local slice implements `POST /api/readings/batch`, `GET /api/patient`, `GET/POST /api/demo/session`, and `POST /api/alerts/:id/events`. The snapshot includes a bounded 60-reading history, current/last assessment, and five recent alert episodes with their audit history. General patient-scoped routing, notes, and background escalation below remain planned.
 
 | Endpoint | Purpose and guarantees |
 |---|---|

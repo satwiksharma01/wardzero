@@ -14,14 +14,14 @@ import {
   Info,
   LayoutDashboard,
   Radio,
-  ShieldCheck,
-  Stethoscope,
   Thermometer,
   Waves,
   Wind,
 } from "lucide-react";
 import type { Snapshot } from "@/domain/readings";
 import { Simulator } from "./simulator";
+import { CareContext } from "./care-context";
+import { CareResponse } from "./care-response";
 import {
   metricDefinitions,
   timeLabel,
@@ -300,40 +300,18 @@ export function Dashboard() {
                 </span>
               </div>
             </section>
-            <section className="panel care-context">
-              <div className="section-heading">
-                <h2>Care context</h2>
-                <Stethoscope size={18} />
-              </div>
-              <span className="context-label">ASSESSMENT</span>
-              <div className="assessment-status">
-                <ShieldCheck size={20} />
-                <strong>Not assessed</strong>
-              </div>
-              <p>
-                Readings are available for observation. A clinical risk
-                assessment has not been generated.
-              </p>
-              <div className="context-divider" />
-              <span className="context-label">DATA CONFIDENCE</span>
-              <strong className="confidence-title">
-                {fresh ? "Fresh observations" : "Fresh evidence needed"}
-              </strong>
-              <p>
-                {fresh
-                  ? "The monitor has received a recent measurement."
-                  : "Check the last observation time before interpreting these readings."}
-              </p>
-              <div className="context-tip">
-                <Info size={15} />
-                <span>
-                  Monitoring status describes data freshness, not the patient’s
-                  condition.
-                </span>
-              </div>
-            </section>
+            <CareContext
+              care={snapshot?.care}
+              fresh={fresh}
+              disconnected={!!error}
+            />
           </div>
 
+          <CareResponse
+            alerts={snapshot?.care.alerts ?? []}
+            disconnected={!!error}
+            onChange={refresh}
+          />
           <Simulator onReading={refresh} />
           <section
             className="panel readings-panel"

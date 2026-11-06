@@ -9,7 +9,7 @@ test("simulator persists readings through the API and survives browser reload", 
   await expect(
     page.getByText("Awaiting first reading", { exact: true }),
   ).toBeVisible();
-  await expect(page.getByText("Not assessed", { exact: true })).toBeVisible();
+  await expect(page.getByTestId("concern-level")).toBeVisible();
   for (let index = 1; index <= 4; index++) {
     await page.getByRole("button", { name: "Send one reading" }).click();
     await expect(page.getByRole("status")).toContainText(
@@ -41,7 +41,7 @@ test("simulator persists readings through the API and survives browser reload", 
   await page.evaluate(() => document.fonts.ready);
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
   await page.screenshot({
-    path: "documents/verification/first-slice-desktop.png",
+    path: "documents/verification/care-loop-overview.png",
     fullPage: true,
   });
   expect(failures).toEqual([]);
@@ -53,7 +53,7 @@ test("compact screens retain care status and have no page overflow", async ({
   for (const width of [320, 768]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
-    await expect(page.getByText("Not assessed", { exact: true })).toBeVisible();
+    await expect(page.getByTestId("concern-level")).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Send one reading" }),
     ).toBeVisible();
@@ -65,7 +65,7 @@ test("compact screens retain care status and have no page overflow", async ({
     ).toBe(true);
     if (width === 320)
       await page.screenshot({
-        path: "documents/verification/first-slice-mobile.png",
+        path: "documents/verification/care-loop-mobile.png",
         fullPage: true,
       });
   }
@@ -108,4 +108,104 @@ test("API reports duplicate/conflict and rejects cross-origin mutations", async 
     data: { readings: [event] },
   });
   expect(blocked.status()).toBe(403);
+});
+
+test("deterioration opens one alert and the assigned caregiver completes a persistent response", async ({
+  page,
+  context,
+}) => {
+  const failures: string[] = [];
+  page.on("pageerror", (error) => failures.push(error.message));
+  await page.goto("/");
+  await page
+    .getByRole("combobox", { name: "Patient scenario" })
+    .selectOption("deteriorating");
+  for (let index = 1; index <= 13; index++) {
+    await page.getByRole("button", { name: "Send one reading" }).click();
+    await expect(page.getByRole("status")).toContainText(
+      `Reading ${index} stored`,
+    );
+  }
+  await expect(page.getByTestId("concern-level")).toHaveText("High");
+  await expect(page.getByText("1 active", { exact: true })).toBeVisible();
+  await page.setViewportSize({ width: 320, height: 900 });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true);
+  await expect(
+    page.getByRole("button", { name: "Acknowledge alert" }),
+  ).toBeVisible();
+  await page.screenshot({
+    path: "documents/verification/care-loop-alert-mobile.png",
+    fullPage: true,
+  });
+  await page.setViewportSize({ width: 1440, height: 1050 });
+  const snapshot = await (await context.request.get("/api/patient")).json();
+  const alertId = snapshot.care.alerts[0].id;
+  const actionUrl = `/api/alerts/${alertId}/events`;
+  const headers = { Origin: "http://127.0.0.1:3100" };
+  const anonymous = await context.request.post(actionUrl, {
+    headers,
+    data: { eventId: "anonymous-browser", action: "acknowledge" },
+  });
+  expect(anonymous.status()).toBe(401);
+  await page
+    .getByRole("combobox", { name: "Demo identity" })
+    .selectOption("backup");
+  await page.getByRole("button", { name: "Activate identity" }).click();
+  await expect(
+    page.getByText("Ravi Menon · Backup coordinator", { exact: true }),
+  ).toBeVisible();
+  const unassigned = await context.request.post(actionUrl, {
+    headers,
+    data: { eventId: "wrong-actor-browser", action: "acknowledge" },
+  });
+  expect(unassigned.status()).toBe(403);
+  await page
+    .getByRole("combobox", { name: "Demo identity" })
+    .selectOption("primary");
+  await page.getByRole("button", { name: "Activate identity" }).click();
+  await expect(
+    page.getByRole("button", { name: "Acknowledge alert" }),
+  ).toBeEnabled();
+  await page.getByRole("button", { name: "Acknowledge alert" }).click();
+  await expect(
+    page.getByLabel("Caregiver action", { exact: true }),
+  ).toBeVisible();
+  await page
+    .getByLabel("Caregiver action", { exact: true })
+    .fill("Contacted the care coordinator and recorded a simulated review.");
+  await page
+    .getByRole("button", { name: "Record action", exact: true })
+    .click();
+  await page
+    .getByLabel("Resolution reason", { exact: true })
+    .fill(
+      "The coordinator reviewed this synthetic scenario and documented the outcome.",
+    );
+  await page
+    .getByRole("button", { name: "Resolve alert", exact: true })
+    .click();
+  await expect(page.getByText("0 active", { exact: true })).toBeVisible();
+  await expect(page.getByTestId("concern-level")).toHaveText("High");
+  await page.reload();
+  await expect(
+    page.getByText(
+      "Response completed. The current concern above is assessed separately.",
+    ),
+  ).toBeVisible();
+  await expect(
+    page.getByText(
+      "Contacted the care coordinator and recorded a simulated review.",
+      { exact: true },
+    ),
+  ).toBeVisible();
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  await page.screenshot({
+    path: "documents/verification/care-loop-completed.png",
+    fullPage: true,
+  });
+  expect(failures).toEqual([]);
 });

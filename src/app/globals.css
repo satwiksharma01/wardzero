@@ -1062,3 +1062,275 @@ tr:last-child td {
     flex-basis: 100%;
   }
 }
+
+/* Explained concern and accountable care response. */
+.assessment-reason + .assessment-reason {
+  margin-top: 8px;
+}
+.concern-low {
+  color: #26664f;
+  background: #edf7ef;
+}
+.concern-medium {
+  color: #80551c;
+  background: #fff3dd;
+}
+.concern-high {
+  color: #9a3e38;
+  background: #fff0ed;
+}
+.concern-unknown {
+  color: #53675d;
+  background: #f0f3ef;
+}
+.assessment-status {
+  padding: 9px;
+  border-radius: 6px;
+}
+.last-assessment {
+  padding-top: 10px;
+  font-size: 10px !important;
+}
+.evidence-details {
+  font-size: 10px;
+  margin-top: 12px;
+  overflow-wrap: anywhere;
+}
+.evidence-details summary,
+.audit-history summary {
+  cursor: pointer;
+  color: var(--teal);
+  padding: 7px 0;
+  font-weight: 550;
+}
+.evidence-details small {
+  display: block;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.evidence-details strong {
+  display: block;
+  margin-top: 9px;
+  font-size: 9px;
+}
+.evidence-details ul {
+  padding-left: 16px;
+  line-height: 1.7;
+}
+.evidence-details code {
+  font-size: 9px;
+}
+.response-panel {
+  margin-top: 22px;
+}
+.section-description {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 7px;
+}
+.demo-identity {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: #f5f8f4;
+  border: 1px solid var(--border);
+  padding: 14px;
+  border-radius: 8px;
+  margin: 19px 0;
+}
+.demo-identity > svg {
+  color: var(--teal);
+}
+.demo-identity > div {
+  margin-right: auto;
+}
+.demo-identity strong {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+}
+.demo-identity small {
+  display: block;
+  font-size: 9px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.care-empty {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 0 2px;
+  color: var(--muted);
+}
+.care-empty strong {
+  font-size: 12px;
+  color: var(--ink);
+  font-weight: 550;
+}
+.care-empty p {
+  font-size: 11px;
+  margin-top: 5px;
+}
+.alert-card {
+  border: 1px solid #e5d8c5;
+  border-radius: 9px;
+  padding: 18px;
+  margin-top: 15px;
+  background: #fffcf6;
+}
+.alert-card.resolved {
+  border-color: var(--border);
+  background: #fcfdfb;
+}
+.alert-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.alert-title > strong {
+  font-size: 12px;
+  font-weight: 600;
+}
+.concern-badge {
+  font-size: 10px;
+  font-weight: 650;
+  padding: 5px 8px;
+  border-radius: 5px;
+}
+.alert-card time {
+  font-size: 9px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.alert-owner {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 10px;
+}
+.alert-reasons {
+  padding-left: 18px;
+  font-size: 12px;
+  line-height: 1.8;
+  margin-bottom: 7px;
+}
+.care-action-form {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--border);
+  margin-top: 14px;
+  padding-top: 15px;
+}
+.care-action-form label {
+  font-size: 11px;
+  font-weight: 550;
+}
+.care-action-form textarea {
+  resize: vertical;
+  min-height: 90px;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccd8ce;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 12px;
+  background: white;
+  color: var(--ink);
+  line-height: 1.6;
+}
+.care-action-form textarea:focus-visible {
+  outline: 3px solid #d19845;
+  outline-offset: 3px;
+}
+.assignment-hint,
+.resolution-note {
+  font-size: 11px;
+  color: var(--muted);
+}
+.resolution-note {
+  margin-top: 15px;
+}
+.audit-history {
+  border-top: 1px solid var(--border);
+  margin-top: 16px;
+  padding-top: 8px;
+  font-size: 10px;
+}
+.audit-history ol {
+  padding: 0;
+  list-style: none;
+  margin: 10px 0 0;
+}
+.audit-history li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  position: relative;
+  padding-bottom: 15px;
+}
+.audit-history li:last-child {
+  padding-bottom: 0;
+}
+.audit-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--teal);
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.audit-history li > div {
+  flex: 1;
+  min-width: 0;
+}
+.audit-history strong {
+  font-size: 10px;
+  font-weight: 650;
+}
+.audit-action {
+  font-size: 9px;
+  color: var(--muted);
+  margin-left: 9px;
+}
+.audit-history p {
+  font-size: 11px;
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+}
+.care-action-form .error-text {
+  font-size: 11px;
+}
+@media (max-width: 1100px) {
+  .demo-identity {
+    flex-wrap: wrap;
+  }
+  .demo-identity > div {
+    flex: 1;
+    min-width: 200px;
+  }
+}
+@media (max-width: 600px) {
+  .demo-identity > div {
+    min-width: 0;
+    flex-basis: calc(100% - 50px);
+  }
+  .demo-identity select,
+  .demo-identity button {
+    width: 100%;
+  }
+  .alert-card {
+    padding: 13px;
+  }
+  .audit-history time {
+    font-size: 8px;
+  }
+  .audit-action {
+    display: block;
+    margin: 3px 0;
+  }
+  .alert-card > .section-heading {
+    align-items: flex-start;
+  }
+}

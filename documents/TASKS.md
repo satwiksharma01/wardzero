@@ -1,6 +1,6 @@
 # Implementation checklist
 
-Status: first local slice implemented; T00/T01 partially complete, T02/T03 complete, T04 freshness started. Budgets are in [ROADMAP.md](ROADMAP.md). Follow [WORKFLOW.md](WORKFLOW.md) for each slice. Keep work in focused increments and record actual evidence.
+Status: T02–T06 implemented for the fixed local demo. T00/T01 remain partially complete. Production identity and run isolation remain prerequisites for later hosting/demo reset. Budgets are in [ROADMAP.md](ROADMAP.md). Follow [WORKFLOW.md](WORKFLOW.md) for each slice.
 
 ## T00 — Confirm participation and constraints
 
@@ -42,27 +42,27 @@ Dependencies: T02. Verification: integration test with database plus manual simu
 
 ## T04 — Implement concern and freshness
 
-Freshness and time ordering are implemented; concern scoring is still pending. The UI explicitly says Not assessed.
+Versioned synthetic rules, evidence-linked concern, last stored assessment, and independent freshness are implemented. Rule assumptions are in CARE_LOOP_PLAN.md; no clinical validation is claimed.
 
-- [ ] Version configurable demo rules for trends, minimum evidence, and freshness eligibility.
-- [ ] Produce evidence-linked Low/Medium/High or Unknown independently of monitoring status.
-- [ ] Keep delayed history from masquerading as current data.
+- [x] Version configurable demo rules for trends, minimum evidence, and freshness eligibility.
+- [x] Produce evidence-linked Low/Medium/High or Unknown independently of monitoring status.
+- [x] Keep delayed history from masquerading as current data.
 
 Dependencies: T03. Verification: stable, deteriorating, missing, old, and future-data tests with fixed clock. Proposed files: assessment engine, freshness module, assessment persistence, status UI, tests. Scope: medium.
 
 ## T05 — Open one alert episode
 
-- [ ] Persist one active episode per patient/run/type and update severity with audit history.
-- [ ] Link alert to assessment evidence and owner.
-- [ ] Prevent duplicates under ingestion retry/concurrency.
+- [x] Persist one active patient-concern episode in the fixed local run and update severity with audit history. General run isolation and monitoring-alert types remain later work.
+- [x] Link alert to assessment evidence and owner.
+- [x] Prevent duplicates under ingestion retry/concurrency.
 
 Dependencies: T04. Verification: retry and concurrent-request integration tests; inspect evidence in UI. Proposed files: alert service/repository, schema migration, alert panel, tests. Scope: medium.
 
 ## T06 — Record authorized caregiver response
 
-- [ ] Implement acknowledgement, action recording, and resolution with transition validation.
-- [ ] Enforce role/patient access on server and persist actor/time/reason.
-- [ ] Preserve separate acknowledgement and resolution semantics.
+- [x] Implement acknowledgement, action recording, and resolution with transition validation.
+- [x] Enforce the fixed local patient's assigned demo caregiver on the server and persist actor/time/reason. Real production sign-in remains pending.
+- [x] Preserve separate acknowledgement and resolution semantics.
 
 Dependencies: T05. Verification: complete journey, invalid transition, unauthorized actor, and duplicate action retry. Proposed files: authorization adapter, care event route/service, response UI, tests. Scope: medium; separate auth setup if necessary.
 

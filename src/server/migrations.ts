@@ -1,0 +1,58 @@
+import type { PGlite } from "@electric-sql/pglite";
+
+const migrations = [
+  {
+    version: 1,
+    sql: `
+    CREATE TABLE IF NOT EXISTS readings (
+      event_id TEXT PRIMARY KEY, observed_at TIMESTAMPTZ NOT NULL,
+      received_at TIMESTAMPTZ NOT NULL, payload JSONB NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS readings_time ON readings (observed_at DESC, event_id DESC);
+  `,
+  },
+  {
+    version: 2,
+    sql: `
+    CREATE TABLE assessments (
+      sequence BIGSERIAL PRIMARY KEY, id TEXT UNIQUE NOT NULL, payload JSONB NOT NULL
+    );
+    CREATE TABLE care_alerts (
+      id TEXT PRIMARY KEY, patient_id TEXT NOT NULL, run_id TEXT NOT NULL DEFAULT 'local',
+      severity TEXT NOT NULL CHECK (severity IN ('Medium','High')),
+      state TEXT NOT NULL CHECK (state IN ('Open','Acknowledged','ActionRecorded','Resolved')),
+      assigned_actor_id TEXT NOT NULL, opened_at TIMESTAMPTZ NOT NULL, updated_at TIMESTAMPTZ NOT NULL,
+      evidence_at TIMESTAMPTZ NOT NULL, assessment JSONB NOT NULL
+    );
+    CREATE UNIQUE INDEX one_active_episode ON care_alerts (patient_id, run_id) WHERE state <> 'Resolved';
+    CREATE TABLE care_events (
+      sequence BIGSERIAL PRIMARY KEY, id TEXT UNIQUE NOT NULL, alert_id TEXT NOT NULL REFERENCES care_alerts(id),
+      actor_id TEXT NOT NULL, actor_name TEXT NOT NULL, action TEXT NOT NULL,
+      text TEXT NOT NULL, occurred_at TIMESTAMPTZ NOT NULL, request JSONB
+    );
+    CREATE INDEX care_events_alert ON care_events (alert_id, sequence);
+    CREATE TABLE demo_sessions (
+      token_hash TEXT PRIMARY KEY, actor_key TEXT NOT NULL, expires_at TIMESTAMPTZ NOT NULL
+    );
+  `,
+  },
+];
+
+export async function migrate(db: PGlite) {
+  await db.exec(
+    "CREATE TABLE IF NOT EXISTS schema_migrations (version INT PRIMARY KEY, applied_at TIMESTAMPTZ NOT NULL DEFAULT now())",
+  );
+  for (const migration of migrations) {
+    await db.transaction(async (tx) => {
+      const existing = await tx.query(
+        "SELECT version FROM schema_migrations WHERE version = $1",
+        [migration.version],
+      );
+      if (existing.rows.length) return;
+      await tx.exec(migration.sql);
+      await tx.query("INSERT INTO schema_migrations(version) VALUES($1)", [
+        migration.version,
+      ]);
+    });
+  }
+}
