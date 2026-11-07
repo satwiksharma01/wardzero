@@ -4,9 +4,7 @@
 
 WardZero connects simulated vital signs and English caregiver observations to explained concern, an assigned alert and a recorded human response. It also demonstrates what happens when sensor connectivity fails or nobody acknowledges an alert.
 
-[Watch the three-minute demo](demo/wardzero-demo.mp4) · [Video captions](demo/wardzero-demo.srt) · [Quick start](#quick-start) · [Architecture](#architecture) · [Testing](#testing)
-
-![WardZero blue workspace](demo/wardzero-cover.png)
+[Quick start](#quick-start) · [Architecture](#architecture) · [Testing](#testing)
 
 All patients, caregivers, readings and notes are synthetic. This is an engineering prototype, with no clinical validation or demonstrated 24–48-hour prediction.
 
