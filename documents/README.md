@@ -24,6 +24,7 @@ All project documentation belongs in `documents/`, including plans, specificatio
 - Prepared: 7 November 2026, Asia/Kolkata.
 - Stage: the core local care loop is implemented. Source and video are in the [public repository](https://github.com/satwiksharma01/wardzero), following the participant's publication authorization. The saved five-step form is mapped in [field-ready answers](submission/FORM_ANSWERS.md). The [improvement plan](IMPROVEMENT_PLAN.md) adds broader [live note evaluation](verification/NOTE_EVALUATION.md), [controlled early warning](verification/EARLY_WARNING.md), evidence clarity, and optional default-disabled email. Final Wooble submission, exact cutoff/timezone, and receipt remain pending.
 - Working project name: WardZero; subject to participant approval.
+- Latest interface: [calm clinical refresh](verification/2026-11-07-ui-refresh.md), application revision `0f0547e`, with shared shadcn controls and responsive care/observation work areas. Installed design resources are recorded in the verification manifest.
 - Participant: solo builder.
 - Update task status only after its acceptance criteria are verified.
 - Record verification results in this folder with date, command/scenario, result, and evidence location. Planned checks are not passed checks.

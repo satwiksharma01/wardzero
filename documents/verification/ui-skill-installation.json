@@ -1,0 +1,130 @@
+{
+  "installedSkillCount": 19,
+  "skills": [
+    {
+      "name": "impeccable",
+      "installed": true,
+      "skillSHA256": "fab04b31f946573b00a8559db1fc070f8ea5825254d491c2b13156e5661a86d7",
+      "source": "https://github.com/pbakaus/impeccable"
+    },
+    {
+      "name": "ui-ux-pro-max",
+      "installed": true,
+      "skillSHA256": "9aa50bd44076db28624ea976056d915905ab9357748f90263a004fa0ef087147",
+      "source": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill"
+    },
+    {
+      "name": "animate-expo",
+      "installed": true,
+      "skillSHA256": "9a01a91701e6563c67677dde6b66ab30f066a5341d42c21a90ba51d99679274a",
+      "source": "https://github.com/emilkowalski/skills/tree/main/skills/animate-expo"
+    },
+    {
+      "name": "animate",
+      "installed": true,
+      "skillSHA256": "39138996033e0dbe53e73217514116eaeca774bae84a0687c80d445a4e0cc3a6",
+      "source": "https://github.com/emilkowalski/skills/tree/main/skills/animate"
+    },
+    {
+      "name": "animation-performance",
+      "installed": true,
+      "skillSHA256": "6c60f45ab416ff3f7d7765a5427beead77fab0d82487fe610d2a298397558d0a",
+      "source": "https://github.com/emilkowalski/skills/tree/main/skills/animation-performance"
+    },
+    {
+      "name": "animation-vocabulary",
+      "installed": true,
+      "skillSHA256": "40d2b27adfdfeb0570a9f20e7d0255109d9233c50603878bcd0dcd04c923fd94",
+      "source": "https://github.com/emilkowalski/skills/tree/main/skills/animation-vocabulary"
+    },
+    {
+      "name": "apple-design",
+      "installed": true,
+      "skillSHA256": "77bb63b7043bb93aca2ff4ab040c249484eef35682bb6ff7163433c31d30adc7",
+      "source": "https://github.com/emilkowalski/skills/tree/main/skills/apple-design"
+    },
+    {
+      "name": "ask-sonner",
+      "installed": true,
+      "skillSHA256": "39f3ee185b3aa2cf70a689052ff078953ce7ba5915ed7a9391d232e9d4dcf57f",
+      "source": "https://github.com/emilkowalski/skills/tree/main/skills/ask-sonner"
+    },
+    {
+      "name": "break-ui",
+      "installed": true,
+      "skillSHA256": "e7eec1d70ac56a04255e9c0dbe98084ea3d544cc04aaad34f32c95d6fa9dff5e",
+      "source": "https://github.com/emilkowalski/skills/tree/main/skills/break-ui"
+    },
+    {
+      "name": "choreograph",
+      "installed": true,
+      "skillSHA256": "815c7d889230bafc72c03bb0769087aeede310130e8795c7949b3e3a1684e464",
+      "source": "https://github.com/emilkowalski/skills/tree/main/skills/choreograph"
+    },
+    {
+      "name": "emil-design-eng",
+      "installed": true,
+      "skillSHA256": "965cc3108047a1f68e504977ae7816c66115b202a32e7509c0b8305314839c54",
+      "source": "https://github.com/emilkowalski/skills/tree/main/skills/emil-design-eng"
+    },
+    {
+      "name": "find-animation-opportunities",
+      "installed": true,
+      "skillSHA256": "d52a377819b84a71930f0c822cfe2849f40301605a2d5c7eccbfa3b257700df2",
+      "source": "https://github.com/emilkowalski/skills/tree/main/skills/find-animation-opportunities"
+    },
+    {
+      "name": "improve-animations",
+      "installed": true,
+      "skillSHA256": "73962447464433476343e2c12cd08ab39cc99a9e5f3c118c5fb54ed897574ef6",
+      "source": "https://github.com/emilkowalski/skills/tree/main/skills/improve-animations"
+    },
+    {
+      "name": "mobile-native",
+      "installed": true,
+      "skillSHA256": "888b7651d66d66dbac4e72b7c554638eb19bd971d686d6cbdf030a5ef3788f55",
+      "source": "https://github.com/emilkowalski/skills/tree/main/skills/mobile-native"
+    },
+    {
+      "name": "pick-ui-library",
+      "installed": true,
+      "skillSHA256": "675fdce308683256ed617351a9b74d23457a5fbd0a562d9831b9c764b8c5e682",
+      "source": "https://github.com/emilkowalski/skills/tree/main/skills/pick-ui-library"
+    },
+    {
+      "name": "prototype",
+      "installed": true,
+      "skillSHA256": "bba39c955eb1871c5a02733976ceec5d0324198e0812e667604756489c89f7b9",
+      "source": "https://github.com/emilkowalski/skills/tree/main/skills/prototype"
+    },
+    {
+      "name": "remove-animations",
+      "installed": true,
+      "skillSHA256": "dea95b7a7ef81cba312c7f70a3c5c67d7e06a287cb16b16d2f90f2b1fb0afff9",
+      "source": "https://github.com/emilkowalski/skills/tree/main/skills/remove-animations"
+    },
+    {
+      "name": "review-animations",
+      "installed": true,
+      "skillSHA256": "5f9fb98b69cace7107af8b393a4196fd42fa42d98bce0e5afc1f866ff3b8a41c",
+      "source": "https://github.com/emilkowalski/skills/tree/main/skills/review-animations"
+    },
+    {
+      "name": "write-swift",
+      "installed": true,
+      "skillSHA256": "16a4b6adb74e338e55e704ce5753ad54d825438b8a63930eeaede9f3c04c9447",
+      "source": "https://github.com/emilkowalski/skills/tree/main/skills/write-swift"
+    }
+  ],
+  "shadcnCLI": "4.23.0",
+  "shadcnComponents": [
+    "button",
+    "badge",
+    "textarea",
+    "field",
+    "label",
+    "separator",
+    "skeleton"
+  ],
+  "note": "Apply platform-relevant web guidance; installing Expo/Swift tools does not imply using those platforms."
+}

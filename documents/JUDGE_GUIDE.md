@@ -4,6 +4,8 @@
 
 WardZero connects simulated home-care vitals and English caregiver observations to explained concern, an assigned alert, and a recorded human response. Its focus is continuity when connectivity fails or nobody acknowledges an alert.
 
+The [current UI refresh](verification/2026-11-07-ui-refresh.md) puts care response and observations alongside one another on wide screens and preserves a stacked keyboard-accessible flow on phones. Measurement, freshness, and care response remain distinct states.
+
 ## See the working chain
 
 1. Follow [SETUP.md](SETUP.md). Start the app, activate the primary caregiver, and create a new demo run.

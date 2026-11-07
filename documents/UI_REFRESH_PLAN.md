@@ -10,12 +10,12 @@ UI/UX Pro Max's initial broad search returned a dark operations landing-page pat
 
 ## Implementation plan
 
-- [ ] Add Tailwind build support and shadcn source primitives without replacing app configuration or resetting the existing CSS. Record installed skill paths/versions.
-- [ ] Refine dashboard navigation, patient header, measurement hierarchy, and care/tool composition. Adopt shared buttons, field/textarea and badges while preserving accessible control names and state ownership.
-- [ ] Replace scattered visual values with coherent tokens and responsive rules, using no new scoring/provider behavior.
-- [ ] Verify unit/type/lint/build, all browser journeys and axe at320/768/1440. Inspect empty/complete/failed/stale/mobile renders; run Impeccable detector and independent code review. Fix material regressions.
+- [x] Add Tailwind build support and shadcn source primitives without replacing app configuration or resetting the existing CSS. Record installed skill paths/versions.
+- [x] Refine dashboard navigation, patient header, measurement hierarchy, and care/tool composition. Adopt shared buttons, field/textarea and badges while preserving accessible control names and state ownership.
+- [x] Replace scattered visual values with coherent tokens and responsive rules, using no new scoring/provider behavior.
+- [x] Verify unit/type/lint/build, all browser journeys and axe at 320/768/1440. Inspect empty/complete/failed/stale/mobile renders; run Impeccable detector and independent code review. Fix material regressions.
 - [ ] Commit and publish within existing authorization, restore local preview, refresh submission visuals/video/source export or state exact artifact revision if refresh is blocked. No Wooble submission is inferred.
 
 ## Verification strategy
 
-The existing73behavior checks cover the unchanged care logic. Existing real-Chrome journeys protect sessions/origin, note failure and contributions, lost acknowledgements, recovery, run isolation and response transitions. Extend the release journey for new section navigation and layout if needed; don't add tests mirroring CSS. Fresh browser screenshots and the retained previous screenshots provide visual comparison. AI extraction is unchanged, so avoid rerunning the40-case provider suite for a presentation change.
+The existing 73 behavior checks cover the unchanged care logic. Existing real-Chrome journeys protect sessions/origin, note failure and contributions, lost acknowledgements, recovery, run isolation and response transitions. Extend the release journey for new section navigation and layout if needed; don't add tests mirroring CSS. Fresh browser screenshots and the retained previous screenshots provide visual comparison. AI extraction is unchanged, so avoid rerunning the40-case provider suite for a presentation change.

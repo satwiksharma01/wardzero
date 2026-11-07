@@ -1,8 +1,8 @@
 {
-  "verifiedAt": "2026-11-07T12:07:27.676777+00:00",
-  "sourceCandidateFiles": 183,
+  "verifiedAt": "2026-11-07T14:15:50.194257+00:00",
+  "sourceCandidateFiles": 199,
   "configuredKeyAndTokenPatternFileHits": [],
-  "gitObjectsExamined": 578,
+  "gitObjectsExamined": 671,
   "gitBlobHits": [],
   "secretValuesPrinted": false
 }

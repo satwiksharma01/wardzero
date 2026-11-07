@@ -100,7 +100,7 @@ The prototype remains local, single-patient, and synthetic. Its engineering thre
 
 These describe prototype evidence, not clinical impact. The story records the measurement setup and baseline.
 
-**Technologies/tools:** Next.js, TypeScript, React, PostgreSQL, SQL, Gemini, IndexedDB, Zod, Git, Playwright.
+**Technologies/tools:** Next.js, TypeScript, React, PostgreSQL, SQL, Gemini, IndexedDB, Zod, Tailwind CSS, shadcn/ui, Git, Playwright.
 
 **GitHub:** https://github.com/satwiksharma01/wardzero
 

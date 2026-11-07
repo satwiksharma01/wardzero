@@ -1,0 +1,77 @@
+{
+  "verifiedAt": "2026-11-07T14:07:56.585105+00:00",
+  "applicationRevision": "0f0547e1a5d9af650bbba29106aad585228a7438",
+  "previousApplicationRevision": "d0bc83cc96eb5a1d7d5abfc76229abd33d22629e",
+  "automatedTests": 73,
+  "testFiles": 21,
+  "chromeJourneys": 8,
+  "chromeDurationSeconds": 46.3,
+  "accessibility": {
+    "verifiedAt": "2026-11-07T14:01:56.480Z",
+    "reports": [
+      {
+        "width": 320,
+        "violations": []
+      },
+      {
+        "width": 768,
+        "violations": []
+      },
+      {
+        "width": 1440,
+        "violations": []
+      }
+    ]
+  },
+  "advisories": 0,
+  "impeccableDetectorFindings": [],
+  "independentReview": "approved; no material regressions; reduced-motion suggestion applied",
+  "domainServerClientChanges": [],
+  "notesExtractionUnchanged": true,
+  "humanCaregiverTesting": "unperformed",
+  "cloudEmailDelivery": "unverified",
+  "woobleSubmitted": false,
+  "recording": {
+    "recordedAt": "2026-11-07T14:09:42.899Z",
+    "applicationRevision": "0f0547e1a5d9af650bbba29106aad585228a7438",
+    "checkpoints": [
+      {
+        "at": 26,
+        "concern": "Low",
+        "readings": 3
+      },
+      {
+        "at": 46,
+        "concern": "Medium",
+        "liveAI": true
+      },
+      {
+        "at": 86,
+        "state": "Resolved",
+        "currentConcern": "High"
+      },
+      {
+        "at": 127,
+        "persistedQueue": 3,
+        "remainingQueue": 0,
+        "stored": 6,
+        "clockAdvancedSeconds": 165
+      },
+      {
+        "at": 157,
+        "escalatedInApp": true,
+        "backupAcknowledged": true
+      }
+    ],
+    "synthetic": true,
+    "aiMocked": false
+  },
+  "video": {
+    "bytes": 9934394,
+    "sha256": "240f349e679b4bf6efaa1eb68af2d3dad6cd93b3cb78a2e80999e912f01c6fba",
+    "durationSeconds": 180,
+    "width": 1920,
+    "height": 1080,
+    "chromePlaybackAndSeek": "passed"
+  }
+}
