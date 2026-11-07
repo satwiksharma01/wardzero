@@ -10,7 +10,7 @@
 | Source package | Final ZIP and its revision/hash are recorded in local `submission/ARTIFACTS.json` after export. |
 | Demo | Local `submission/wardzero-demo.mp4`, 180 seconds, 1920×1080; captions included. |
 | Repository URL | [satwiksharma01/wardzero](https://github.com/satwiksharma01/wardzero), verified **PUBLIC** after participant authorization; default branch `main`. |
-| Remote video | [Public GitHub video file](https://github.com/satwiksharma01/wardzero/blob/main/documents/submission/wardzero-demo.mp4). Refreshed UI0f0547e encode: 9,934,394 bytes, SHA256 `240f349e679b4bf6efaa1eb68af2d3dad6cd93b3cb78a2e80999e912f01c6fba`. Anonymous verification is recorded in verification/ui-public-handoff.json after publication. |
+| Remote video | [Public GitHub video file](https://github.com/satwiksharma01/wardzero/blob/main/documents/submission/wardzero-demo.mp4). Refreshed UI 0f0547e encode: 9,934,394 bytes, SHA256 `240f349e679b4bf6efaa1eb68af2d3dad6cd93b3cb78a2e80999e912f01c6fba`. Anonymous HTTP200/hash verification is recorded in verification/ui-public-handoff.json. |
 | Public interactive demo | Not deployed; loopback preview only. Public brief does not establish a hosting requirement. |
 | Closing date | Saved page displays 8 November 2026; exact cutoff/timezone unverified. |
 | Form and declarations | Five participant-supplied saved MHTML steps were inspected; field-ready answers and upload limits are in submission/FORM_ANSWERS.md. Current authenticated server state, final declarations, and cutoff/timezone remain unverified. No live draft save is claimed. |

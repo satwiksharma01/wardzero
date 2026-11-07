@@ -14,7 +14,7 @@ UI/UX Pro Max's initial broad search returned a dark operations landing-page pat
 - [x] Refine dashboard navigation, patient header, measurement hierarchy, and care/tool composition. Adopt shared buttons, field/textarea and badges while preserving accessible control names and state ownership.
 - [x] Replace scattered visual values with coherent tokens and responsive rules, using no new scoring/provider behavior.
 - [x] Verify unit/type/lint/build, all browser journeys and axe at 320/768/1440. Inspect empty/complete/failed/stale/mobile renders; run Impeccable detector and independent code review. Fix material regressions.
-- [ ] Commit and publish within existing authorization, restore local preview, refresh submission visuals/video/source export or state exact artifact revision if refresh is blocked. No Wooble submission is inferred.
+- [x] Commit and publish within existing authorization, restore local preview, refresh submission visuals/video/source export or state exact artifact revision if refresh is blocked. No Wooble submission is inferred.
 
 ## Verification strategy
 
