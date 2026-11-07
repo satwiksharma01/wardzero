@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { Assessment, SavedAssessment } from "./assessment";
 import type { CareNote } from "./notes";
+import type { EmailDelivery } from "./notifications";
 
 export const DEMO_ACTORS = {
   primary: {
@@ -41,6 +42,7 @@ export type AuditEvent = {
   occurredAt: string;
 };
 export type AlertEpisode = {
+  emailDelivery?: EmailDelivery | null;
   id: string;
   severity: "Medium" | "High";
   state: AlertState;

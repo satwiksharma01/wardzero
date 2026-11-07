@@ -11,6 +11,7 @@ import { readHistory } from "./reading-history";
 import { readNotes } from "./note-history";
 import { fuseNotes } from "../domain/notes";
 import { acknowledgementDelayMs } from "./escalation";
+import { readEmailDeliveries } from "./notification-store";
 
 type AlertRow = {
   id: string;
@@ -135,6 +136,10 @@ export async function readCare(
     "SELECT * FROM care_alerts WHERE run_id=$1 ORDER BY (state = 'Resolved'), opened_at DESC, id DESC LIMIT 5",
     [runId],
   );
+  const deliveries = await readEmailDeliveries(
+    tx,
+    rows.rows.map((row) => row.id),
+  );
   const events = await tx.query<{
     id: string;
     alert_id: string;
@@ -153,6 +158,7 @@ export async function readCare(
     notes,
     workerLastTickAt: heartbeat.rows[0]?.last_tick_at.toISOString() ?? null,
     alerts: rows.rows.map((row) => ({
+      emailDelivery: deliveries.get(row.id) ?? null,
       id: row.id,
       severity: row.severity,
       state: row.state,

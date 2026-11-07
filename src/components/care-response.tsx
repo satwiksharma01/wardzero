@@ -10,6 +10,17 @@ import {
   type DemoRole,
 } from "@/domain/care";
 import { timeLabel } from "./vital-chart";
+import type { EmailDeliveryState } from "@/domain/notifications";
+
+const deliveryLabels: Record<EmailDeliveryState, string> = {
+  Disabled: "Disabled; no send queued",
+  Pending: "Queued",
+  Sending: "Request in progress",
+  Retry: "Awaiting retry",
+  Accepted: "Provider accepted; delivery and reading unverified",
+  Failed: "Not confirmed; retries stopped",
+  Cancelled: "Cancelled before confirmation",
+};
 
 async function readActor(): Promise<Actor | null> {
   const response = await fetch("/api/demo/session", { cache: "no-store" });
@@ -73,6 +84,7 @@ export function CareResponse({
     <section
       className="panel response-panel"
       id="care-response"
+      tabIndex={-1}
       aria-labelledby="response-title"
     >
       <div className="section-heading">
@@ -94,7 +106,7 @@ export function CareResponse({
         {workerLastTickAt
           ? `Deadline worker checked ${timeLabel(workerLastTickAt)}`
           : "Waiting for deadline worker"}{" "}
-        · In-app escalation only
+        · In-app escalation; optional email is tracked separately
       </p>
       <div className="demo-identity">
         <UserCheck size={18} />
@@ -255,6 +267,29 @@ function AlertCard({
         <p className="deadline-label">
           Acknowledgement recorded · deadline timer stopped
         </p>
+      )}
+      {alert.escalatedAt && (
+        <div className="email-delivery" data-testid="email-delivery">
+          <strong>
+            Optional email:{" "}
+            {alert.emailDelivery
+              ? deliveryLabels[alert.emailDelivery.state]
+              : "No attempt recorded"}
+          </strong>
+          {alert.emailDelivery && (
+            <small>
+              {alert.emailDelivery.attempts} attempt
+              {alert.emailDelivery.attempts === 1 ? "" : "s"}
+              {alert.emailDelivery.nextAttemptAt
+                ? ` · Next try ${timeLabel(alert.emailDelivery.nextAttemptAt)} (wall time)`
+                : ""}
+              {alert.emailDelivery.providerAcceptedAt
+                ? ` · Acceptance recorded ${timeLabel(alert.emailDelivery.providerAcceptedAt)} (wall time)`
+                : ""}
+              . Caregiver acknowledgement is recorded separately.
+            </small>
+          )}
+        </div>
       )}
       <ul className="alert-reasons">
         {alert.assessment.reasons.map((reason) => (

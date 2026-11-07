@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import type { PGlite } from "@electric-sql/pglite";
 import { getRun, runTime } from "./run-context";
 import { DEMO_ACTORS } from "../domain/care";
+import { enqueueEscalationEmail } from "./notification-store";
 
 export function acknowledgementDelayMs() {
   const value = Number(process.env.WARDZERO_ACK_DEADLINE_MS ?? 120000);
@@ -15,9 +16,9 @@ export async function evaluateDeadlines(db: PGlite, now: Date) {
     const wall = now;
     const run = await getRun(tx);
     now = runTime(run, wall);
-    const overdue = await tx.query<{ id: string }>(
+    const overdue = await tx.query<{ id: string; severity: string }>(
       `UPDATE care_alerts SET escalated_at=$1, updated_at=$1
-      WHERE state='Open' AND escalated_at IS NULL AND acknowledgement_due_at <= $1 AND run_id=$2 RETURNING id`,
+      WHERE state='Open' AND escalated_at IS NULL AND acknowledgement_due_at <= $1 AND run_id=$2 RETURNING id,severity`,
       [now.toISOString(), run.id],
     );
     for (const alert of overdue.rows) {
@@ -27,9 +28,14 @@ export async function evaluateDeadlines(db: PGlite, now: Date) {
         [
           randomUUID(),
           alert.id,
-          `Acknowledgement overdue. Escalated in-app to ${DEMO_ACTORS.backup.name}; no external message was sent.`,
+          `Acknowledgement overdue. Escalated in-app to ${DEMO_ACTORS.backup.name}. Optional email delivery is tracked separately.`,
           now.toISOString(),
         ],
+      );
+      await enqueueEscalationEmail(
+        tx,
+        { id: alert.id, severity: alert.severity, runId: run.id },
+        wall,
       );
     }
     await tx.query(

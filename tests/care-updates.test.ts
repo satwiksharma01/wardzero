@@ -84,8 +84,12 @@ it("adopts an existing first-slice database without losing readings and applies 
     await store.initialize();
     expect((await store.snapshot(now)).latest?.eventId).toBe("legacy");
     expect(
-      (await db.query("SELECT * FROM schema_migrations")).rows,
-    ).toHaveLength(5);
+      (await db.query("SELECT version FROM schema_migrations ORDER BY version"))
+        .rows,
+    ).toEqual([1, 2, 3, 4, 5, 6].map((version) => ({ version })));
+    expect((await db.query("SELECT * FROM notification_jobs")).rows).toEqual(
+      [],
+    );
   } finally {
     await db.close();
   }

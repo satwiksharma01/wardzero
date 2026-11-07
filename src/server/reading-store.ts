@@ -15,6 +15,7 @@ import { evaluateDeadlines } from "./escalation";
 import { getRun, runTime } from "./run-context";
 import { DemoStore } from "./demo-store";
 import { isCareError } from "../domain/care";
+import { NotificationStore } from "./notification-store";
 
 export class ReadingStore {
   constructor(private readonly db: PGlite) {}
@@ -26,6 +27,9 @@ export class ReadingStore {
   }
   get demo() {
     return new DemoStore(this.db, (events, wall) => this.ingest(events, wall));
+  }
+  get notifications() {
+    return new NotificationStore(this.db);
   }
 
   async initialize() {

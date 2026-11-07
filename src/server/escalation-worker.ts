@@ -1,4 +1,5 @@
 import { getStore } from "./database";
+import { configuredEmailProvider } from "./email-provider";
 
 const workerGlobal = globalThis as typeof globalThis & {
   wardzeroDeadlineTimer?: ReturnType<typeof setInterval>;
@@ -10,7 +11,13 @@ export async function startEscalationWorker() {
     if (busy) return;
     busy = true;
     try {
-      await (await getStore()).evaluateDeadlines(new Date());
+      const store = await getStore();
+      await store.evaluateDeadlines(new Date());
+      try {
+        await store.notifications.runDue(new Date(), configuredEmailProvider());
+      } catch {
+        console.error("notification_worker_tick_failed");
+      }
     } catch {
       console.error("escalation_worker_tick_failed");
     } finally {

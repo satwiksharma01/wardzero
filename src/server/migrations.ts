@@ -74,6 +74,19 @@ const migrations = [
     CREATE TABLE demo_commands(id TEXT PRIMARY KEY, run_id TEXT NOT NULL REFERENCES demo_runs(id), request JSONB NOT NULL, payload JSONB, created_at TIMESTAMPTZ NOT NULL);
   `,
   },
+  {
+    version: 6,
+    sql: `
+    CREATE TABLE notification_jobs(
+      id TEXT PRIMARY KEY, alert_id TEXT NOT NULL UNIQUE REFERENCES care_alerts(id), run_id TEXT NOT NULL REFERENCES demo_runs(id),
+      state TEXT NOT NULL CHECK(state IN ('Disabled','Pending','Sending','Retry','Accepted','Failed','Cancelled')),
+      idempotency_key TEXT NOT NULL UNIQUE, payload JSONB, attempts INT NOT NULL DEFAULT 0,
+      created_at TIMESTAMPTZ NOT NULL, next_attempt_at TIMESTAMPTZ, lease_until TIMESTAMPTZ,
+      accepted_at TIMESTAMPTZ, provider_reference TEXT, last_error_code TEXT
+    );
+    CREATE INDEX notification_due ON notification_jobs(state,next_attempt_at);
+    `,
+  },
 ];
 
 export async function migrate(db: PGlite) {
