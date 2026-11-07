@@ -1,6 +1,6 @@
 # Demo and submission plan
 
-Prepared artifacts: [three-minute demo](submission/wardzero-demo.mp4), [captions](submission/wardzero-demo.srt), [submission text](submission/ENTRY_COPY.md), [judge guide](JUDGE_GUIDE.md), and [package verification](verification/2026-11-07-package.md). Repository visibility and the authenticated submission step remain pending.
+Prepared artifacts: [private source repository](https://github.com/satwiksharma01/wardzero), [three-minute demo](submission/wardzero-demo.mp4), [captions](submission/wardzero-demo.srt), [submission text](submission/ENTRY_COPY.md), [judge guide](JUDGE_GUIDE.md), and [package verification](verification/2026-11-07-package.md). Judge access, public visibility choice, and the authenticated submission step remain pending.
 
 ## Three-minute narrative
 
@@ -20,7 +20,7 @@ Rehearse the queue/reload segment and scenario reset before recording. Use clear
 
 ## Submission artifacts
 
-- [ ] Source repository with application, simulator, executable tests, lockfile, fixtures, and environment-variable example without values.
+- [x] Private source repository with application, simulator, executable tests, lockfile, fixtures, and environment-variable example without values. Judge access is a separate pending gate.
 - [x] `documents/README.md` index and finalized setup, architecture, decisions, and limitations.
 - [x] Exact setup/reset/test/build commands verified against the release candidate; clean source revision 7752366 passes.
 - [ ] Three-minute video playable with the intended access permissions.

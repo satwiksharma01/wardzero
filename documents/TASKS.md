@@ -138,6 +138,6 @@ Dependencies: T12. Verification: independent link-open check, video playback, se
 ## Release gate
 
 - [ ] All core deliverables have evidence; optional omissions are explicit.
-- [ ] No secrets or real patient data are included.
-- [ ] Documentation matches actual behavior, commands, and limitations.
+- [x] No secrets or real patient data are included; source/archive scans and synthetic-data provenance are recorded.
+- [x] Documentation matches actual behavior, commands, and limitations; local links resolve and final application revision is reproduced.
 - [ ] Submission confirmation is retained; completion is not inferred from an upload alone.

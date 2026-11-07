@@ -12,3 +12,5 @@ Inspected on 7 November 2026 from the participant's saved `Operation Ward Zero H
 Before final submission, inspect the current authenticated “Submit your work” flow, confirm the exact cutoff and artifact permissions, and retain a receipt. Do not infer that submission is complete from registration alone.
 
 The saved control links to the challenge's `/submit` route. The unauthenticated web tool could not open that route, and access to the participant's open Chrome window timed out. The current form remains unverified; no credentials were extracted from the snapshot or browser.
+
+A direct check in the available browser confirmed a redirect to **Talent sign in · Wooble**, with the challenge submission route retained as its return destination. The signed-in form requires the participant's authenticated session; the browser tab is retained for handoff.
