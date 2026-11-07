@@ -113,4 +113,3 @@ with no clinical validation or forty-eight-hour prediction claim. WardZero makes
 29
 00:02:58,220 --> 00:02:59,000
 and accountable.
-

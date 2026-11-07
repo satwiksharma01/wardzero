@@ -66,7 +66,7 @@ chapters.forEach((chapter, index) => {
   }
 });
 writeFileSync(".data/demo/captions.ass", ass);
-writeFileSync("documents/submission/wardzero-demo.srt", srt);
+writeFileSync("documents/submission/wardzero-demo.srt", srt.trimEnd() + "\n");
 const filter = [
   "[0:v]scale=1536:960,pad=1920:1080:192:0:color=0x173e35,ass=.data/demo/captions.ass[v]",
   ...audioFilters,
