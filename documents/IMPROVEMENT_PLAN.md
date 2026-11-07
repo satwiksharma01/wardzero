@@ -62,5 +62,5 @@ Files: focused notification domain/provider/store modules, migration, escalation
 
 - [x] Run applicable full test/type/lint/build/browser/live checks after changes.
 - [x] Request focused fresh code review; resolve material findings with regression tests.
-- [ ] Reconcile stale visibility/form docs, publish verified code/evidence within prior authorization, and refresh the demo/entry material as appropriate.
-- [ ] State exact revisions, changed files, evidence paths, measured limitations, and remaining submission gates. No final declaration/submission is inferred.
+- [x] Reconcile stale visibility/form docs, publish verified code/evidence within prior authorization, and refresh the demo/entry material as appropriate.
+- [x] State exact revisions, changed files, evidence paths, measured limitations, and remaining submission gates. No final declaration/submission is inferred.

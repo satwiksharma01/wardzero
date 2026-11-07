@@ -23,7 +23,7 @@ Rehearse the queue/reload segment and scenario reset before recording. Use clear
 - [x] Public source repository with application, simulator, executable tests, lockfile, fixtures, and environment-variable example without secrets.
 - [x] `documents/README.md` index and finalized setup, architecture, decisions, and limitations.
 - [x] Exact setup/reset/test/build commands verified against the release candidate; clean source revision 7752366 passes.
-- [ ] Three-minute video playable with the intended access permissions.
+- [x] Three-minute video playable locally in Chrome; public video bytes verified anonymously against the local hash.
 - [ ] Live demo link if required or available; write/reset operations appropriately protected.
 - [x] AI provider/model requirements, explicitly isolated deterministic test mocks, and honest Unavailable behavior without a key.
 - [x] Synthetic data origin and third-party attribution recorded in AI_USE.md and THIRD_PARTY_NOTICES.md.
@@ -36,8 +36,8 @@ The public brief asks for a repository and README. Our substantive README is `do
 - [ ] Verify exact cutoff/timezone and required fields in the authenticated submission flow.
 - [x] Participant chose public repository visibility; GitHub metadata verified PUBLIC.
 - [ ] Inspect challenge-specific terms, allowed tools, and declarations; the public page does not settle all of these.
-- [ ] Open repository, video, and demo links in a clean browser context.
-- [ ] Verify no keys, real patient data, or local-only absolute links are in submission materials.
+- [x] Verify anonymous repository/source/video access and exact media bytes; the interactive demo remains local, not a public hosting claim.
+- [x] Scan source/history/archive for configured keys and token patterns; synthetic provenance and prepared entry links inspected. See verification/publication-scan.json and local submission/ARTIFACTS.json.
 - [ ] Retain confirmation/receipt and submitted revision/link details in `documents/submission-record.md`.
 
 ## Claims to use

@@ -130,7 +130,7 @@ Dependencies: T11. Verification: focused regression tests, browser journey, and 
 
 - [x] Reproduce setup from a clean environment and finalize architecture/limitations documentation.
 - [x] Record and inspect the three-minute video locally with live Gemini and explicit synthetic-clock labels.
-- [ ] Verify externally accessible repository/video links and any required deployment permissions.
+- [x] Verify externally accessible repository/video links and any required deployment permissions. PUBLIC source/video anonymous HTTP200/hash checks are in verification/public-handoff.json; interactive hosting remains local.
 - [ ] Submit through the required flow before verified cutoff and retain confirmation.
 
 Dependencies: T12. Verification: independent link-open check, video playback, setup run, and submission receipt. Files: documents/SETUP.md, documents/SUBMISSION.md, documents/verification report, video artifact. Scope: medium.

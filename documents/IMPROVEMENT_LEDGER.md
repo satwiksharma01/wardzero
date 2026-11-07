@@ -27,6 +27,6 @@ Ruling: Repeat baseline and final evaluation sequentially with five-second reque
 
 Ruling: Keep the existing publication target and publish the reviewed improvements without repeating the public/private question — the participant explicitly authorized a public repository earlier. Do not infer permission to send real email or submit final declarations. Cost if wrong: final live form decisions remain for the participant, while reversible source/media publication proceeds within recorded authorization.
 
-## Handoff in progress
+## Completed public handoff
 
-Repository metadata rechecked PUBLIC / default main. Five saved form steps are mapped; no exact cutoff/timezone or live submission receipt is known. Old private-repository/current-form wording is reconciled in current handoff docs while historical reports retain their original evidence. A fresh full production recording is being prepared; source export/hash/anonymous link checks follow publication.
+Repository metadata rechecked PUBLIC / default main. Five saved form steps are mapped; no exact cutoff/timezone or live submission receipt is known. Old private-repository/current-form wording is reconciled in current handoff docs while historical reports retain their original evidence. The fresh production recording passed all checkpoints, encode/playback/seek checks, and visual inspection. Video/gallery/cover are current to application d0bc83c. Publication revision 62cd88d has anonymous HTTP200 source/video checks against exact Git blobs; video also matches local bytes exactly. public-handoff.json records proof; local ARTIFACTS.json records final export revision/hash. Public upload is not Wooble submission.
