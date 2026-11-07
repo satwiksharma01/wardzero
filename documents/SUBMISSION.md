@@ -1,6 +1,6 @@
 # Demo and submission plan
 
-Prepared artifacts: [private source repository](https://github.com/satwiksharma01/wardzero), [three-minute demo](submission/wardzero-demo.mp4), [captions](submission/wardzero-demo.srt), [submission text](submission/ENTRY_COPY.md), [judge guide](JUDGE_GUIDE.md), and [package verification](verification/2026-11-07-package.md). Judge access, public visibility choice, and the authenticated submission step remain pending.
+Prepared artifacts: [public source repository](https://github.com/satwiksharma01/wardzero), [three-minute demo](submission/wardzero-demo.mp4), [captions](submission/wardzero-demo.srt), [field-ready form answers](submission/FORM_ANSWERS.md), and [judge guide](JUDGE_GUIDE.md). Public publication was authorized. Final authenticated submission, exact cutoff/timezone, and receipt remain pending.
 
 ## Three-minute narrative
 
@@ -20,7 +20,7 @@ Rehearse the queue/reload segment and scenario reset before recording. Use clear
 
 ## Submission artifacts
 
-- [x] Private source repository with application, simulator, executable tests, lockfile, fixtures, and environment-variable example without values. Judge access is a separate pending gate.
+- [x] Public source repository with application, simulator, executable tests, lockfile, fixtures, and environment-variable example without secrets.
 - [x] `documents/README.md` index and finalized setup, architecture, decisions, and limitations.
 - [x] Exact setup/reset/test/build commands verified against the release candidate; clean source revision 7752366 passes.
 - [ ] Three-minute video playable with the intended access permissions.
@@ -34,7 +34,7 @@ The public brief asks for a repository and README. Our substantive README is `do
 ## Before submitting
 
 - [ ] Verify exact cutoff/timezone and required fields in the authenticated submission flow.
-- [ ] Check whether a private repository needs reviewer access; do not assume public access is mandatory.
+- [x] Participant chose public repository visibility; GitHub metadata verified PUBLIC.
 - [ ] Inspect challenge-specific terms, allowed tools, and declarations; the public page does not settle all of these.
 - [ ] Open repository, video, and demo links in a clean browser context.
 - [ ] Verify no keys, real patient data, or local-only absolute links are in submission materials.

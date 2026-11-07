@@ -22,7 +22,7 @@ All project documentation belongs in `documents/`, including plans, specificatio
 ## Status and maintenance
 
 - Prepared: 7 November 2026, Asia/Kolkata.
-- Stage: T01–T12 complete locally, including live Gemini, durable recovery, autonomous escalation, isolated demos, and the [release audit](verification/2026-11-07-release.md). The [final review correction](verification/2026-11-07-review-fix.md) is verified. T13 source/video artifacts are uploaded to the [private repository](https://github.com/satwiksharma01/wardzero); judge access, live submission fields, and the final receipt remain pending.
+- Stage: the core local care loop is implemented. Source and video are in the [public repository](https://github.com/satwiksharma01/wardzero), following the participant's publication authorization. The saved five-step form is mapped in [field-ready answers](submission/FORM_ANSWERS.md). The [improvement plan](IMPROVEMENT_PLAN.md) adds broader [live note evaluation](verification/NOTE_EVALUATION.md), [controlled early warning](verification/EARLY_WARNING.md), evidence clarity, and optional default-disabled email. Final Wooble submission, exact cutoff/timezone, and receipt remain pending.
 - Working project name: WardZero; subject to participant approval.
 - Participant: solo builder.
 - Update task status only after its acceptance criteria are verified.

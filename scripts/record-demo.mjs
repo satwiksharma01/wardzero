@@ -2,9 +2,10 @@ import { chromium, expect } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import path from "node:path";
+import { execFileSync } from "node:child_process";
 
 // Records real UI/API transitions. No mocked AI or injected dashboard state.
-const baseURL = "http://127.0.0.1:3000";
+const baseURL = process.env.WARDZERO_DEMO_URL ?? "http://127.0.0.1:3000";
 await mkdir(".data/demo/raw", { recursive: true });
 const browser = await chromium.launch({ channel: "chrome" });
 const context = await browser.newContext({
@@ -167,6 +168,9 @@ try {
     JSON.stringify(
       {
         recordedAt: new Date().toISOString(),
+        applicationRevision: execFileSync("git", ["rev-parse", "HEAD"], {
+          encoding: "utf8",
+        }).trim(),
         checkpoints,
         synthetic: true,
         aiMocked: false,

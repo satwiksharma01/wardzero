@@ -4,7 +4,7 @@ Status: T01–T12 verified for the local single-patient prototype, including liv
 
 ## T00 — Confirm participation and constraints
 
-Registration is confirmed by saved entry WZ-95CMQ; see HACKATHON_ENTRY.md. Exact cutoff and expanded submission fields remain unverified.
+Registration is confirmed by saved entry WZ-95CMQ; see HACKATHON_ENTRY.md. Five saved form steps are mapped in submission/FORM_ANSWERS.md; exact cutoff/timezone and current authenticated server state remain unverified.
 
 - [ ] Record registration status, actual submission cutoff/timezone, submission fields, and any additional rules.
 - [x] Record the participant-approved Next.js/TypeScript stack and supplied Gemini credentials; use the documented local PGlite fallback. No fixed work budget or public hosting account was specified.

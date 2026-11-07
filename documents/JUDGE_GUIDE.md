@@ -27,12 +27,12 @@ Use new runs to repeat safely; prior evidence stays in read-only archives. Demo 
 
 ## Verification you can rerun
 
-The [release audit](verification/2026-11-07-release.md) maps all 22 critical scenarios to executable evidence: 47 automated tests, eight Chrome journeys, four live Gemini note cases, a live care journey, and a browser-closed production worker check. The current lockfile reports zero npm advisories. These are prototype checks, not clinical validation or a guarantee against undiscovered defects.
+The [improvement report](verification/2026-11-07-improvements.md) records 73 automated tests, eight Chrome journeys, a 40-case actual Gemini evaluation, a live care journey, and browser-closed production escalation. The controlled [early-warning replay](verification/EARLY_WARNING.md) measures 45 seconds before the fixture's first individual threshold, with negative/stable controls and inference latency explicitly excluded. [Note results](verification/NOTE_EVALUATION.md) retain baseline errors, earlier provider failures, and final raw cases. Optional email is tested against a loopback HTTP receiver with a lost acceptance and transient conflict, not a real cloud mailbox. The dependency audit reports zero advisories at verification time. These are prototype checks, not clinical validation or a guarantee against undiscovered defects.
 
 `npm test` is deterministic and needs no AI key. `npm run test:e2e` explicitly uses a local mock HTTP provider. The opt-in live commands require a reviewer-owned Gemini key and make real provider requests. Without AI configuration, notes show Unavailable; reading-based assessment continues. There is no hidden mock fallback in the normal application.
 
 ## Boundaries
 
-This local, single-patient prototype uses synthetic identities and measurements, engineering thresholds, and embedded PostgreSQL. It is not a validated clinical score, diagnosis, treatment system, or demonstrated 24–48-hour predictor. Escalation is in-app only. It cannot monitor continuously when the server/computer is off; persisted state and overdue deadlines recover on restart.
+This local, single-patient prototype uses synthetic identities and measurements, engineering thresholds, and embedded PostgreSQL. It is not a validated clinical score, diagnosis, treatment system, or demonstrated 24–48-hour predictor. In-app escalation works by default. Optional email is disabled and live delivery is unverified; provider acceptance never means caregiver acknowledgement. Human caregiver testing remains unperformed. It cannot monitor continuously when the server/computer is off; persisted state and overdue deadlines recover on restart.
 
 Local demo identities let a reviewer exercise both roles. Public interactive hosting would require production authentication, hosted durable storage, rate limiting, and a supported worker. This release remains bound to loopback.

@@ -71,3 +71,11 @@ The overview's job is to make the last received evidence legible. Its primary de
 - Verify: clean application revision 264d833 installs/tests/builds; final demo transitions assert successfully; local video is decoded and played in Chrome.
 - Review: fresh code review found one accepted-future-evidence gap. ADR-005 and a failing-then-passing regression resolve it; reviewer approved the correction.
 - Ship: local artifacts prepared. External visibility, live form/declarations, cutoff, permission checks, and receipt remain pending; see submission-record.md.
+
+## Completed cycle: reviewed evidence and optional delivery
+
+- Define/Plan: IMPROVEMENT_SPEC.md and IMPROVEMENT_PLAN.md bound the scope to synthetic English notes, a controlled early-warning scenario, legible evidence, and one default-disabled email adapter.
+- Build: notes-v3 context guards, source/time/use labels, independent fixtures/scorers, repeatable storage replay, migration6 email outbox/worker/retry state.
+- Verify: 73 automated tests, eight Chrome journeys, 40 actual Gemini cases, live early-warning controls and care journey, production browser-closed worker, local HTTP email fault/retry protocol, lint/type/format/build checks with 11 traces, and zero dependency advisories.
+- Review: three material findings and the reverse-order history regression were reproduced and resolved; final focused reviewer approved the fixes. See verification/2026-11-07-improvements.md.
+- Ship: source publication is authorized and repository is PUBLIC. Refreshed evidence/media and hashes are prepared through the handoff checklist. Human feedback, real cloud email, exact cutoff/final declarations, and Wooble receipt remain external/unverified; none is inferred from code publication.

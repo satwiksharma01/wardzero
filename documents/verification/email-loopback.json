@@ -1,0 +1,20 @@
+{
+  "verifiedAt": "2026-11-07T12:02:03.798Z",
+  "runType": "local-loopback-http-mock",
+  "realEmailSent": false,
+  "cloudProviderVerified": false,
+  "browserOrApiPollingDuringWorkerInterval": false,
+  "observationMs": 8500,
+  "requests": 3,
+  "uniqueAccepted": 1,
+  "stableIdentityAndBody": true,
+  "emailDelivery": {
+    "state": "Accepted",
+    "attempts": 3,
+    "providerReference": "fixture-acceptance-1",
+    "providerAcceptedAt": "2026-11-07T12:02:01.477Z",
+    "nextAttemptAt": null,
+    "errorCode": null
+  },
+  "careState": "Open"
+}

@@ -30,7 +30,11 @@ Run only one app instance per database name. Stop the dev server before running 
 | `npm run dev` | Local development server bound to 127.0.0.1. |
 | `npm test` | Domain, ingestion, API-boundary, and disk-persistence tests. |
 | `npm run test:e2e` | Isolated Chrome tests on port 3100 with a new database. |
-| `npm run test:ai-live` | Opt-in real Gemini cases using `.env.local`; makes provider requests. |
+| `npm run test:ai-live` | Opt-in 40-case synthetic Gemini evaluation using `.env.local`; real requests paced five seconds apart. |
+| `npm run test:ai-smoke` | Original four-case real Gemini smoke suite. |
+| `npm run test:early-warning` | Deterministic storage-backed timeline and controls. |
+| `npm run test:early-warning-live` | Same controlled timeline with actual Gemini note extraction. |
+| `npm run test:email` | Production worker against loopback mock email receiver; build first. No real email. |
 | `npm run test:e2e-live` | Opt-in real Gemini app journey on port 3102; makes provider requests. |
 | `npm run test:worker` | Browser-closed deadline check with a two-second test deadline, port 3103. |
 | `npm run test:worker:production` | Same check against the compiled server; run `npm run build` first. |
@@ -53,7 +57,7 @@ Units are encoded in metric names: `pulseBpm`, `oxygenPct`, `temperatureC`, `res
 
 ## Current limits
 
-The app implements monitoring, explained concern, live AI notes, caregiver response, durable browser outbox, autonomous in-app escalation, and isolated demo runs. The full release audit, submission package, production sign-in, and optional public deployment remain pending. Do not use real patient data or expose this local milestone publicly.
+The app implements monitoring, explained concern, live AI notes, caregiver response, durable browser outbox, autonomous in-app escalation, and isolated demo runs. Source/video are public; the interactive application remains local. Optional email is disabled by default and has no live delivery verification. Production sign-in, hosted storage/worker, clinical evaluation, and final Wooble submission remain outside this local release.
 
 ## Try the care loop
 
@@ -98,3 +102,11 @@ A new run archives earlier evidence without deleting it. Previous runs opens rea
 The Node server evaluates deadlines every second while it runs, even with no browser open. Default acknowledgement interval is 120 seconds; optional `WARDZERO_ACK_DEADLINE_MS` accepts 1000–900000 ms for a labeled test/demo. Deadlines and clock offsets persist across restart. In-app escalation does not send SMS/calls and cannot continue while the server/computer is off.
 
 `GET /api/demo` lists ten recent runs. `POST /api/demo` accepts authorized, idempotent reset/seed/advance commands. `GET /archive/:id` is read-only. New readings include runId; absent runId maps to the original local run.
+
+## Optional email adapter
+
+Email is off unless `WARDZERO_EMAIL_ENABLED=true` and `WARDZERO_EMAIL_API_KEY`, `WARDZERO_EMAIL_FROM`, and `WARDZERO_EMAIL_TO` are all configured on the server. Use a verified Resend sender and one authorized recipient. Never enable real delivery merely to run the test suite. This project's checks use fake credentials, reserved `.invalid` addresses, and a loopback HTTP receiver; no real email was sent or verified.
+
+At the first overdue in-app escalation, a job freezes its metadata-only payload and idempotency key. Disabled jobs never activate retroactively. The worker sends outside the database transaction, leases for 30 seconds, retries at most six times within 23 actual wall-clock hours, and cancels due work when the episode/run closes. Demo time advance does not advance retry limits. Provider acceptance is shown separately from unverified delivery/reading and caregiver acknowledgement. See [ADR-006](decisions/006-optional-email-outbox.md).
+
+`WARDZERO_EMAIL_ENDPOINT` is an optional test override restricted to Resend's exact HTTPS origin or an HTTP loopback `/emails` receiver. Invalid endpoint configuration disables email without blocking in-app escalation. The production email contract test uses ports 3107/3112 and an isolated database. Run app-owning suites sequentially; each runner stops its own server. Normal app use and tests require no email configuration.

@@ -99,17 +99,17 @@ call. A separate production-server test verifies that the deadline worker also r
 every browser page closed.
 
 26
-00:02:43,000 --> 00:02:48,073
-The repository includes forty-seven automated tests, eight browser journeys, live Gemini evidence, and
+00:02:43,000 --> 00:02:47,952
+The repository includes seventy-three automated tests, eight browser journeys, forty synthetic Gemini cases,
 
 27
-00:02:48,073 --> 00:02:53,146
-reproducible setup. This is a local prototype using synthetic data and engineering rules,
+00:02:47,952 --> 00:02:52,905
+and reproducible setup. This is a local prototype using synthetic data and engineering
 
 28
-00:02:53,146 --> 00:02:58,220
-with no clinical validation or forty-eight-hour prediction claim. WardZero makes the handoff visible
+00:02:52,905 --> 00:02:57,857
+rules, with no clinical validation or forty-eight-hour prediction claim. WardZero makes the handoff
 
 29
-00:02:58,220 --> 00:02:59,000
-and accountable.
+00:02:57,857 --> 00:02:59,000
+visible and accountable.

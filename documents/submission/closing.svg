@@ -20,11 +20,11 @@
 </g>
 <text x="90" y="500" font-size="30" font-weight="bold">Verified in the running prototype</text>
 <g font-size="25" fill="#435e51">
-<text x="90" y="555">47 automated tests · 8 browser journeys · 4 live Gemini note cases</text>
+<text x="90" y="555">73 automated tests · 8 browser journeys · 40 synthetic live Gemini cases</text>
 <text x="90" y="602">Browser-closed production escalation · Durable queue and restart recovery</text>
 <text x="90" y="649">Keyboard and compact-screen checks · Reproducible local setup</text>
 </g>
 <rect x="90" y="710" width="1250" height="110" rx="12" fill="#edf1eb"/>
-<text x="115" y="754" font-size="24" font-weight="bold">Synthetic data. Engineering demo rules. In-app escalation only.</text>
+<text x="115" y="754" font-size="24" font-weight="bold">Synthetic data. Engineering rules. Optional email off; live delivery unverified.</text>
 <text x="115" y="792" font-size="23">No clinical validation or 24–48-hour prediction claim. Server must remain powered.</text>
 </g></svg>

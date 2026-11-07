@@ -1,6 +1,6 @@
 # Prepared submission text
 
-Use the matching sections after confirming the live submission form. Repository/video URLs and final declarations remain pending; no submission is claimed here.
+Use these with the saved five-step form mapping in FORM_ANSWERS.md. Public repository/video URLs are available; current server fields, final declarations, exact cutoff/timezone, and submission remain pending.
 
 ## Project title
 
@@ -26,11 +26,11 @@ Next.js, TypeScript, React, embedded PostgreSQL/PGlite, Zod, Gemini structured o
 
 ## Reliability and verification
 
-47 automated tests, eight Chrome journeys, four live Gemini note cases, a live provider care journey, and browser-closed escalation against the production server. The release audit covers 22 critical scenarios including malformed/future data, late replay, lost acknowledgements, AI failure, unauthorized mutation, restart recovery, and bounded queue capacity. A clean checkout installs, tests, builds, and starts without a key; AI status then shows Unavailable.
+73 automated tests, eight Chrome journeys, a 40-case synthetic live Gemini evaluation, a live provider care journey, and browser-closed escalation against the production server. The release audit covers 22 critical scenarios including malformed/future data, late replay, lost acknowledgements, AI failure, unauthorized mutation, restart recovery, and bounded queue capacity. A clean checkout installs, tests, builds, and starts without a key; AI status then shows Unavailable.
 
 ## Prototype boundaries
 
-Single synthetic patient, engineering demo thresholds, loopback-only application, and in-app escalation. No clinical validation, diagnosis/treatment, real hardware integration, external SMS/calls, or demonstrated 24–48-hour prediction. Monitoring cannot continue while the server/computer is powered off. Public interactive hosting requires production identity, durable hosted storage, rate limiting, and worker support.
+Single synthetic patient, engineering demo thresholds, loopback-only application, and default in-app escalation. Optional email is disabled; cloud delivery is unverified and only a local HTTP mock was tested. Human caregiver testing remains unperformed. No clinical validation, diagnosis/treatment, real hardware integration, external SMS/calls, or demonstrated 24–48-hour prediction. Monitoring cannot continue while the server/computer is powered off. Public interactive hosting requires production identity, durable hosted storage, rate limiting, and worker support.
 
 ## AI/data disclosure
 

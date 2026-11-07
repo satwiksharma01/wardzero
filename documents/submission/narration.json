@@ -39,6 +39,6 @@
     "start": 163,
     "end": 180,
     "title": "WORKING INTEGRATION · MEASURED LIMITS",
-    "text": "The repository includes forty-seven automated tests, eight browser journeys, live Gemini evidence, and reproducible setup. This is a local prototype using synthetic data and engineering rules, with no clinical validation or forty-eight-hour prediction claim. WardZero makes the handoff visible and accountable."
+    "text": "The repository includes seventy-three automated tests, eight browser journeys, forty synthetic Gemini cases, and reproducible setup. This is a local prototype using synthetic data and engineering rules, with no clinical validation or forty-eight-hour prediction claim. WardZero makes the handoff visible and accountable."
   }
 ]
