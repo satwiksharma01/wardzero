@@ -2,6 +2,42 @@ import { expect, it } from "vitest";
 import { PGlite } from "@electric-sql/pglite";
 import { ReadingStore } from "../src/server/reading-store";
 import { makeReading } from "../src/domain/readings";
+import { NOTE_PROMPT_VERSION } from "../src/domain/notes";
+
+it("records the prompt version actually used when retrying a note saved by an older version", async () => {
+  const db = new PGlite();
+  try {
+    const store = new ReadingStore(db);
+    await store.initialize();
+    const now = new Date("2026-11-07T08:00:00Z");
+    const { token } = await store.care.createSession("primary", now);
+    const input = {
+      id: "version-retry",
+      text: "An unrelated synthetic observation.",
+    };
+    await store.notes.submit(token, input, now, null, () => now);
+    await db.query(
+      "UPDATE caregiver_notes SET prompt_version='older-version' WHERE id=$1",
+      [input.id],
+    );
+    const note = await store.notes.submit(
+      token,
+      input,
+      now,
+      {
+        model: "explicit-fixture",
+        async extract() {
+          return { observations: [] };
+        },
+      },
+      () => now,
+    );
+    expect(note.status).toBe("Complete");
+    expect(note.promptVersion).toBe(NOTE_PROMPT_VERSION);
+  } finally {
+    await db.close();
+  }
+});
 
 it("persists notes first, applies validated provider evidence, and handles unavailable/failed analysis", async () => {
   const db = new PGlite();

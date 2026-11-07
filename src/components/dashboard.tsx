@@ -95,6 +95,9 @@ export function Dashboard() {
     ? "Disconnected"
     : (snapshot?.monitoring ?? "Connecting");
   const fresh = monitoring === "Current";
+  const activeEpisode = snapshot?.care.alerts.find(
+    (alert) => alert.state !== "Resolved",
+  );
 
   return (
     <div className="workspace">
@@ -204,6 +207,26 @@ export function Dashboard() {
             </div>
           </section>
 
+          {activeEpisode && (
+            <div className="priority-response">
+              <div>
+                <strong>
+                  {error ? "Last-known unresolved" : "Unresolved"}{" "}
+                  {activeEpisode.severity.toLowerCase()}-concern episode
+                </strong>
+                <p>
+                  {activeEpisode.state === "ActionRecorded"
+                    ? "Action recorded"
+                    : activeEpisode.state}{" "}
+                  · Opened {timeLabel(activeEpisode.openedAt)}. Response state
+                  is separate from current concern.
+                </p>
+              </div>
+              <a className="secondary-button" href="#care-response">
+                View care response
+              </a>
+            </div>
+          )}
           <div className="section-heading vitals-heading">
             <h2>Vital signs</h2>
             <span className="last-seen">
@@ -305,6 +328,7 @@ export function Dashboard() {
               </div>
             </section>
             <CareContext
+              history={history}
               care={snapshot?.care}
               fresh={fresh}
               disconnected={!!error}
@@ -318,6 +342,8 @@ export function Dashboard() {
             onChange={refresh}
           />
           <CaregiverNotes
+            assessment={snapshot?.care.currentAssessment}
+            serverTime={snapshot?.serverTime}
             key={`notes-${snapshot?.run.id ?? "loading"}`}
             runId={snapshot?.run.id ?? "local"}
             notes={snapshot?.care.notes ?? []}

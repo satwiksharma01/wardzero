@@ -140,6 +140,7 @@ test("caregiver notes pass through the HTTP adapter and contribute evidence to c
   await expect(
     page.getByText("AI analysis: Failed", { exact: true }),
   ).toBeVisible();
+  await expect(page.getByText(/Caregiver context incomplete:/)).toBeVisible();
   await page.reload();
   await expect(
     page.getByText("AI analysis: Complete", { exact: true }),

@@ -1,17 +1,30 @@
 import { Info, ShieldCheck, Stethoscope } from "lucide-react";
 import type { CareSnapshot } from "@/domain/care";
+import type { StoredReading } from "@/domain/readings";
 import { timeLabel } from "./vital-chart";
 
 export function CareContext({
   care,
   fresh,
   disconnected,
+  history = [],
 }: {
   care?: CareSnapshot;
   fresh: boolean;
   disconnected: boolean;
+  history?: StoredReading[];
 }) {
   const assessment = disconnected ? null : care?.currentAssessment;
+  const incomplete = assessment
+    ? (care?.notes.filter(
+        (note) =>
+          note.status !== "Complete" &&
+          Date.parse(assessment.evaluatedAt) - Date.parse(note.recordedAt) >=
+            0 &&
+          Date.parse(assessment.evaluatedAt) - Date.parse(note.recordedAt) <
+            120000,
+      ).length ?? 0)
+    : 0;
   return (
     <section
       className="panel care-context"
@@ -31,6 +44,37 @@ export function CareContext({
           {disconnected ? "Unavailable" : (assessment?.concern ?? "Unknown")}
         </strong>
       </div>
+      {assessment && (
+        <div className="evidence-summary">
+          <strong>
+            {assessment.concern === "Unknown"
+              ? "Fresh evidence needed"
+              : assessment.reasons.some((reason) => reason.noteIds?.length)
+                ? "Vitals + caregiver observations"
+                : "Vital readings"}
+          </strong>
+          <span>
+            Assessed{" "}
+            <time
+              dateTime={assessment.evaluatedAt}
+              title={assessment.evaluatedAt}
+            >
+              {timeLabel(assessment.evaluatedAt)}
+            </time>
+          </span>
+          {assessment.latestObservedAt && (
+            <span>
+              Latest reading{" "}
+              <time
+                dateTime={assessment.latestObservedAt}
+                title={assessment.latestObservedAt}
+              >
+                {timeLabel(assessment.latestObservedAt)}
+              </time>
+            </span>
+          )}
+        </div>
+      )}
       {assessment?.reasons
         .filter(
           (reason, index) =>
@@ -43,6 +87,13 @@ export function CareContext({
             {reason.message}
           </p>
         ))}
+      {incomplete > 0 && (
+        <p className="context-analysis-limit">
+          Caregiver context incomplete: {incomplete} recent observation
+          {incomplete === 1 ? " has" : "s have"} no completed analysis.{" "}
+          <a href="#caregiver-notes">Review original notes</a>.
+        </p>
+      )}
       {!assessment && (
         <p>
           {disconnected
@@ -62,11 +113,50 @@ export function CareContext({
               <strong>{reason.code}</strong>
               <p>{reason.message}</p>
               <ul>
-                {[...reason.eventIds, ...(reason.noteIds ?? [])].map((id) => (
-                  <li key={id}>
-                    <code>{id}</code>
-                  </li>
-                ))}
+                {[
+                  ...reason.eventIds.map((id) => ({
+                    id,
+                    kind: "reading" as const,
+                  })),
+                  ...(reason.noteIds ?? []).map((id) => ({
+                    id,
+                    kind: "note" as const,
+                  })),
+                ].map(({ id, kind }) => {
+                  const reading =
+                    kind === "reading"
+                      ? history.find((item) => item.eventId === id)
+                      : undefined;
+                  const note =
+                    kind === "note"
+                      ? care?.notes.find((item) => item.id === id)
+                      : undefined;
+                  return (
+                    <li key={`${kind}-${id}`}>
+                      {reading ? (
+                        <>
+                          <strong>
+                            Reading · {timeLabel(reading.observedAt)}
+                          </strong>
+                          <p>
+                            {reading.metrics.oxygenPct}% SpO₂ ·{" "}
+                            {reading.metrics.pulseBpm} bpm ·{" "}
+                            {reading.metrics.temperatureC} °C ·{" "}
+                            {reading.metrics.respiratoryRate}/min
+                          </p>
+                        </>
+                      ) : note ? (
+                        <a href={`#note-${id}`}>
+                          Caregiver note · {timeLabel(note.recordedAt)} ·{" "}
+                          {note.status}
+                        </a>
+                      ) : (
+                        <span>Reference outside the recent snapshot</span>
+                      )}
+                      <code>{id}</code>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}

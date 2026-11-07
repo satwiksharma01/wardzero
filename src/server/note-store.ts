@@ -64,8 +64,8 @@ export class NoteStore {
         )
           return false;
         await tx.query(
-          "UPDATE caregiver_notes SET status='Pending', analysis_started_at=$2, failure_reason=NULL WHERE id=$1",
-          [id, wall.toISOString()],
+          "UPDATE caregiver_notes SET status='Pending', analysis_started_at=$2, failure_reason=NULL, prompt_version=$3 WHERE id=$1",
+          [id, wall.toISOString(), NOTE_PROMPT_VERSION],
         );
       } else {
         await tx.query(

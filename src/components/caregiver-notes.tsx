@@ -3,6 +3,8 @@
 import { useRef, useState } from "react";
 import { FileText } from "lucide-react";
 import type { CareNote } from "@/domain/notes";
+import type { Assessment } from "@/domain/assessment";
+import { noteEvidenceUse } from "@/domain/evidence";
 import { timeLabel } from "./vital-chart";
 
 export function CaregiverNotes({
@@ -10,11 +12,15 @@ export function CaregiverNotes({
   disconnected,
   onChange,
   runId,
+  assessment,
+  serverTime,
 }: {
   notes: CareNote[];
   disconnected: boolean;
   onChange: () => Promise<void>;
   runId: string;
+  assessment?: Assessment;
+  serverTime?: string;
 }) {
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
@@ -104,10 +110,12 @@ export function CaregiverNotes({
         <p className="notes-empty">No caregiver observations recorded yet.</p>
       )}
       {notes.map((note) => (
-        <article className="note-entry" key={note.id}>
+        <article className="note-entry" key={note.id} id={`note-${note.id}`}>
           <div className="section-heading">
             <strong>{note.authorName}</strong>
-            <time dateTime={note.recordedAt}>{timeLabel(note.recordedAt)}</time>
+            <time dateTime={note.recordedAt} title={note.recordedAt}>
+              Recorded {timeLabel(note.recordedAt)}
+            </time>
           </div>
           <p>{note.text}</p>
           <span
@@ -115,6 +123,14 @@ export function CaregiverNotes({
           >
             AI analysis: {note.status}
           </span>
+          <p className="note-use" data-testid="note-use">
+            {noteEvidenceUse(
+              note,
+              new Date(serverTime ?? note.recordedAt),
+              assessment ?? null,
+              disconnected,
+            )}
+          </p>
           {note.model && (
             <small>
               {note.model} · {note.promptVersion}

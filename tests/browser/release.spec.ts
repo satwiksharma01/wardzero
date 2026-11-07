@@ -34,7 +34,13 @@ test("caregiver can navigate by keyboard, preserve failed drafts, and read compa
     page.getByText("AI analysis: Complete", { exact: true }),
   ).toBeVisible();
   await expect(note).toHaveValue("");
+  await expect(page.getByTestId("note-use").first()).toHaveText(
+    "Contributes to current concern",
+  );
   await expect(page.getByTestId("concern-level")).toHaveText("Medium");
+  await page
+    .getByRole("link", { name: "View care response", exact: true })
+    .click();
   await page.getByRole("button", { name: "Acknowledge alert" }).click();
   const action = page.getByLabel("Caregiver action", { exact: true });
   await action.fill("Contacted the coordinator for this synthetic review.");
@@ -54,6 +60,9 @@ test("caregiver can navigate by keyboard, preserve failed drafts, and read compa
   ).toBeVisible();
   await page.getByRole("button", { name: "Advance 130 seconds" }).click();
   await expect(page.getByTestId("concern-level")).toHaveText("Unknown");
+  await expect(page.getByTestId("note-use").first()).toHaveText(
+    "Stale; outside the 120-second context window",
+  );
 
   const reports = [];
   for (const width of [320, 768, 1440]) {

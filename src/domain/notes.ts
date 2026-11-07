@@ -25,7 +25,7 @@ export type CareNote = {
   promptVersion: string;
   failureReason: string | null;
 };
-export const NOTE_PROMPT_VERSION = "notes-v1";
+export const NOTE_PROMPT_VERSION = "notes-v3";
 export const noteInputSchema = z
   .object({
     id: z
@@ -43,6 +43,45 @@ export const noteInputSchema = z
   })
   .strict();
 
+function observationContext(
+  text: string,
+  observation: Observation,
+  inheritCoordination = false,
+): string {
+  const start = text.indexOf(observation.excerpt);
+  // Anchor a broad excerpt to its symptom phrase so unrelated clauses do not
+  // lend it their negation/history. This is a conservative lexical guard, not NLP validation.
+  const terms = {
+    fatigue: /tired|tierd|fatigu|exhaust|energy/i,
+    reduced_intake: /intake|eat|ate|food|fluid|meal|lunch|drink/i,
+    breathlessness: /breath|breth|short of/i,
+    confusion: /confus|disorient/i,
+  };
+  const anchor =
+    start +
+    (observation.excerpt.search(terms[observation.code]) < 0
+      ? 0
+      : observation.excerpt.search(terms[observation.code]));
+  let left = 0,
+    right = text.length;
+  for (const boundary of text.matchAll(
+    /[.!?;\n]|\b(?:but|however|yet|although|whereas)\b|\band\s+(?=(?:she|he|they|the patient|patient)\b)/gi,
+  )) {
+    if (
+      inheritCoordination &&
+      boundary.index < anchor &&
+      /^and\s/i.test(boundary[0])
+    )
+      continue;
+    if (boundary.index < anchor) left = boundary.index + boundary[0].length;
+    else {
+      right = boundary.index;
+      break;
+    }
+  }
+  return text.slice(left, right);
+}
+
 export function validateObservations(
   text: string,
   raw: unknown,
@@ -51,30 +90,65 @@ export function validateObservations(
   for (const observation of observations) {
     if (!text.includes(observation.excerpt))
       throw new Error("Observation excerpt does not occur in the source note.");
-    const start = text.indexOf(observation.excerpt);
-    const sentenceStart =
-      Math.max(
-        text.lastIndexOf(".", start),
-        text.lastIndexOf(";", start),
-        text.lastIndexOf("\n", start),
-      ) + 1;
-    const following = text.indexOf(".", start + observation.excerpt.length);
-    const context = text.slice(
-      Math.max(sentenceStart, start - 80),
-      following < 0
-        ? Math.min(text.length, start + observation.excerpt.length + 40)
-        : following,
-    );
+    const context = observationContext(text, observation);
+    // A coordinated clause can inherit history: "last week and she was confused".
+    // Explicit current timing resets that scope; contrast/punctuation remain boundaries.
+    const historicalContext =
+      /\b(now|today|currently|this (?:morning|afternoon|evening)|at present)\b/i.test(
+        context,
+      )
+        ? context
+        : observationContext(text, observation, true);
     if (
       !observation.negated &&
-      /\b(no|not|denies|without|never)\b/i.test(context)
+      /\b(no|not|denies|without|never)\b/i.test(
+        context.replace(/\bnot only\b/gi, ""),
+      )
     )
       throw new Error("Observation contradicts explicit source negation.");
     if (
       observation.temporality === "current" &&
-      /\b(last (week|month|year)|yesterday|previously|used to)\b/i.test(context)
+      /\b(last (week|month|year)|yesterday|previously|used to|(?:\d+|one|two|three|several) (?:days?|weeks?|months?|years?) ago)\b/i.test(
+        historicalContext,
+      )
     )
       throw new Error("Observation contradicts explicit historical context.");
+    if (
+      !observation.negated &&
+      observation.temporality === "current" &&
+      /\b(may|might|maybe|perhaps|possibly|uncertain|unsure|whether|if|tomorrow|plan to|please check|check for|watch for)\b/i.test(
+        context,
+      )
+    )
+      throw new Error(
+        "Uncertain or planned observations require clarification.",
+      );
+    if (
+      /\b(?:ignore (?:all|the|previous|earlier)|system override|(?:return|output) (?:a|an|the|\{)|replace (?:the|this) note)\b|<system>/i.test(
+        context,
+      )
+    )
+      throw new Error("Instructions are not patient observation evidence.");
+    if (
+      /\b(?:I am (?:the|a) caregiver|caregiver (?:is|feels?|reports feeling))\b/i.test(
+        context,
+      )
+    )
+      throw new Error("Observer symptoms are not patient observations.");
+  }
+  for (const observation of observations) {
+    if (
+      observation.temporality === "current" &&
+      observations.some(
+        (other) =>
+          other.code === observation.code &&
+          other.temporality === "current" &&
+          other.negated !== observation.negated,
+      )
+    )
+      throw new Error(
+        "Conflicting current observations require clarification.",
+      );
   }
   return observations;
 }
