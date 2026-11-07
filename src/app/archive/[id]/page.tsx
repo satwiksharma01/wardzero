@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getStore } from "@/server/database";
 import { runIdentity } from "@/domain/demo";
+import { isCareError } from "@/domain/care";
 export const dynamic = "force-dynamic";
 export default async function Archive({
   params,
@@ -16,8 +17,9 @@ export default async function Archive({
   let snapshot;
   try {
     snapshot = await store.snapshot(new Date(), id);
-  } catch {
-    notFound();
+  } catch (error) {
+    if (isCareError(error) && error.status === 404) notFound();
+    throw error;
   }
   return (
     <main className="archive-page">
@@ -86,7 +88,12 @@ export default async function Archive({
       </section>
       <section className="panel readings-panel">
         <h2>Recent reading evidence</h2>
-        <div className="table-wrap">
+        <div
+          className="table-wrap"
+          tabIndex={0}
+          role="region"
+          aria-label="Scrollable archived readings"
+        >
           <table>
             <thead>
               <tr>

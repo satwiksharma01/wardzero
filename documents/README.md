@@ -20,7 +20,7 @@ All project documentation belongs in `documents/`, including plans, specificatio
 ## Status and maintenance
 
 - Prepared: 7 November 2026, Asia/Kolkata.
-- Stage: local monitoring, live Gemini notes, care response, and durable recovery built; see [latest verification](verification/2026-11-07-notes-recovery.md). Timed escalation and isolated demos are also built; [latest verification](verification/2026-11-07-demo-runs.md). Full release audit and submission remain pending.
+- Stage: T02–T12 complete locally, including live Gemini, durable recovery, autonomous escalation, isolated demos, and the full release audit. See [release verification](verification/2026-11-07-release.md). Source packaging, video, and submission remain T13.
 - Working project name: WardZero; subject to participant approval.
 - Participant: solo builder.
 - Update task status only after its acceptance criteria are verified.

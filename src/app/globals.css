@@ -378,7 +378,7 @@ h1 {
 .patient-context > span {
   font-size: 8px;
   letter-spacing: 1.3px;
-  color: #647562;
+  color: #4e604c;
 }
 .patient-context strong {
   font-weight: 550;
@@ -633,11 +633,11 @@ select {
 .small-label {
   font-size: 8px;
   letter-spacing: 1.4px;
-  color: #63765e;
+  color: #4e604c;
 }
 .simulator > p {
   font-size: 11px;
-  color: var(--muted);
+  color: #4e604c;
   margin-top: 7px;
 }
 .simulation-controls {
@@ -671,7 +671,7 @@ select {
 }
 .simulator small {
   font-size: 9px;
-  color: #63755f;
+  color: #4e604c;
   line-height: 1.6;
   display: block;
 }
@@ -1408,7 +1408,7 @@ tr:last-child td {
 }
 .queue-count {
   font-size: 11px;
-  color: var(--muted);
+  color: #4e604c;
   margin-right: auto;
 }
 .transport-offline {

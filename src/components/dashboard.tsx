@@ -351,7 +351,12 @@ export function Dashboard() {
                 Simulator 001
               </span>
             </div>
-            <div className="table-wrap">
+            <div
+              className="table-wrap"
+              tabIndex={0}
+              role="region"
+              aria-label="Scrollable reading log"
+            >
               <table>
                 <thead>
                   <tr>

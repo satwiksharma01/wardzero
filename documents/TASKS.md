@@ -120,9 +120,9 @@ Dependencies: T07, T09, T10. Verification: execute the full script twice with id
 
 ## T12 — Validate and polish the caregiver journey
 
-- [ ] Execute every critical case in VALIDATION.md and fix failures.
-- [ ] Check keyboard access, readable small-screen layout, timestamps, errors, and note preservation.
-- [ ] Complete build/type/lint checks configured by the project and record results.
+- [x] Execute every critical case in VALIDATION.md and fix failures.
+- [x] Check keyboard access, readable small-screen layout, timestamps, errors, and note preservation.
+- [x] Complete build/type/lint checks configured by the project and record results.
 
 Dependencies: T11. Verification: focused regression tests, browser journey, and verification report with actual commands. Proposed files: affected interface files, focused tests, documents/verification report. Scope: split fixes into small tasks as discovered.
 

@@ -24,6 +24,7 @@ export function CareContext({
       <span className="context-label">CURRENT CONCERN · DEMO RULES</span>
       <div
         className={`assessment-status concern-${assessment?.concern.toLowerCase() ?? "unknown"}`}
+        aria-live="polite"
       >
         <ShieldCheck size={20} />
         <strong data-testid="concern-level">

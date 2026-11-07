@@ -72,3 +72,42 @@ it("preserves readings and observation time after closing and reopening the data
     await rm(directory, { recursive: true });
   }
 });
+
+it("catches up an unanswered deadline exactly once after database restart", async () => {
+  const testRoot = path.resolve(".data/tests");
+  await mkdir(testRoot, { recursive: true });
+  const directory = await mkdtemp(path.join(testRoot, "persistence-"));
+  let db = new PGlite(directory);
+  const now = new Date("2026-11-07T08:00:00Z");
+  try {
+    let store = new ReadingStore(db);
+    await store.initialize();
+    await store.ingest(
+      [makeReading(12, "deteriorating", now, "restart-high")],
+      now,
+    );
+    const original = (await store.snapshot(now)).care.alerts[0];
+    await db.close();
+    db = new PGlite(directory);
+    store = new ReadingStore(db);
+    await store.initialize();
+    const recoveryTime = new Date(now.getTime() + 180000);
+    expect(await store.evaluateDeadlines(recoveryTime)).toBe(1);
+    expect(await store.evaluateDeadlines(recoveryTime)).toBe(0);
+    const recovered = (await store.snapshot(recoveryTime)).care.alerts[0];
+    expect(recovered.id).toBe(original.id);
+    expect(recovered.acknowledgementDueAt).toBe(original.acknowledgementDueAt);
+    expect(recovered.escalatedAt).toBe(recoveryTime.toISOString());
+    expect(
+      recovered.events.filter((event) => event.action === "escalated"),
+    ).toHaveLength(1);
+  } finally {
+    await db.close();
+    if (
+      path.dirname(path.resolve(directory)) !== testRoot ||
+      !path.basename(directory).startsWith("persistence-")
+    )
+      throw new Error("Unsafe test cleanup path");
+    await rm(directory, { recursive: true });
+  }
+});

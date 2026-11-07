@@ -1,17 +1,17 @@
-# Proposed architecture
+# WardZero architecture
 
 Status: Next.js/TypeScript/PostgreSQL stack confirmed by the participant on 7 November 2026. Local milestone uses filesystem-backed PGlite (embedded PostgreSQL). Local assessment, live Gemini notes, alerts, demo sessions, caregiver response, autonomous in-app escalation, durable outbox, and isolated demo runs are implemented. Hosted PostgreSQL and production identity remain prerequisites if public interactive hosting is chosen. Actual versions are pinned in package.json/package-lock.json. See [ADR-001](decisions/001-local-postgres.md) and [ADR-002](decisions/002-explained-care-loop.md).
 
-## Default stack proposal
+## Implemented stack
 
 - TypeScript with Next.js for the interface and server API, avoiding a second backend language for a solo build.
-- PostgreSQL with a familiar typed database layer for durable hosted state; local PostgreSQL for reproducible development where feasible.
+- Filesystem-backed PGlite (embedded PostgreSQL) with parameterized SQL and five numbered migrations for a reproducible local demo.
 - Browser simulator with IndexedDB outbox; it sends to the same ingestion API used by tests.
 - Schema validation at every boundary; structured-output-capable AI provider behind a server-only adapter.
 - Polling for current snapshot/history initially; introduce streaming only if justified.
 - Focused unit/integration tests plus a small browser journey suite using familiar tools.
 
-If this stack is unfamiliar, substitute a familiar equivalent before implementation. If PostgreSQL provisioning blocks progress, evaluate a persistent local SQLite demo and document hosting constraints. Do not deploy SQLite on an ephemeral filesystem and claim persistence.
+PGlite owns one database per Node process. This release binds to loopback and persists under ignored `.data/`. Public interactive hosting requires a separately reviewed identity system, hosted database, and supported background worker. Ephemeral serverless storage is unsuitable for this deployment.
 
 ## Data flow
 
@@ -33,37 +33,38 @@ flowchart LR
 
 AI calls occur outside database transactions. Persist the note first with Pending analysis; complete or fail analysis explicitly. Recompute assessment after validated extraction. Keep critical reading rules available independently of AI.
 
-## Proposed records
+## Persisted records
 
 | Record | Essential fields |
 |---|---|
-| Patient | id, synthetic label, baseline configuration version |
-| DemoRun | id, seed, scenario, virtual-clock anchor, speed, startedAt |
-| Reading | eventId, patientId, runId, deviceId, sequence, observedAt, receivedAt, metrics, quality flags |
+| Patient | Fixed synthetic identity `patient-001` in validated contracts; no real patient records. |
+| DemoRun | id, scenario, createdAt, clockOffsetMs, active; idempotent command journal for seed/reset/advance. |
+| Reading | eventId, patientId, runId, deviceId, sequence, observedAt, receivedAt, metrics. |
 | Note | id, patientId, runId, authorId, text, recordedAt, analysis status |
-| NoteAnalysis | noteId, observations, source excerpts, negation/temporality, model/prompt/schema versions, failure reason |
-| Assessment | id, patientId, runId, concern, evidence IDs, reasons, evaluatedAt, rules version, completeness |
+| NoteAnalysis | Fields on the note: observations, source excerpts, negation/temporality, model/prompt version, failure reason. |
+| Assessment | id, runId, concern, evidence IDs, reasons, evaluatedAt, latestObservedAt, ruleVersion. |
 | AlertEpisode | id, patientId, runId, type, severity, state, assignedActor, openedAt, acknowledgementDueAt |
 | CareEvent | id, alertId, actorId, action type, reason, occurredAt, idempotency key |
-| Escalation | alertId, policy version, target role, deadline, evaluatedAt, delivery status |
+| Escalation | Persisted dueAt/escalatedAt/backup actor on alert; one audit event and separate worker heartbeat. In-app channel only. |
+| Session | Opaque token hash, allowlisted demo actor, wall-time expiry. |
 
 Store measurements with explicit units and preserve observation/receipt times separately. Add uniqueness for event identity and escalation identity. Scope reads and writes to authorized patient/run assignments.
 
-## Proposed API contract
+## Local API contract
 
 Current local slice implements `POST /api/readings/batch`, `GET /api/patient`, `GET/POST /api/demo/session`, and `POST /api/alerts/:id/events`. The snapshot includes a bounded 60-reading history, current/last assessment, and five recent alert episodes with their audit history. `POST /api/notes`, `GET/POST /api/demo`, and read-only `/archive/:id` are also implemented. General multi-patient routing remains planned.
 
 | Endpoint | Purpose and guarantees |
 |---|---|
 | `POST /api/readings/batch` | Bounded batch, per-event accepted/duplicate/rejected result; same event ID and different payload is a conflict. |
-| `GET /api/patients/:id/snapshot` | Latest valid observed readings, concern, freshness, active alerts, server/run time. |
-| `GET /api/patients/:id/history` | Bounded time window/pagination with stable observation-time ordering. |
-| `POST /api/patients/:id/notes` | Validates size and actor; persists note before asynchronous or bounded analysis. |
+| `GET /api/patient` | Latest readings, last 60 readings, current/last assessment, five recent episodes, notes, run/clock, heartbeat. |
+| `POST /api/notes` | Validates size, source run, and actor; persists note before bounded model analysis. |
 | `POST /api/alerts/:id/events` | Authorizes actor, checks allowed state transition, appends audit event transactionally. |
-| `GET /api/alerts` | Returns alerts visible to the current role, including overdue state. |
-| `POST /api/demo/reset` | Protected operation; creates a new run rather than ambiguously merging old fixtures. |
+| `GET/POST /api/demo/session` | Inspect/activate an allowlisted local demo identity using an HttpOnly session cookie. |
+| `GET/POST /api/demo` | List ten recent runs; primary-only idempotent reset, preset, or time advance. |
+| `GET /archive/:id` | Read-only stored run evidence, including direct links older than the ten-run index. |
 
-Validation errors return structured field errors without sensitive internals. Mutations use idempotency where retries are possible. Exact response schemas are to be finalized with T02.
+Mutations validate with Zod, bound JSON bodies to 128 KB, and use idempotency identities where retries are possible. Reading batches contain 1–100 events. Session/care errors distinguish 400/401/403/404/409; operational failure returns 503 without database/provider internals. Multi-patient routing and public authentication are outside this release.
 
 ## Time and concurrency
 
@@ -76,9 +77,9 @@ Validation errors return structured field errors without sensitive internals. Mu
 
 ## Escalation execution
 
-Deploy a scheduled evaluator or worker if the hosting environment supports it. It must progress without an open dashboard. Use persisted due times, idempotent writes, and observable last-run status.
+Next.js Node instrumentation starts one in-process interval, which evaluates persisted deadlines every second. Transactional writes create exactly one escalation per episode. The UI exposes the worker's last check. A browser-closed production-server test verifies independent progress.
 
-A demo-only explicit time-advance/evaluate operation is acceptable for reproducibility if labeled. Request-driven polling alone is not autonomous background escalation; disclose it if used as a fallback.
+Demo time advance also evaluates deadlines for repeatability and is visibly labeled. Database reopen tests verify overdue catch-up; there is no continuous monitoring while the server/computer is off. No SMS, call, or external delivery is claimed.
 
 ## Outbox recovery
 
@@ -92,6 +93,6 @@ Treat notes as untrusted data, including embedded instructions. Request only an 
 
 ## Access and deployment
 
-Use an established authentication/session mechanism with server-enforced patient/role authorization. Demo identities may be preseeded, but roles cannot be trusted from client-supplied fields. Protect mutation endpoints against cross-site requests as appropriate to the session mechanism. Rate-limit public AI/ingestion paths and protect demo reset.
+The local server validates loopback Host, exact mutation Origin, JSON type, body size, and server-assigned care roles. Session tokens are random, hashed in storage, HttpOnly/SameSite Strict, and expire after eight wall-time hours. Both identity choices are intentionally available to the local participant; this is a demonstration boundary rather than production sign-in.
 
 Use synthetic data exclusively. A public read-only demo can be separate from authenticated write controls. Record environment variable names in future SETUP.md; never commit values. Verify persistent storage, worker support, and deployment build before recording the video.

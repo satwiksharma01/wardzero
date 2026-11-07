@@ -55,3 +55,11 @@ The overview's job is to make the last received evidence legible. Its primary de
 - Verify: 45 automated tests, seven browser tests, two repeated demo cycles, and browser-closed checks in development and production.
 - Review: cross-bundle error identity, snapshot ordering across clock reset, pending-data preservation, and late AI completion isolation.
 - Ship: local milestone. Next cycle: full release audit and submission artifacts.
+
+## Completed cycle: release audit
+
+- Define/Plan: execute V01–V22 and the T12 usability checks.
+- Build: contrast and keyboard-scroll fixes, polite concern announcements, accurate archive errors, targeted lint dependency patch, and a draft-preservation browser check.
+- Verify: 46 automated tests, eight browser journeys, four live Gemini cases, live care journey, browser-closed production worker, lint, formatting, and artifact-checked production build.
+- Review: no unresolved core-matrix failures; zero current npm advisories. See verification/2026-11-07-release.md for scope and limits.
+- Ship: verified local release candidate. T13 source setup, video, and authenticated submission remain open.
