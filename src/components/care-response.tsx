@@ -1,5 +1,9 @@
 "use client";
 
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+
 import { useEffect, useRef, useState } from "react";
 import { BellRing, CheckCircle2, UserCheck } from "lucide-react";
 import {
@@ -130,13 +134,13 @@ export function CareResponse({
           <option value="primary">Ananya · Primary caregiver</option>
           <option value="backup">Ravi · Backup coordinator</option>
         </select>
-        <button
-          className="secondary-button"
+        <Button
+          variant="outline"
           disabled={busy || disconnected}
           onClick={() => void activate()}
         >
           {busy ? "Activating…" : "Activate identity"}
-        </button>
+        </Button>
       </div>
       {error && (
         <p className="error-text" role="alert">
@@ -327,35 +331,34 @@ function AlertCard({
             </p>
           )}
           {needsText && (
-            <>
-              <label htmlFor={`action-${alert.id}`}>
-                {action === "resolve"
-                  ? "Resolution reason"
-                  : "Caregiver action"}
-              </label>
-              <textarea
-                id={`action-${alert.id}`}
-                value={text}
-                onChange={(event) => {
-                  setText(event.target.value);
-                  if (pending.current) pending.current = null;
-                }}
-                minLength={5}
-                maxLength={1000}
-                required
-                disabled={busy || !assigned || disconnected}
-                placeholder={
-                  action === "resolve"
-                    ? "Record why this alert can be closed."
-                    : "Record what you did in response to this concern."
-                }
-              />
-            </>
+            <FieldGroup>
+              <Field data-disabled={busy || !assigned || disconnected}>
+                <FieldLabel htmlFor={`action-${alert.id}`}>
+                  {action === "resolve"
+                    ? "Resolution reason"
+                    : "Caregiver action"}
+                </FieldLabel>
+                <Textarea
+                  id={`action-${alert.id}`}
+                  value={text}
+                  onChange={(event) => {
+                    setText(event.target.value);
+                    if (pending.current) pending.current = null;
+                  }}
+                  minLength={5}
+                  maxLength={1000}
+                  required
+                  disabled={busy || !assigned || disconnected}
+                  placeholder={
+                    action === "resolve"
+                      ? "Record why this alert can be closed."
+                      : "Record what you did in response to this concern."
+                  }
+                />
+              </Field>
+            </FieldGroup>
           )}
-          <button
-            className="primary-button"
-            disabled={busy || !assigned || disconnected}
-          >
+          <Button disabled={busy || !assigned || disconnected}>
             {busy
               ? "Saving…"
               : error
@@ -365,7 +368,7 @@ function AlertCard({
                   : action === "record-action"
                     ? "Record action"
                     : "Resolve alert"}
-          </button>
+          </Button>
           {error && (
             <p className="error-text" role="alert">
               {error}

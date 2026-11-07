@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+
 import { useSimulator } from "@/client/use-simulator";
 import type { DemoRun } from "@/domain/demo";
 import {
@@ -64,23 +66,19 @@ export function Simulator({
             <option value="deteriorating">Gradual deterioration</option>
           </select>
         </div>
-        <button
-          className="primary-button"
-          disabled={sending || !ready}
-          onClick={() => void send()}
-        >
+        <Button disabled={sending || !ready} onClick={() => void send()}>
           <Radio size={16} />
           {sending ? "Sending…" : "Send one reading"}
           <ArrowUpRight size={15} />
-        </button>
-        <button
-          className="secondary-button"
+        </Button>
+        <Button
+          variant="outline"
           disabled={sending || !ready}
           onClick={() => setRunning((value) => !value)}
         >
           {running ? <Pause size={15} /> : <Play size={15} />}
           {running ? "Pause stream" : "Stream every 5s"}
-        </button>
+        </Button>
       </div>
       <div className="transport-controls">
         <span className={`tag ${summary.blocked ? "transport-offline" : ""}`}>
@@ -92,21 +90,21 @@ export function Simulator({
         <span className="queue-count" data-testid="queue-count">
           {summary.pending} queued · {summary.rejected.length} rejected
         </span>
-        <button
-          className="secondary-button"
+        <Button
+          variant="outline"
           disabled={!ready || sending}
           onClick={() => void toggleTransport()}
         >
           {summary.blocked ? "Reconnect sensor" : "Disconnect sensor"}
-        </button>
+        </Button>
         {summary.pending > 0 && !summary.blocked && (
-          <button
-            className="secondary-button"
+          <Button
+            variant="outline"
             disabled={sending}
             onClick={() => void sync(true)}
           >
             Retry queued readings
-          </button>
+          </Button>
         )}
       </div>
       <div

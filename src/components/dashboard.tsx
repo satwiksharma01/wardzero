@@ -17,7 +17,12 @@ import {
   Thermometer,
   Waves,
   Wind,
+  BellRing,
+  FileText,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { Snapshot } from "@/domain/readings";
 import { Simulator } from "./simulator";
 import { CareContext } from "./care-context";
@@ -111,15 +116,23 @@ export function Dashboard() {
           </span>
           wardzero<span className="brand-dot">.</span>
         </a>
-        <span className="nav-caption">CARE WORKSPACE</span>
+        <span className="nav-caption">Your workspace</span>
         <nav aria-label="Workspace">
           <a className="nav-link selected" href="#main">
             <LayoutDashboard size={18} />
-            Care overview<span className="nav-count">1</span>
+            Care overview
           </a>
           <a className="nav-link" href="#vital-history">
             <Activity size={18} />
             Vital history
+          </a>
+          <a className="nav-link" href="#care-response">
+            <BellRing size={18} />
+            Care response
+          </a>
+          <a className="nav-link" href="#caregiver-notes">
+            <FileText size={18} />
+            Observations
           </a>
           <a className="nav-link" href="#simulator">
             <FlaskConical size={18} />
@@ -128,12 +141,8 @@ export function Dashboard() {
         </nav>
         <div className="sidebar-note">
           <House size={23} />
-          <p>
-            Good care.
-            <br />
-            Closer to home.
-          </p>
-          <span>Operation Ward Zero</span>
+          <p>Care with continuity.</p>
+          <span>Readings, context, and a recorded response.</span>
         </div>
         <div className="workspace-identity">
           <span className="avatar small">WZ</span>
@@ -150,30 +159,41 @@ export function Dashboard() {
             Workspace <ChevronRight size={13} />
             <span>Care overview</span>
           </div>
-          <span className="demo-badge">
+          <Badge variant="outline" className="demo-badge">
             <FlaskConical size={13} />
             DEMONSTRATION
             {(snapshot?.run.clockOffsetMs ?? 0) > 0 &&
               ` · CLOCK +${Math.round(snapshot!.run.clockOffsetMs / 1000)}s`}
-          </span>
+          </Badge>
         </header>
         <main id="main" tabIndex={-1}>
           <div className="page-heading">
             <div>
-              <span className="eyebrow">YOUR HOME-CARE WORKSPACE</span>
-              <h1>Every reading. A clearer picture.</h1>
-              <p>A connected view of recovery, from the comfort of home.</p>
+              <h1>Patient overview</h1>
+              <p>Readings, observations, and the next care action.</p>
             </div>
-            <a className="secondary-button" href="#simulator">
-              Open simulator
-              <ArrowUpRight size={16} />
-            </a>
+            <div className="heading-actions">
+              <Button variant="outline" asChild>
+                <a href="#simulator">
+                  Open simulator
+                  <ArrowUpRight data-icon="inline-end" />
+                </a>
+              </Button>
+              <Button asChild>
+                <a href="#caregiver-notes">
+                  <FileText data-icon="inline-start" />
+                  Record observation
+                </a>
+              </Button>
+            </div>
           </div>
           {error && (
             <div className="error-banner" role="alert">
               <Info size={18} />
               <span>{error}</span>
-              <button onClick={() => void refresh()}>Retry</button>
+              <Button variant="outline" onClick={() => void refresh()}>
+                Retry
+              </Button>
             </div>
           )}
 
@@ -183,7 +203,7 @@ export function Dashboard() {
               <div>
                 <div className="patient-title">
                   <h2 id="patient-name">Meera Rao</h2>
-                  <span className="tag">Demo patient</span>
+                  <Badge variant="secondary">Demo patient</Badge>
                 </div>
                 <p>
                   68 years <span>·</span> Post-discharge recovery <span>·</span>{" "}
@@ -222,9 +242,12 @@ export function Dashboard() {
                   is separate from current concern.
                 </p>
               </div>
-              <a className="secondary-button" href="#care-response">
-                View care response
-              </a>
+              <Button variant="outline" asChild>
+                <a href="#care-response">
+                  View care response
+                  <ArrowUpRight data-icon="inline-end" />
+                </a>
+              </Button>
             </div>
           )}
           <div className="section-heading vitals-heading">
@@ -255,9 +278,16 @@ export function Dashboard() {
                     <Icon size={17} />
                   </div>
                   <div className="vital-value">
-                    {value === undefined
-                      ? "—"
-                      : value.toFixed(definition.decimals)}
+                    {!snapshot && !error ? (
+                      <Skeleton
+                        className="h-10 w-20"
+                        aria-label="Loading measurement"
+                      />
+                    ) : value === undefined ? (
+                      "—"
+                    ) : (
+                      value.toFixed(definition.decimals)
+                    )}
                     <span>{definition.unit}</span>
                   </div>
                   <VitalChart
@@ -335,34 +365,48 @@ export function Dashboard() {
             />
           </div>
 
-          <CareResponse
-            workerLastTickAt={snapshot?.care.workerLastTickAt ?? null}
-            alerts={snapshot?.care.alerts ?? []}
-            disconnected={!!error}
-            onChange={refresh}
-          />
-          <CaregiverNotes
-            assessment={snapshot?.care.currentAssessment}
-            serverTime={snapshot?.serverTime}
-            key={`notes-${snapshot?.run.id ?? "loading"}`}
-            runId={snapshot?.run.id ?? "local"}
-            notes={snapshot?.care.notes ?? []}
-            disconnected={!!error}
-            onChange={refresh}
-          />
-          <DemoControls
-            run={snapshot?.run}
-            serverTime={snapshot?.serverTime}
-            disconnected={!!error}
-            onChange={refresh}
-          />
-          {snapshot && (
-            <Simulator
-              key={`simulator-${snapshot.run.id}`}
-              run={snapshot.run}
-              onReading={refresh}
+          <div className="care-workspace-grid">
+            <CareResponse
+              workerLastTickAt={snapshot?.care.workerLastTickAt ?? null}
+              alerts={snapshot?.care.alerts ?? []}
+              disconnected={!!error}
+              onChange={refresh}
             />
-          )}
+            <CaregiverNotes
+              assessment={snapshot?.care.currentAssessment}
+              serverTime={snapshot?.serverTime}
+              key={`notes-${snapshot?.run.id ?? "loading"}`}
+              runId={snapshot?.run.id ?? "local"}
+              notes={snapshot?.care.notes ?? []}
+              disconnected={!!error}
+              onChange={refresh}
+            />
+          </div>
+          <div className="section-heading tools-heading">
+            <div>
+              <h2>Demo workspace</h2>
+              <p>Generate synthetic readings and repeat the care journey.</p>
+            </div>
+            <Badge variant="outline">
+              <FlaskConical aria-hidden="true" />
+              Simulation tools
+            </Badge>
+          </div>
+          <div className="tools-grid">
+            <DemoControls
+              run={snapshot?.run}
+              serverTime={snapshot?.serverTime}
+              disconnected={!!error}
+              onChange={refresh}
+            />
+            {snapshot && (
+              <Simulator
+                key={`simulator-${snapshot.run.id}`}
+                run={snapshot.run}
+                onReading={refresh}
+              />
+            )}
+          </div>
           <section
             className="panel readings-panel"
             aria-labelledby="readings-title"

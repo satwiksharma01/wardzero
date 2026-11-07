@@ -12,6 +12,13 @@ test("caregiver can navigate by keyboard, preserve failed drafts, and read compa
   ).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
+  const observe = page.getByRole("link", {
+    name: "Record observation",
+    exact: true,
+  });
+  await observe.focus();
+  await observe.press("Enter");
+  await expect(page.locator("#caregiver-notes")).toBeFocused();
   await page.getByRole("button", { name: "Activate identity" }).click();
   await expect(
     page.getByText("Ananya Shah · Primary caregiver", { exact: true }),
@@ -68,11 +75,25 @@ test("caregiver can navigate by keyboard, preserve failed drafts, and read compa
   for (const width of [320, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.evaluate(() => document.fonts.ready);
+    const layout = await page.evaluate(() => ({
+      width: document.documentElement.scrollWidth,
+      offenders: [...document.querySelectorAll("body *")]
+        .filter(
+          (element) =>
+            !element.closest(".table-wrap") &&
+            element.getBoundingClientRect().right > innerWidth + 1,
+        )
+        .slice(0, 8)
+        .map((element) => ({
+          tag: element.tagName,
+          className: element.getAttribute("class"),
+          right: element.getBoundingClientRect().right,
+        })),
+    }));
     expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= innerWidth,
-      ),
-    ).toBe(true);
+      layout.width,
+      JSON.stringify({ viewport: width, ...layout }),
+    ).toBeLessThanOrEqual(width);
     const report = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
       .analyze();

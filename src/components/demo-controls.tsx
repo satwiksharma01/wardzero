@@ -1,4 +1,6 @@
 "use client";
+
+import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
 import { History, RotateCcw, Timer } from "lucide-react";
 import type { DemoRun, DemoRunSummary } from "@/domain/demo";
@@ -105,8 +107,8 @@ export function DemoControls({
           <option value="outage">Connectivity outage</option>
           <option value="no-response">Unanswered alert</option>
         </select>
-        <button
-          className="secondary-button"
+        <Button
+          variant="outline"
           disabled={disabled}
           onClick={() =>
             void execute({ action: "reset", id: crypto.randomUUID(), scenario })
@@ -114,11 +116,11 @@ export function DemoControls({
         >
           <RotateCcw size={14} />
           New demo run
-        </button>
+        </Button>
       </div>
       <div className="demo-toolbar">
-        <button
-          className="secondary-button"
+        <Button
+          variant="outline"
           disabled={disabled}
           onClick={() =>
             void execute({
@@ -130,9 +132,9 @@ export function DemoControls({
           }
         >
           Load stable baseline
-        </button>
-        <button
-          className="secondary-button"
+        </Button>
+        <Button
+          variant="outline"
           disabled={disabled}
           onClick={() =>
             void execute({
@@ -144,9 +146,9 @@ export function DemoControls({
           }
         >
           Load deterioration
-        </button>
-        <button
-          className="secondary-button"
+        </Button>
+        <Button
+          variant="outline"
           disabled={disabled}
           onClick={() =>
             void execute({
@@ -158,9 +160,9 @@ export function DemoControls({
           }
         >
           Advance 35 seconds
-        </button>
-        <button
-          className="secondary-button"
+        </Button>
+        <Button
+          variant="outline"
           disabled={disabled}
           onClick={() =>
             void execute({
@@ -172,7 +174,7 @@ export function DemoControls({
           }
         >
           Advance 130 seconds
-        </button>
+        </Button>
       </div>
       <small>
         Advancing demo time also evaluates freshness and alert deadlines. It
@@ -182,15 +184,15 @@ export function DemoControls({
       {error && (
         <div className="demo-error" role="alert">
           <p>{error}</p>
-          <button
-            className="secondary-button"
+          <Button
+            variant="outline"
             disabled={busy}
             onClick={() => {
               if (pending.current) void execute(pending.current);
             }}
           >
             Retry demo action
-          </button>
+          </Button>
         </div>
       )}
       <details className="run-history">

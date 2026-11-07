@@ -1,6 +1,10 @@
 "use client";
 
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+
 import { useRef, useState } from "react";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { FileText } from "lucide-react";
 import type { CareNote } from "@/domain/notes";
 import type { Assessment } from "@/domain/assessment";
@@ -62,6 +66,7 @@ export function CaregiverNotes({
       className="panel notes-panel"
       aria-labelledby="notes-title"
       id="caregiver-notes"
+      tabIndex={-1}
     >
       <div className="section-heading">
         <div className="heading-with-icon">
@@ -83,23 +88,29 @@ export function CaregiverNotes({
         }}
         className="care-action-form"
       >
-        <label htmlFor="caregiver-note">Patient observation</label>
-        <textarea
-          id="caregiver-note"
-          minLength={5}
-          maxLength={2000}
-          required
-          value={text}
-          disabled={busy || disconnected}
-          onChange={(event) => {
-            setText(event.target.value);
-            pending.current = null;
-          }}
-          placeholder="For example: More tired today and barely ate lunch."
-        />
-        <button className="primary-button" disabled={busy || disconnected}>
+        <FieldGroup>
+          <Field data-disabled={busy || disconnected}>
+            <FieldLabel htmlFor="caregiver-note">
+              Patient observation
+            </FieldLabel>
+            <Textarea
+              id="caregiver-note"
+              minLength={5}
+              maxLength={2000}
+              required
+              value={text}
+              disabled={busy || disconnected}
+              onChange={(event) => {
+                setText(event.target.value);
+                pending.current = null;
+              }}
+              placeholder="For example: More tired today and barely ate lunch."
+            />
+          </Field>
+        </FieldGroup>
+        <Button disabled={busy || disconnected}>
           {busy ? "Saving and interpreting…" : "Save observation"}
-        </button>
+        </Button>
         {error && (
           <p className="error-text" role="alert">
             {error}
@@ -154,13 +165,13 @@ export function CaregiverNotes({
           {(note.status === "Failed" ||
             note.status === "Unavailable" ||
             note.status === "Pending") && (
-            <button
-              className="secondary-button"
+            <Button
+              variant="outline"
               disabled={busy || disconnected}
               onClick={() => void save({ id: note.id, text: note.text }, true)}
             >
               Retry analysis
-            </button>
+            </Button>
           )}
           <details className="evidence-details">
             <summary>Observation reference</summary>

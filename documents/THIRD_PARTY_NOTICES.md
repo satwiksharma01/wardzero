@@ -11,6 +11,11 @@ Versions and resolved dependencies are pinned in `package-lock.json`. npm instal
 | Lucide React | 1.70.0 | ISC | Interface icons. |
 | Playwright | 1.65.0 | Apache-2.0 | Chrome tests and actual-screen video capture. |
 | axe Playwright integration | 4.14.0 | MPL-2.0 | Development accessibility checks. |
+| shadcn/ui source components | CLI 4.23.0, customized | MIT | Buttons, badges, fields, textarea, loading placeholder. |
+| Radix UI | 1.8.1 | MIT | Accessible slot, label and separator primitives. |
+| cn | 0.5.2 | MIT | Tailwind class composition. |
+| class-variance-authority | 0.7.1 | Apache-2.0 | Component variants. |
+| Tailwind CSS / PostCSS integration | 4.3.5 | MIT | UI utility generation, restricted to application source. |
 
 The CSS requests DM Sans and Manrope through Google Fonts, with Arial/sans-serif fallbacks. No font binaries are vendored into this repository. The app remains functional with fallback fonts if that request is unavailable.
 
