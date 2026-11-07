@@ -3,7 +3,8 @@ import type { CareSnapshot } from "./care";
 import type { DemoRun } from "./demo";
 
 export const PATIENT_ID = "patient-001";
-export const FUTURE_SKEW_MS = 5000;
+// Future observations have no current-care eligibility; reject instead of buffering them invisibly.
+export const FUTURE_SKEW_MS = 0;
 export const readingSchema = z
   .object({
     eventId: z

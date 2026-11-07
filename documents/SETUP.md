@@ -49,7 +49,7 @@ Browser test data is isolated under `.data/browser-*`. Screenshots live in `docu
 
 `POST /api/readings/batch` accepts `{ readings: [...] }` with 1–100 entries, a JSON body under 128 KB, and a same-origin local request. Each result is accepted, duplicate, conflict, or rejected. Duplicate identity with a changed payload is never silently overwritten.
 
-Units are encoded in metric names: `pulseBpm`, `oxygenPct`, `temperatureC`, `respiratoryRate` (breaths/minute). Timestamps use UTC ISO strings; the UI formats local time. Observations over five seconds in the future are rejected. Freshness changes at 30 and 90 seconds for this demo.
+Units are encoded in metric names: `pulseBpm`, `oxygenPct`, `temperatureC`, `respiratoryRate` (breaths/minute). Timestamps use UTC ISO strings; the UI formats local time. Any observation ahead of its source run's server clock is rejected and retained in the simulator's rejected queue for inspection; timestamps are never silently repaired. Freshness changes at 30 and 90 seconds for this demo.
 
 ## Current limits
 

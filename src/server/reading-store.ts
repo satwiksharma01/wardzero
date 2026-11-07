@@ -73,7 +73,8 @@ export class ReadingStore {
             return {
               eventId: reading.eventId,
               status: "rejected",
-              reason: "Observation is more than five seconds in the future.",
+              reason:
+                "Observation is in the future relative to the source run clock.",
             };
           const inserted = await tx.query(
             `INSERT INTO readings (event_id, observed_at, received_at, payload,run_id)

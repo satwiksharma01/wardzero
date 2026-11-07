@@ -70,7 +70,7 @@ Mutations validate with Zod, bound JSON bodies to 128 KB, and use idempotency id
 
 - Use UTC instants in storage and explicit timezone formatting in the UI.
 - Inject a clock into simulator, assessment, and escalation logic; accelerated demos must share the same virtual clock mapping.
-- Reject or quarantine future readings beyond configured skew. Never silently repair their timestamps.
+- Reject any reading ahead of its source run's clock (zero positive skew). No invisible future-evidence buffer exists; the simulator retains rejected entries for inspection. Never silently repair timestamps.
 - Append historical readings, but recompute the current snapshot from latest valid observation time.
 - Evaluate active episodes transactionally; use uniqueness/locking to prevent concurrent ingestion from opening duplicate episodes.
 - Separate historical replay analysis from current alerting. Use freshness eligibility at evaluation time.
