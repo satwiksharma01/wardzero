@@ -1,5 +1,7 @@
 # Demo and submission plan
 
+Prepared artifacts: [three-minute demo](submission/wardzero-demo.mp4), [captions](submission/wardzero-demo.srt), [submission text](submission/ENTRY_COPY.md), [judge guide](JUDGE_GUIDE.md), and [package verification](verification/2026-11-07-package.md). Repository visibility and the authenticated submission step remain pending.
+
 ## Three-minute narrative
 
 Lead with the caregiver problem and demonstrate causal changes in the running application. Show the simulator sending data; avoid substituting prerecorded UI state for integration proof.
@@ -19,13 +21,13 @@ Rehearse the queue/reload segment and scenario reset before recording. Use clear
 ## Submission artifacts
 
 - [ ] Source repository with application, simulator, executable tests, lockfile, fixtures, and environment-variable example without values.
-- [ ] `documents/README.md` index and finalized setup, architecture, decisions, and limitations.
-- [ ] Exact setup/reset/test/build commands verified against the submitted revision.
+- [x] `documents/README.md` index and finalized setup, architecture, decisions, and limitations.
+- [x] Exact setup/reset/test/build commands verified against the release candidate; clean source revision 7752366 passes.
 - [ ] Three-minute video playable with the intended access permissions.
 - [ ] Live demo link if required or available; write/reset operations appropriately protected.
-- [ ] AI provider/model requirements and a clearly labeled deterministic test/demo fallback.
-- [ ] Synthetic data origin and any dependency/dataset attribution or license obligations.
-- [ ] Verification report showing actual results rather than proposed targets.
+- [x] AI provider/model requirements, explicitly isolated deterministic test mocks, and honest Unavailable behavior without a key.
+- [x] Synthetic data origin and third-party attribution recorded in AI_USE.md and THIRD_PARTY_NOTICES.md.
+- [x] Verification reports show executed results rather than proposed targets.
 
 The public brief asks for a repository and README. Our substantive README is `documents/README.md`; if a root README is needed for discoverability, use only a pointer there in accordance with the documentation convention.
 

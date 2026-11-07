@@ -8,27 +8,25 @@ Prepared: 7 November 2026. Implementation status is tracked in TASKS.md and date
 |---|---|---|---|
 | D01 | Confirmed user instruction | Store all substantive documentation in documents/. | One discoverable source of project context. |
 | D02 | Confirmed context | Solo implementation. | Limit breadth and external service dependencies. |
-| D03 | Proposed | One synthetic post-discharge patient and two response roles. | Demonstrates ownership and escalation without a hospital management suite. |
+| D03 | Implemented locally | One synthetic post-discharge patient and two response roles. | Demonstrates ownership and escalation without a hospital management suite. |
 | D04 | Accepted stack; local implementation | Next.js/TypeScript and PostgreSQL. | User confirmed. Local PGlite persists to disk; hosted PostgreSQL provisioning remains open. See decisions/001-local-postgres.md. |
 | D05 | Implemented locally | Deterministic concern engine plus bounded live Gemini extraction. | Structured output and source excerpts verified; no clinical forecasting claim. |
 | D06 | Implemented locally | Separate concern, freshness, and response lifecycle. | Missing data, patient condition, and acknowledgement mean different things. |
 | D07 | Implemented locally | Browser simulator with IndexedDB outbox and idempotent ingestion. | Verified refresh, real transport failure, lost acknowledgement, capacity, and replay; browser eviction remains a limit. |
-| D08 | Proposed | In-app coordinator escalation as initial channel. | Avoid notification-service setup; do not imply external delivery. |
+| D08 | Implemented locally | In-app coordinator escalation as initial channel. | Autonomous worker verified; no external delivery is claimed. |
 | D09 | Implemented locally | Shared virtual clock for deterministic demos. | Deadline and observation-time behavior remain coherent during acceleration. |
 | D10 | Implemented locally | Polling and a one-second Node evaluator for autonomous escalation. | Simpler UI transport; background execution still needs hosting support. |
 | D11 | Confirmed user instruction | Define → Plan → Build → Verify → Review → Ship. | Apply to each feature slice; see WORKFLOW.md. |
 
 When accepted, capture expensive-to-reverse choices as sequential ADRs under `documents/decisions/`, including alternatives and consequences. Do not delete superseded decisions.
 
-## Questions to resolve first
+## Unresolved external questions
 
 1. What is the actual submission deadline and timezone, distinct from registration?
-2. Is registration complete and what fields/assets does the submission flow require?
-3. Which stack does the participant know best, and what is the actual available build time?
-4. Which AI provider credentials and hosting/database accounts are available?
-5. Does the deployment support persistent storage and scheduled execution?
-6. Do additional rules govern AI assistance, preexisting code, external datasets, or repository visibility?
-7. Are in-app alerts sufficient? The public SMS/call question is unanswered; no requirement should be invented.
+2. Registration is confirmed as WZ-95CMQ; what fields/assets does the current submission form require?
+3. What repository visibility/reviewer permissions does the participant want, and do additional declarations govern AI assistance or preexisting code?
+4. Is public interactive hosting required by the live form? If so, which supported identity/database/worker hosting is available?
+5. Are in-app alerts sufficient? The public SMS/call question is unanswered; no requirement should be invented.
 
 ## Risk register
 

@@ -1,14 +1,14 @@
 # Implementation checklist
 
-Status: T02–T09 implemented for the fixed local demo, with live Gemini integration verified. T10 escalation and T11 isolated demos are verified; T12/T13 remain open. T00/T01 remain partially complete. Production identity and run isolation remain prerequisites for later hosting/demo reset. Budgets are in [ROADMAP.md](ROADMAP.md). Follow [WORKFLOW.md](WORKFLOW.md) for each slice.
+Status: T01–T12 verified for the local single-patient prototype, including live Gemini, run isolation, durable recovery, autonomous escalation, and the release audit. T13 packaging is underway; T00 cutoff/form details and final submission remain open. Public interactive hosting would require production identity and hosted persistence. Follow [WORKFLOW.md](WORKFLOW.md) for each slice.
 
 ## T00 — Confirm participation and constraints
 
 Registration is confirmed by saved entry WZ-95CMQ; see HACKATHON_ENTRY.md. Exact cutoff and expanded submission fields remain unverified.
 
 - [ ] Record registration status, actual submission cutoff/timezone, submission fields, and any additional rules.
-- [ ] Confirm familiar stack, available AI credentials, hosting access, and actual work budget.
-- [ ] Resolve architecture proposals in DECISIONS.md or explicitly retain a documented fallback.
+- [x] Record the participant-approved Next.js/TypeScript stack and supplied Gemini credentials; use the documented local PGlite fallback. No fixed work budget or public hosting account was specified.
+- [x] Resolve architecture proposals in DECISIONS.md and accepted ADRs; retain public-hosting prerequisites explicitly.
 
 Dependencies: none. Verification: inspect authenticated submission requirements manually; do not infer unknown fields. Files: documents/DECISIONS.md, documents/ROADMAP.md. Scope: small.
 
@@ -54,7 +54,7 @@ Dependencies: T03. Verification: stable, deteriorating, missing, old, and future
 
 ## T05 — Open one alert episode
 
-- [x] Persist one active patient-concern episode in the fixed local run and update severity with audit history. General run isolation and monitoring-alert types remain later work.
+- [x] Persist one active patient-concern episode per run and update severity with audit history. Monitoring freshness remains a separate state.
 - [x] Link alert to assessment evidence and owner.
 - [x] Prevent duplicates under ingestion retry/concurrency.
 
@@ -128,8 +128,9 @@ Dependencies: T11. Verification: focused regression tests, browser journey, and 
 
 ## T13 — Package, record, and submit
 
-- [ ] Reproduce setup from a clean environment and finalize architecture/limitations documentation.
-- [ ] Record and inspect the three-minute video; verify repository, deployment, and video permissions.
+- [x] Reproduce setup from a clean environment and finalize architecture/limitations documentation.
+- [x] Record and inspect the three-minute video locally with live Gemini and explicit synthetic-clock labels.
+- [ ] Verify externally accessible repository/video links and any required deployment permissions.
 - [ ] Submit through the required flow before verified cutoff and retain confirmation.
 
 Dependencies: T12. Verification: independent link-open check, video playback, setup run, and submission receipt. Files: documents/SETUP.md, documents/SUBMISSION.md, documents/verification report, video artifact. Scope: medium.

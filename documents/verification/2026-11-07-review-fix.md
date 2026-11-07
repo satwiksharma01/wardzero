@@ -10,5 +10,6 @@ Added a regression covering +1 ms, +1 second, +5 seconds, and exact-now acceptan
 - `npm run test:e2e`: **eight Chrome journeys passed**, 42.1 seconds; includes normal generation, durable replay, live-shaped mock-provider flow, care transitions, repeated scenarios, accessibility, and preserved drafts.
 - Fresh reviewer independently re-probed the correction in memory: all positive offsets rejected, exact-now High still opens one alert. Verdict: approved, no further correction findings.
 - `npm run build`: passed with TypeScript and all 11 runtime-data/private-environment trace checks.
+- `npm run test:worker:production`: passed again on the corrected build, 10.4 seconds; autonomous browser-closed escalation and backup acknowledgement remain intact.
 
 This tightens the initial ingestion policy without changing clinical-demo thresholds or assessment semantics. Distributed-device clock synchronization remains outside this local shared-clock prototype.

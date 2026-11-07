@@ -10,3 +10,5 @@ test-results/
 playwright-report/
 coverage/
 *.log
+/documents/submission/wardzero-source.zip
+/documents/submission/ARTIFACTS.json

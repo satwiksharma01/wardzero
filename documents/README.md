@@ -2,6 +2,8 @@
 
 All project documentation belongs in `documents/`, including plans, specifications, architecture decisions, setup instructions, verification reports, and submission materials. Keep implementation code and executable tests outside this folder.
 
+**Reviewing the entry? Start with the [judge guide](JUDGE_GUIDE.md)** for the working flow, evidence by judging criterion, and prototype boundaries. [AI/data disclosure](AI_USE.md) describes the runtime model and development assistance.
+
 ## Read in this order
 
 1. [Roadmap](ROADMAP.md): strategy, milestones, time budgets, and release gates.
@@ -20,7 +22,7 @@ All project documentation belongs in `documents/`, including plans, specificatio
 ## Status and maintenance
 
 - Prepared: 7 November 2026, Asia/Kolkata.
-- Stage: T02–T12 complete locally, including live Gemini, durable recovery, autonomous escalation, isolated demos, and the full release audit. See [release verification](verification/2026-11-07-release.md). Source packaging, video, and submission remain T13.
+- Stage: T01–T12 complete locally, including live Gemini, durable recovery, autonomous escalation, isolated demos, and the [release audit](verification/2026-11-07-release.md). The [final review correction](verification/2026-11-07-review-fix.md) is verified. T13 source/video packaging is prepared; external publication, live submission fields, and the final receipt remain pending.
 - Working project name: WardZero; subject to participant approval.
 - Participant: solo builder.
 - Update task status only after its acceptance criteria are verified.

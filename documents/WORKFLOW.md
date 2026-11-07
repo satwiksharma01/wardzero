@@ -63,3 +63,11 @@ The overview's job is to make the last received evidence legible. Its primary de
 - Verify: 46 automated tests, eight browser journeys, four live Gemini cases, live care journey, browser-closed production worker, lint, formatting, and artifact-checked production build.
 - Review: no unresolved core-matrix failures; zero current npm advisories. See verification/2026-11-07-release.md for scope and limits.
 - Ship: verified local release candidate. T13 source setup, video, and authenticated submission remain open.
+
+## Packaging cycle
+
+- Define/Plan: match the public source/README/video requirements and preserve honest clinical boundaries.
+- Build: judge guide, submission copy, disclosure/credits, real UI recording, synthesized narration, captions, and source export.
+- Verify: clean application revision 264d833 installs/tests/builds; final demo transitions assert successfully; local video is decoded and played in Chrome.
+- Review: fresh code review found one accepted-future-evidence gap. ADR-005 and a failing-then-passing regression resolve it; reviewer approved the correction.
+- Ship: local artifacts prepared. External visibility, live form/declarations, cutoff, permission checks, and receipt remain pending; see submission-record.md.

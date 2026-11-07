@@ -1,0 +1,44 @@
+[
+  {
+    "start": 0,
+    "end": 12,
+    "title": "WARDZERO · CARE WITH CONTINUITY",
+    "text": "After discharge, readings alone are not enough. WardZero connects a synthetic home-care patient, explained concern, and a caregiver who takes responsibility."
+  },
+  {
+    "start": 12,
+    "end": 33,
+    "title": "1 · SENSOR → PLATFORM",
+    "text": "These readings travel from the browser simulator through a validated API into embedded PostgreSQL. Three recent stable observations establish Low concern. Measurement time and arrival time are preserved. Missing or stale evidence is shown explicitly rather than labeled safe."
+  },
+  {
+    "start": 33,
+    "end": 65,
+    "title": "2 · LIVE GEMINI + GROUNDED EVIDENCE",
+    "text": "Now the caregiver records: more tired today and barely ate lunch. This is a live Gemini request. The adapter accepts only allowed observations and literal source excerpts, including negation and time context. These current observations raise Low concern to Medium. A deterioration preset then sends additional readings through normal ingestion, raising concern to High. Every explanation points back to stored evidence."
+  },
+  {
+    "start": 65,
+    "end": 99,
+    "title": "3 · ALERT → ACCOUNTABLE RESPONSE",
+    "text": "One active episode belongs to the assigned caregiver. Acknowledgement takes ownership, but does not resolve it. The caregiver records an action, then a separate resolution reason. Actor, time, and each transition remain in the audit trail. Closing the response does not rewrite the patient's current concern. These actions describe a synthetic review; the app does not prescribe treatment."
+  },
+  {
+    "start": 99,
+    "end": 135,
+    "title": "4 · OUTAGE → DURABLE RECOVERY",
+    "text": "In a separate run, sensor transport goes offline while the dashboard remains connected. Three readings are saved in IndexedDB before transmission. The visibly accelerated clock makes monitoring delayed, then offline. Refresh preserves the pending queue. Reconnection drains it into the database once, with original observation times. Old readings do not pretend to be fresh. Lost acknowledgements and duplicate retries are also covered by executable tests."
+  },
+  {
+    "start": 135,
+    "end": 163,
+    "title": "5 · UNANSWERED ALERT → COORDINATOR",
+    "text": "This new run leaves a High-concern alert unanswered. Advancing the labeled demo clock crosses the acknowledgement deadline. The alert appears in the backup coordinator's inbox, where Ravi can respond. This is in-app escalation, not a text message or phone call. A separate production-server test verifies that the deadline worker also runs with every browser page closed."
+  },
+  {
+    "start": 163,
+    "end": 180,
+    "title": "WORKING INTEGRATION · MEASURED LIMITS",
+    "text": "The repository includes forty-seven automated tests, eight browser journeys, live Gemini evidence, and reproducible setup. This is a local prototype using synthetic data and engineering rules, with no clinical validation or forty-eight-hour prediction claim. WardZero makes the handoff visible and accountable."
+  }
+]

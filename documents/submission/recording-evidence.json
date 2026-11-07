@@ -1,0 +1,34 @@
+{
+  "recordedAt": "2026-11-07T06:43:38.933Z",
+  "checkpoints": [
+    {
+      "at": 26,
+      "concern": "Low",
+      "readings": 3
+    },
+    {
+      "at": 46,
+      "concern": "Medium",
+      "liveAI": true
+    },
+    {
+      "at": 86,
+      "state": "Resolved",
+      "currentConcern": "High"
+    },
+    {
+      "at": 127,
+      "persistedQueue": 3,
+      "remainingQueue": 0,
+      "stored": 6,
+      "clockAdvancedSeconds": 165
+    },
+    {
+      "at": 157,
+      "escalatedInApp": true,
+      "backupAcknowledged": true
+    }
+  ],
+  "synthetic": true,
+  "aiMocked": false
+}
