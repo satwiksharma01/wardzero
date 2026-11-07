@@ -1,4 +1,4 @@
-import type { PGlite } from "@electric-sql/pglite";
+import type { PGliteInterface } from "@electric-sql/pglite";
 import { CareError } from "../domain/care";
 import {
   NOTE_PROMPT_VERSION,
@@ -13,7 +13,7 @@ import { noteFromRow, type NoteRow } from "./note-history";
 import { getRun, runTime } from "./run-context";
 
 export class NoteStore {
-  constructor(private readonly db: PGlite) {}
+  constructor(private readonly db: PGliteInterface) {}
   async submit(
     token: string | null,
     input: unknown,

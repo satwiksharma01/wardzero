@@ -19,3 +19,6 @@ __pycache__/
 
 # Documentation is consolidated in the root README; reports are generated in .data.
 /documents/
+
+# Presentation media is retained locally; the public demo is the Pages app.
+/demo/

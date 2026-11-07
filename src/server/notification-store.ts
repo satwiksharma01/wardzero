@@ -1,4 +1,4 @@
-import type { PGlite, Transaction } from "@electric-sql/pglite";
+import type { PGliteInterface, Transaction } from "@electric-sql/pglite";
 import type { EmailDelivery } from "../domain/notifications";
 import {
   emailConfiguration,
@@ -111,7 +111,7 @@ export async function readEmailDeliveries(
 }
 
 export class NotificationStore {
-  constructor(private readonly db: PGlite) {}
+  constructor(private readonly db: PGliteInterface) {}
 
   async claimDue(now: Date) {
     return this.db.transaction(async (tx) => {

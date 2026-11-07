@@ -7,6 +7,9 @@
   "scripts": {
     "dev": "next dev --webpack --hostname 127.0.0.1",
     "build": "next build && node scripts/verify-build.mjs",
+    "build:pages": "vite build --config vite.pages.config.ts",
+    "preview:pages": "vite preview --config vite.pages.config.ts --host 127.0.0.1",
+    "test:pages": "playwright test --config playwright.pages.config.ts",
     "verify:artifact": "node scripts/verify-build.mjs",
     "start": "next start --hostname 127.0.0.1",
     "test": "vitest run",
@@ -52,6 +55,7 @@
     "prettier": "3.9.10",
     "tailwindcss": "4.3.5",
     "typescript": "5.9.3",
+    "vite": "8.3.6",
     "vitest": "5.1.0"
   }
 }

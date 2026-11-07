@@ -1,4 +1,5 @@
 "use client";
+import { apiFetch } from "@/client/api";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { makeReading, type Scenario } from "../domain/readings";
 import { Outbox, type QueueSummary } from "./outbox";
@@ -37,7 +38,7 @@ export function useSimulator(onReading: () => Promise<void>, run: DemoRun) {
         const batch = await outbox.pending(force ? Infinity : Date.now());
         if (!batch.length) return;
         try {
-          const response = await fetch("/api/readings/batch", {
+          const response = await apiFetch("/api/readings/batch", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

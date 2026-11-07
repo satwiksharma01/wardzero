@@ -1,4 +1,5 @@
 "use client";
+import { apiFetch } from "@/client/api";
 import {
   createContext,
   useContext,
@@ -11,7 +12,7 @@ import { DEMO_ACTORS, type Actor, type DemoRole } from "@/domain/care";
 import { Button } from "./ui/button";
 import { useWorkspace } from "./workspace-state";
 async function readActor(): Promise<Actor | null> {
-  const response = await fetch("/api/demo/session", {
+  const response = await apiFetch("/api/demo/session", {
     cache: "no-store",
     signal: AbortSignal.timeout(10000),
   });
@@ -60,7 +61,7 @@ export function CareIdentityProvider({ children }: { children: ReactNode }) {
     setBusy(true);
     setError("");
     try {
-      const response = await fetch("/api/demo/session", {
+      const response = await apiFetch("/api/demo/session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ role }),

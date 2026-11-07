@@ -1,4 +1,5 @@
 "use client";
+import { apiFetch } from "@/client/api";
 
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -143,7 +144,7 @@ function AlertCard({
         : { eventId: crypto.randomUUID(), action, text: text.trim() });
     setDraft((value) => ({ ...value, pending: payload }));
     try {
-      const response = await fetch(`/api/alerts/${alert.id}/events`, {
+      const response = await apiFetch(`/api/alerts/${alert.id}/events`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

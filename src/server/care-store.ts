@@ -1,5 +1,5 @@
-import { createHash, randomBytes } from "node:crypto";
-import type { PGlite, Transaction } from "@electric-sql/pglite";
+import type { PGliteInterface, Transaction } from "@electric-sql/pglite";
+import { hex, sha256 } from "../domain/crypto";
 import {
   CareError,
   careActionSchema,
@@ -11,8 +11,6 @@ import {
 import { getRun, runTime } from "./run-context";
 
 export const SESSION_SECONDS = 8 * 3600;
-const hashToken = (token: string) =>
-  createHash("sha256").update(token).digest("hex");
 
 async function actorForSession(
   tx: Pick<Transaction, "query">,
@@ -22,7 +20,7 @@ async function actorForSession(
   if (!token || !/^[a-f0-9]{64}$/.test(token)) return null;
   const result = await tx.query<{ actor_key: DemoRole }>(
     "SELECT actor_key FROM demo_sessions WHERE token_hash = $1 AND expires_at > $2",
-    [hashToken(token), now.toISOString()],
+    [await sha256(token), now.toISOString()],
   );
   return result.rows.length
     ? (DEMO_ACTORS[result.rows[0].actor_key] ?? null)
@@ -30,12 +28,12 @@ async function actorForSession(
 }
 
 export class CareStore {
-  constructor(private readonly db: PGlite) {}
+  constructor(private readonly db: PGliteInterface) {}
 
   async createSession(role: DemoRole, now: Date) {
     const actor = DEMO_ACTORS[role];
     if (!actor) throw new CareError(400, "Unknown demo identity.");
-    const token = randomBytes(32).toString("hex");
+    const token = hex(crypto.getRandomValues(new Uint8Array(32)));
     await this.db.transaction(async (tx) => {
       await tx.query("DELETE FROM demo_sessions WHERE expires_at <= $1", [
         now.toISOString(),
@@ -43,7 +41,7 @@ export class CareStore {
       await tx.query(
         "INSERT INTO demo_sessions(token_hash, actor_key, expires_at) VALUES($1,$2,$3)",
         [
-          hashToken(token),
+          await sha256(token),
           role,
           new Date(now.getTime() + SESSION_SECONDS * 1000).toISOString(),
         ],

@@ -1,4 +1,4 @@
-import type { PGlite } from "@electric-sql/pglite";
+import type { PGliteInterface } from "@electric-sql/pglite";
 import {
   FUTURE_SKEW_MS,
   monitoringStatus,
@@ -18,7 +18,7 @@ import { isCareError } from "../domain/care";
 import { NotificationStore } from "./notification-store";
 
 export class ReadingStore {
-  constructor(private readonly db: PGlite) {}
+  constructor(private readonly db: PGliteInterface) {}
   get care() {
     return new CareStore(this.db);
   }

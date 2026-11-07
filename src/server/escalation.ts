@@ -1,5 +1,4 @@
-import { randomUUID } from "node:crypto";
-import type { PGlite } from "@electric-sql/pglite";
+import type { PGliteInterface } from "@electric-sql/pglite";
 import { getRun, runTime } from "./run-context";
 import { DEMO_ACTORS } from "../domain/care";
 import { enqueueEscalationEmail } from "./notification-store";
@@ -11,7 +10,7 @@ export function acknowledgementDelayMs() {
   return value;
 }
 
-export async function evaluateDeadlines(db: PGlite, now: Date) {
+export async function evaluateDeadlines(db: PGliteInterface, now: Date) {
   return db.transaction(async (tx) => {
     const wall = now;
     const run = await getRun(tx);
@@ -26,7 +25,7 @@ export async function evaluateDeadlines(db: PGlite, now: Date) {
         `INSERT INTO care_events(id,alert_id,actor_id,actor_name,action,text,occurred_at)
         VALUES($1,$2,'system','WardZero','escalated',$3,$4)`,
         [
-          randomUUID(),
+          crypto.randomUUID(),
           alert.id,
           `Acknowledgement overdue. Escalated in-app to ${DEMO_ACTORS.backup.name}. Optional email delivery is tracked separately.`,
           now.toISOString(),

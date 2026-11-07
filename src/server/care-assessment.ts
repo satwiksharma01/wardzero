@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto";
 import type { Transaction } from "@electric-sql/pglite";
 import { assess, type SavedAssessment } from "../domain/assessment";
 import {
@@ -36,7 +35,7 @@ export async function evaluateCare(
   const notes = await readNotes(tx, runId);
   const assessment: SavedAssessment = {
     ...fuseNotes(assess(history, now), notes, now),
-    id: randomUUID(),
+    id: crypto.randomUUID(),
   };
   const supportingNotes = new Set(
     assessment.reasons.flatMap((reason) => reason.noteIds ?? []),
@@ -76,7 +75,7 @@ export async function evaluateCare(
       await tx.query(
         `INSERT INTO care_events(id, alert_id, actor_id, actor_name, action, text, occurred_at)
       VALUES($1,$2,'system','WardZero','severity-raised','Concern increased from Medium to High.',$3)`,
-        [randomUUID(), alert.id, now.toISOString()],
+        [crypto.randomUUID(), alert.id, now.toISOString()],
       );
     return;
   }
@@ -90,7 +89,7 @@ export async function evaluateCare(
     Date.parse(evidenceAt) <= resolved.rows[0].latest.getTime()
   )
     return;
-  const id = randomUUID();
+  const id = crypto.randomUUID();
   await tx.query(
     `INSERT INTO care_alerts(id, patient_id, severity, state, assigned_actor_id, opened_at, updated_at, evidence_at, assessment, acknowledgement_due_at, run_id)
     VALUES($1,$2,$3,'Open',$4,$5,$5,$6,$7::jsonb,$8,$9)`,
@@ -110,7 +109,7 @@ export async function evaluateCare(
     `INSERT INTO care_events(id, alert_id, actor_id, actor_name, action, text, occurred_at)
     VALUES($1,$2,'system','WardZero','opened',$3,$4)`,
     [
-      randomUUID(),
+      crypto.randomUUID(),
       id,
       `${assessment.concern} concern opened an alert assigned to ${DEMO_ACTORS.primary.name}.`,
       now.toISOString(),

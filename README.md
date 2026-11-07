@@ -4,7 +4,7 @@
 
 WardZero connects simulated vital signs and English caregiver observations to explained concern, an assigned alert and a recorded human response. It also demonstrates what happens when sensor connectivity fails or nobody acknowledges an alert.
 
-[Quick start](#quick-start) · [Architecture](#architecture) · [Testing](#testing)
+[Open the browser app](https://satwiksharma01.github.io/wardzero/) · [Quick start](#quick-start) · [Architecture](#architecture) · [Testing](#testing)
 
 All patients, caregivers, readings and notes are synthetic. This is an engineering prototype, with no clinical validation or demonstrated 24–48-hour prediction.
 
@@ -45,6 +45,26 @@ A shared layout owns patient polling, identity, sensor timers and draft state. C
 Exact dependency resolutions are pinned in [package-lock.json](package-lock.json).
 
 ## Quick start
+
+### GitHub Pages app
+
+Open **[satwiksharma01.github.io/wardzero](https://satwiksharma01.github.io/wardzero/)** to run the five-page app without installing anything. Activate Ananya's identity, open Simulation and load a stable baseline. Then use the sample note in Observations or load deterioration to try the care response. Disconnect/reconnect the sensor to inspect its persistent queue, or advance the demo clock to demonstrate escalation to Ravi.
+
+The Pages build reuses the workspace components, PostgreSQL schema, reading store, deterministic rules, evidence validation and care transitions. PGlite runs in a Web Worker and persists to IndexedDB on the visitor's device; its leader election coordinates multiple tabs. Client navigation uses query URLs such as `?page=vitals`, so direct links and refresh work under GitHub's repository path.
+
+**This is a browser-local demonstration.** Data is not shared between devices. The exact sample `More tired today and barely ate lunch.` uses an explicitly labeled fixed interpretation, not a live model. Other notes are saved with analysis Unavailable. No Gemini key, email credentials or local patient database is published. Deadlines are checked while the app is open and on reopening; no monitoring runs after all its tabs close. Clearing site data removes that browser's history. Use a current browser that supports IndexedDB, Web Workers, WebAssembly and Web Crypto.
+
+To reproduce the Pages build:
+
+```sh
+npm ci
+npm run build:pages
+npm run preview:pages
+```
+
+The preview command prints its local URL. Output lives in ignored `.data/pages/`; only that generated bundle is uploaded. [The Pages workflow](.github/workflows/pages.yml) runs checks and browser journeys before deploying pushes to `main`. It also supports manual runs. Repository Settings → Pages must use **GitHub Actions** as the build source. Reverting a deployment commit on `main` and letting the workflow run redeploys the previous source.
+
+The following instructions run the full Next.js server app with optional live Gemini.
 
 ### Requirements
 
@@ -188,9 +208,10 @@ src/
   components/   Workspace, evidence, care and UI components
   domain/       Contracts, assessment and care rules
   server/       Database, migrations, stores, AI and deadline worker
+  pages-demo/   Browser entry, local transport, routing and database worker
 tests/          Deterministic, browser, provider and worker checks
 scripts/        Recording, encoding and artifact verification
-demo/           Canonical video, cover, captions and presentation inputs
+demo/           Optional presentation media and inputs; local-only, ignored
 LICENSES/       Required third-party source notices
 .data/          Ignored runtime databases, reports and local exports
 README.md       Project documentation
@@ -210,23 +231,26 @@ npm run test:e2e
 
 The browser configuration uses installed Chrome and isolated data/ports. If Playwright cannot find Chrome, install it or select an appropriate installed channel in the configuration. Run app-owning browser/live/worker suites sequentially: they share Playwright's default report directory. Test fixtures and their databases are separate from the normal app.
 
-| Command                           | Scope                                                                                                       |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `npm test`                        | Domain, ingestion, persistence, source-context validation, authorization and queue checks; no AI key.       |
-| `npm run test:e2e`                | Chrome navigation, caregiver flow, failed drafts, outage/replay, keyboard and accessibility; local mock AI. |
-| `npm run test:worker:production`  | Deadline escalation with all browser pages closed; build first.                                             |
-| `npm run test:worker`             | Development-server version of the worker check.                                                             |
-| `npm run test:email`              | Production worker against a loopback email receiver; build first. No real email.                            |
-| `npm run test:ai-live`            | Opt-in 40-case synthetic Gemini evaluation, paced at least five seconds apart.                              |
-| `npm run test:ai-smoke`           | Opt-in four-case Gemini smoke test.                                                                         |
-| `npm run test:e2e-live`           | Opt-in actual Gemini note-to-care browser journey.                                                          |
-| `npm run test:early-warning`      | Deterministic storage-backed replay and controls.                                                           |
-| `npm run test:early-warning-live` | Opt-in replay using actual Gemini extraction.                                                               |
-| `npm run verify:artifact`         | Check server build traces exclude runtime data and private environment files.                               |
+| Command                           | Scope                                                                                                         |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `npm test`                        | Domain, ingestion, persistence, source-context validation, authorization and queue checks; no AI key.         |
+| `npm run test:e2e`                | Chrome navigation, caregiver flow, failed drafts, outage/replay, keyboard and accessibility; local mock AI.   |
+| `npm run test:pages`              | Built static app under `/wardzero/`: care flow, queue persistence, archives, multiple tabs and accessibility. |
+| `npm run test:worker:production`  | Deadline escalation with all browser pages closed; build first.                                               |
+| `npm run test:worker`             | Development-server version of the worker check.                                                               |
+| `npm run test:email`              | Production worker against a loopback email receiver; build first. No real email.                              |
+| `npm run test:ai-live`            | Opt-in 40-case synthetic Gemini evaluation, paced at least five seconds apart.                                |
+| `npm run test:ai-smoke`           | Opt-in four-case Gemini smoke test.                                                                           |
+| `npm run test:e2e-live`           | Opt-in actual Gemini note-to-care browser journey.                                                            |
+| `npm run test:early-warning`      | Deterministic storage-backed replay and controls.                                                             |
+| `npm run test:early-warning-live` | Opt-in replay using actual Gemini extraction.                                                                 |
+| `npm run verify:artifact`         | Check server build traces exclude runtime data and private environment files.                                 |
 
 Generated screenshots and JSON evidence go to ignored `.data/verification/`; browser failure traces go to `test-results/`. Live commands use the configured provider and make real requests. Never enable real email just to run the tests.
 
 ### Recorded verification and evidence
+
+The GitHub Pages release passed 77 deterministic tests across 22 files and four static-app Chrome journeys. Five pages at three widths passed overflow, visible-notice and tagged axe checks. The journeys also cover failed database downloads, persistent queues, care responses, read-only archives and browser-worker leadership changes. The full Next.js build and its 15 private-file trace guards, TypeScript and lint checks passed. These Pages checks make no live AI or email calls.
 
 On 8 November 2026, this README/report-path migration reran all 73 deterministic tests and 12 Chrome journeys, production compilation and trace guards, TypeScript, ESLint, formatting, the browser-closed production worker, loopback email and the actual Gemini UI journey. Relocated video playback/seek also passed, and no suite recreated the removed folder. The 40-case extractor evaluation below was not rerun for this migration.
 
@@ -236,9 +260,11 @@ These historical results identify application revision `2b0e2e76b1403608c0c740bb
 
 The synthetic 40-case English-note evaluation contains 32 development examples and eight confirmation examples. Those confirmation examples were reused for the final v3 evaluation, so the results remain development-informed. Earlier model errors and provider failures remain in the linked reports. A constructed replay measured concern 45 synthetic seconds before the fixture's first individual vital threshold; model wall latency is excluded. Neither result demonstrates real-patient accuracy, clinical lead time, multilingual reliability or 24–48-hour prediction.
 
-## Demo and reproduction
+## Optional local recording tools
 
-The [video](demo/wardzero-demo.mp4) is 180 seconds, 1920×1080 H.264/AAC, with synthesized narration and burned-in captions. It records real UI/API/database transitions and actual Gemini against synthetic inputs. Accelerated demo time is visibly labeled. The [SHA256 file](demo/wardzero-demo.mp4.sha256) identifies the canonical encode.
+Presentation media is retained locally in ignored `demo/` and is not part of a fresh clone or the Pages deployment. The existing recording tools require local `demo/narration.json` and `demo/closing.svg` inputs before running the optional commands below. They are not needed to run either version of the app.
+
+The existing local `demo/wardzero-demo.mp4` is 180 seconds, 1920×1080 H.264/AAC, with synthesized narration and burned-in captions. It records real UI/API/database transitions and actual Gemini against synthetic inputs. Accelerated demo time is visibly labeled; the adjacent `.sha256` file identifies the encode.
 
 To reproduce it, install FFmpeg/FFprobe and Chrome. Narration generation additionally requires the Windows speech runtime. Start an isolated app instance with a different `WARDZERO_DATA_NAME`, a configured Gemini key and email disabled. Optionally set its `PORT` and the recording command's `WARDZERO_DEMO_URL` to the same loopback URL.
 
@@ -290,20 +316,20 @@ This exports committed files only. Keep the generated ZIP local rather than addi
 
 ## AI, data and prototype boundaries
 
-An AI coding assistant helped with planning, implementation, tests, review, documentation and demo preparation. Runtime note extraction uses the configured Gemini provider; repeatable browser regressions use an explicitly isolated mock. The synthetic note set is not a clinical NLP benchmark. No imported patient dataset, real patient note, credential, hardware integration, stock patient footage or music is included.
+An AI coding assistant helped with planning, implementation, tests, review, documentation and demo preparation. Full-server note extraction uses the configured Gemini provider; repeatable server browser regressions use an explicitly isolated mock. The Pages app uses only its declared exact-note fixture, with no live AI. The synthetic note set is not a clinical NLP benchmark. No imported patient dataset, real patient note, credential, hardware integration, stock patient footage or music is included.
 
-This is a local single-patient prototype. Human caregiver usability, clinical validation and real cloud email delivery remain unperformed or unverified. It does not diagnose, recommend treatment or claim continuous monitoring while the server/computer is off. Public interactive deployment requires production identity, hosted durable storage, worker support, rate limiting and appropriate clinical governance. Publishing source/media does not establish a Wooble submission.
+This is a single-patient prototype with a local server version and a public browser-local demo. Human caregiver usability, clinical validation and real cloud email delivery remain unperformed or unverified. It does not diagnose, recommend treatment or claim continuous monitoring while the server/computer is off. Hosting the shared server app publicly requires production identity, hosted durable storage, worker support, rate limiting and appropriate clinical governance. The Pages app's identities are local role controls, not production authentication. Publishing the app/source does not establish a Wooble submission.
 
 ## Third-party notices
 
 Dependencies retain their upstream licenses, available through installed packages and their pinned source versions. Customized shadcn source attribution is preserved in [LICENSES/shadcn-ui.txt](LICENSES/shadcn-ui.txt). Listing dependencies does not grant a new license to this repository's original source.
 
-| Component                                                 | License                     |
-| --------------------------------------------------------- | --------------------------- |
-| Next.js, React/React DOM, Zod, Radix UI, cn, Tailwind CSS | MIT                         |
-| PGlite, Playwright, class-variance-authority              | Apache-2.0                  |
-| Lucide React                                              | ISC                         |
-| axe Playwright integration                                | MPL-2.0                     |
-| shadcn/ui source                                          | MIT; notice retained above. |
+| Component                                                       | License                     |
+| --------------------------------------------------------------- | --------------------------- |
+| Next.js, React/React DOM, Zod, Radix UI, cn, Tailwind CSS, Vite | MIT                         |
+| PGlite, Playwright, class-variance-authority                    | Apache-2.0                  |
+| Lucide React                                                    | ISC                         |
+| axe Playwright integration                                      | MPL-2.0                     |
+| shadcn/ui source                                                | MIT; notice retained above. |
 
 The CSS requests DM Sans and Manrope from Google Fonts with Arial/sans-serif fallbacks; no font binaries are vendored. Demo narration uses the installed Microsoft Zira voice and FFmpeg encodes the footage, audio and captions.

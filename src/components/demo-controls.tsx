@@ -1,4 +1,6 @@
 "use client";
+import Link from "next/link";
+import { apiFetch } from "@/client/api";
 
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
@@ -11,7 +13,7 @@ type Command =
   | { action: "advance"; id: string; runId: string; seconds: number }
   | { action: "seed"; id: string; runId: string; scenario: string };
 async function listRuns(): Promise<DemoRunSummary[]> {
-  const response = await fetch("/api/demo", { cache: "no-store" });
+  const response = await apiFetch("/api/demo", { cache: "no-store" });
   if (!response.ok) throw new Error("Run history unavailable.");
   return (await response.json()).runs;
 }
@@ -62,7 +64,7 @@ export function DemoControls({
     setBusy(true);
     setError("");
     try {
-      const response = await fetch("/api/demo", {
+      const response = await apiFetch("/api/demo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(command),
@@ -226,13 +228,13 @@ export function DemoControls({
                     notes · {previous.alertCount} alerts
                   </small>
                 </div>
-                <a
+                <Link
                   href={`/archive/${previous.id}`}
                   target="_blank"
                   rel="noreferrer"
                 >
                   View archived run
-                </a>
+                </Link>
               </li>
             ))}
         </ul>

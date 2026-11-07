@@ -1,4 +1,4 @@
-import type { PGlite } from "@electric-sql/pglite";
+import type { PGliteInterface } from "@electric-sql/pglite";
 
 const migrations = [
   {
@@ -89,7 +89,7 @@ const migrations = [
   },
 ];
 
-export async function migrate(db: PGlite) {
+export async function migrate(db: PGliteInterface) {
   await db.exec(
     "CREATE TABLE IF NOT EXISTS schema_migrations (version INT PRIMARY KEY, applied_at TIMESTAMPTZ NOT NULL DEFAULT now())",
   );

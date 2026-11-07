@@ -1,4 +1,5 @@
 "use client";
+import { apiFetch } from "@/client/api";
 import {
   createContext,
   useCallback,
@@ -44,7 +45,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   );
   const refresh = useCallback(async () => {
     try {
-      const response = await fetch("/api/patient", {
+      const response = await apiFetch("/api/patient", {
         cache: "no-store",
         signal: AbortSignal.timeout(15000),
       });

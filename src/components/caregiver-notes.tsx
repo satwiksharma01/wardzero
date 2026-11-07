@@ -1,4 +1,5 @@
 "use client";
+import { apiFetch } from "@/client/api";
 
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -42,7 +43,7 @@ export function CaregiverNotes({
     setError("");
     if (!retry) setDraft((value) => ({ ...value, pending: input }));
     try {
-      const response = await fetch("/api/notes", {
+      const response = await apiFetch("/api/notes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...input, runId }),

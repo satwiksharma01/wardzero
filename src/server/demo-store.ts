@@ -1,5 +1,5 @@
-import { createHash } from "node:crypto";
-import type { PGlite } from "@electric-sql/pglite";
+import type { PGliteInterface } from "@electric-sql/pglite";
+import { sha256 } from "../domain/crypto";
 import { CareError, DEMO_ACTORS } from "../domain/care";
 import {
   demoResetSchema,
@@ -17,7 +17,7 @@ import { getRun, runFromRow, runTime, type RunRow } from "./run-context";
 
 export class DemoStore {
   constructor(
-    private readonly db: PGlite,
+    private readonly db: PGliteInterface,
     private readonly ingest: (
       events: unknown[],
       wall: Date,
@@ -135,13 +135,14 @@ export class DemoStore {
         return existing.rows[0].payload;
       }
       const now = runTime(run, wall);
+      const commandHash = await sha256(request.id);
       const steps = request.scenario === "stable" ? [0, 1, 2] : [8, 10, 12];
       const events = steps.map((step, index) =>
         makeReading(
           step,
           request.scenario,
           new Date(now.getTime() - (2 - index) * 5000),
-          `${createHash("sha256").update(request.id).digest("hex")}-${index}`,
+          `${commandHash}-${index}`,
           run.id,
         ),
       );
