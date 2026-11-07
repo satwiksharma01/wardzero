@@ -42,7 +42,7 @@
   "developmentCompiler": "webpack; repeated Turbopack HMR reproduction documented with exact cause unproven",
   "impeccableDetector": {
     "findings": 0,
-    "report": "blue-ui-detector.json"
+    "report": "https://github.com/satwiksharma01/wardzero/blob/6eb717e8990e4f73bdba62f1034dfc54e0b03728/documents/verification/blue-ui-detector.json"
   },
   "liveGeminiJourney": {
     "verifiedAt": "2026-11-07T16:01:58.509Z",

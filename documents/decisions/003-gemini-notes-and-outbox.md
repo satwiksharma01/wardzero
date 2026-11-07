@@ -18,9 +18,9 @@ Sensor disconnection is a persisted demo control independent of dashboard transp
 
 ## Evidence
 
-- [Gemini case results](../verification/gemini-live.json)
+- [Gemini evaluation and original failures](../verification/NOTE_EVALUATION.md)
 - [Live app journey](../verification/gemini-live-journey.json)
-- [Verification report](../verification/2026-11-07-notes-recovery.md)
+- [Current workspace verification](../verification/2026-11-07-blue-pages.md)
 
 ## Sources consulted
 
