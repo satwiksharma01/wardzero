@@ -40,7 +40,7 @@ test("deadline worker escalates while every browser page is closed", async ({
   expect(snapshot.care.workerLastTickAt).not.toBeNull();
   const newContext = await browser.newContext();
   const reopened = await newContext.newPage();
-  await reopened.goto("http://127.0.0.1:3103");
+  await reopened.goto("http://127.0.0.1:3103/care");
   await reopened
     .getByRole("combobox", { name: "Demo identity" })
     .selectOption("backup");

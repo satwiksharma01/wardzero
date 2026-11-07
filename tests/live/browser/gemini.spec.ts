@@ -25,7 +25,7 @@ test("live Gemini observations raise concern and reach a recorded caregiver resp
     data: { readings },
   });
   expect(response.ok()).toBe(true);
-  await page.goto("/");
+  await page.goto("/observations");
   await expect(page.getByTestId("concern-level")).toHaveText("Low");
   await page.getByRole("button", { name: "Activate identity" }).click();
   await expect(
@@ -39,6 +39,10 @@ test("live Gemini observations raise concern and reach a recorded caregiver resp
     page.getByText("AI analysis: Complete", { exact: true }),
   ).toBeVisible({ timeout: 22000 });
   await expect(page.getByTestId("concern-level")).toHaveText("Medium");
+  await page
+    .getByRole("navigation", { name: "Workspace" })
+    .getByRole("link", { name: "Care response", exact: true })
+    .click();
   await page.getByRole("button", { name: "Acknowledge alert" }).click();
   await page
     .getByLabel("Caregiver action", { exact: true })

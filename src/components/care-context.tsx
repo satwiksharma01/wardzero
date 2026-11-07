@@ -1,4 +1,5 @@
 import { Info, ShieldCheck, Stethoscope } from "lucide-react";
+import Link from "next/link";
 import type { CareSnapshot } from "@/domain/care";
 import type { StoredReading } from "@/domain/readings";
 import { timeLabel } from "./vital-chart";
@@ -91,7 +92,10 @@ export function CareContext({
         <p className="context-analysis-limit">
           Caregiver context incomplete: {incomplete} recent observation
           {incomplete === 1 ? " has" : "s have"} no completed analysis.{" "}
-          <a href="#caregiver-notes">Review original notes</a>.
+          <Link href="/observations#caregiver-notes">
+            Review original notes
+          </Link>
+          .
         </p>
       )}
       {!assessment && (
@@ -146,10 +150,10 @@ export function CareContext({
                           </p>
                         </>
                       ) : note ? (
-                        <a href={`#note-${id}`}>
+                        <Link href={`/observations#note-${id}`}>
                           Caregiver note · {timeLabel(note.recordedAt)} ·{" "}
                           {note.status}
-                        </a>
+                        </Link>
                       ) : (
                         <span>Reference outside the recent snapshot</span>
                       )}

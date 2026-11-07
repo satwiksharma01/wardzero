@@ -1,3 +1,4 @@
+import { go } from "./navigation-helpers";
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { writeFile } from "node:fs/promises";
@@ -23,16 +24,20 @@ test("caregiver can navigate by keyboard, preserve failed drafts, and read compa
   await expect(
     page.getByText("Ananya Shah · Primary caregiver", { exact: true }),
   ).toBeVisible();
+  await go(page, "Simulation");
   await page.getByRole("button", { name: "New demo run" }).click();
   await expect(page.getByTestId("concern-level")).toHaveText("Unknown");
   await page.getByRole("button", { name: "Load stable baseline" }).click();
   await expect(page.getByTestId("concern-level")).toHaveText("Low");
 
+  await go(page, "Observations");
   const note = page.getByLabel("Patient observation", { exact: true });
   const draft = "More tired today and barely ate lunch.";
   await note.fill(draft);
   await page.route("**/api/notes", (route) => route.abort("connectionfailed"));
   await page.getByRole("button", { name: "Save observation" }).click();
+  await go(page, "Vitals");
+  await go(page, "Observations");
   await expect(note).toHaveValue(draft);
   await expect(page.locator("#caregiver-notes [role=alert]")).toBeVisible();
   await page.unroute("**/api/notes");
@@ -45,6 +50,14 @@ test("caregiver can navigate by keyboard, preserve failed drafts, and read compa
     "Contributes to current concern",
   );
   await expect(page.getByTestId("concern-level")).toHaveText("Medium");
+  await go(page, "Vitals");
+  await page.getByText("Inspect assessment evidence", { exact: true }).click();
+  await page
+    .getByRole("link", { name: /Caregiver note ·/ })
+    .first()
+    .click();
+  await expect(page).toHaveURL(/\/observations#note-/);
+  await expect(page.locator(".note-entry").first()).toBeFocused();
   await page
     .getByRole("link", { name: "View care response", exact: true })
     .click();
@@ -57,6 +70,8 @@ test("caregiver can navigate by keyboard, preserve failed drafts, and read compa
   await page
     .getByRole("button", { name: "Record action", exact: true })
     .click();
+  await go(page, "Vitals");
+  await go(page, "Care response");
   await expect(action).toHaveValue(
     "Contacted the coordinator for this synthetic review.",
   );
@@ -65,8 +80,10 @@ test("caregiver can navigate by keyboard, preserve failed drafts, and read compa
   await expect(
     page.getByLabel("Resolution reason", { exact: true }),
   ).toBeVisible();
+  await go(page, "Simulation");
   await page.getByRole("button", { name: "Advance 130 seconds" }).click();
   await expect(page.getByTestId("concern-level")).toHaveText("Unknown");
+  await go(page, "Observations");
   await expect(page.getByTestId("note-use").first()).toHaveText(
     "Stale; outside the 120-second context window",
   );

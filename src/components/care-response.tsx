@@ -4,14 +4,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 
-import { useEffect, useRef, useState } from "react";
-import { BellRing, CheckCircle2, UserCheck } from "lucide-react";
+import { useWorkspaceDraft } from "./workspace-state";
+import { useCareIdentity } from "./care-identity";
+import { BellRing, CheckCircle2 } from "lucide-react";
 import {
   DEMO_ACTORS,
   type Actor,
   type AlertEpisode,
   type CareAction,
-  type DemoRole,
 } from "@/domain/care";
 import { timeLabel } from "./vital-chart";
 import type { EmailDeliveryState } from "@/domain/notifications";
@@ -26,12 +26,6 @@ const deliveryLabels: Record<EmailDeliveryState, string> = {
   Cancelled: "Cancelled before confirmation",
 };
 
-async function readActor(): Promise<Actor | null> {
-  const response = await fetch("/api/demo/session", { cache: "no-store" });
-  if (!response.ok) throw new Error("Demo session unavailable.");
-  return (await response.json()).actor;
-}
-
 export function CareResponse({
   alerts,
   disconnected,
@@ -43,47 +37,11 @@ export function CareResponse({
   onChange: () => Promise<void>;
   workerLastTickAt: string | null;
 }) {
-  const [actor, setActor] = useState<Actor | null>(null);
-  const [role, setRole] = useState<DemoRole>("primary");
-  const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
+  const { actor } = useCareIdentity();
   const coordinator = actor?.id === DEMO_ACTORS.backup.id;
   const visibleAlerts = coordinator
     ? alerts.filter((alert) => alert.escalatedAt)
     : alerts;
-  useEffect(() => {
-    let active = true;
-    void readActor().then(
-      (value) => {
-        if (active) setActor(value);
-      },
-      () => {
-        if (active) setError("Demo session unavailable. Retry activation.");
-      },
-    );
-    return () => {
-      active = false;
-    };
-  }, []);
-  async function activate() {
-    setBusy(true);
-    setError("");
-    try {
-      const response = await fetch("/api/demo/session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ role }),
-        signal: AbortSignal.timeout(10000),
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error);
-      setActor(result.actor);
-    } catch {
-      setError("Could not activate the demo identity. Try again.");
-    } finally {
-      setBusy(false);
-    }
-  }
   return (
     <section
       className="panel response-panel"
@@ -112,41 +70,6 @@ export function CareResponse({
           : "Waiting for deadline worker"}{" "}
         · In-app escalation; optional email is tracked separately
       </p>
-      <div className="demo-identity">
-        <UserCheck size={18} />
-        <div>
-          <strong>
-            {actor
-              ? `${actor.name} · ${actor.role}`
-              : "No active caregiver session"}
-          </strong>
-          <small>Local demo identity</small>
-        </div>
-        <label className="sr-only" htmlFor="demo-role">
-          Demo identity
-        </label>
-        <select
-          id="demo-role"
-          value={role}
-          disabled={busy || disconnected}
-          onChange={(event) => setRole(event.target.value as DemoRole)}
-        >
-          <option value="primary">Ananya · Primary caregiver</option>
-          <option value="backup">Ravi · Backup coordinator</option>
-        </select>
-        <Button
-          variant="outline"
-          disabled={busy || disconnected}
-          onClick={() => void activate()}
-        >
-          {busy ? "Activating…" : "Activate identity"}
-        </Button>
-      </div>
-      {error && (
-        <p className="error-text" role="alert">
-          {error}
-        </p>
-      )}
       {!visibleAlerts.length && (
         <div className="care-empty">
           <CheckCircle2 size={22} />
@@ -187,10 +110,17 @@ function AlertCard({
   disconnected: boolean;
   onChange: () => Promise<void>;
 }) {
-  const [text, setText] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  const pending = useRef<CareAction | null>(null);
+  const [draft, setDraft] = useWorkspaceDraft<{
+    text: string;
+    busy: boolean;
+    error: string;
+    pending: CareAction | null;
+  }>(`action/${alert.id}`, { text: "", busy: false, error: "", pending: null });
+  const { text, busy, error } = draft;
+  const setText = (text: string) => setDraft((value) => ({ ...value, text }));
+  const setBusy = (busy: boolean) => setDraft((value) => ({ ...value, busy }));
+  const setError = (error: string) =>
+    setDraft((value) => ({ ...value, error }));
   const assigned =
     actor?.id === alert.assignedActorId ||
     (!!alert.escalatedAt && actor?.id === alert.backupActorId);
@@ -207,11 +137,11 @@ function AlertCard({
     setBusy(true);
     setError("");
     const payload: CareAction =
-      pending.current ??
+      draft.pending ??
       (action === "acknowledge"
         ? { eventId: crypto.randomUUID(), action }
         : { eventId: crypto.randomUUID(), action, text: text.trim() });
-    pending.current = payload;
+    setDraft((value) => ({ ...value, pending: payload }));
     try {
       const response = await fetch(`/api/alerts/${alert.id}/events`, {
         method: "POST",
@@ -221,10 +151,11 @@ function AlertCard({
       });
       const result = await response.json();
       if (!response.ok) {
-        if (response.status < 500) pending.current = null;
+        if (response.status < 500)
+          setDraft((value) => ({ ...value, pending: null }));
         throw new Error(result.error);
       }
-      pending.current = null;
+      setDraft((value) => ({ ...value, pending: null }));
       setText("");
       await onChange();
     } catch (failure) {
@@ -343,7 +274,8 @@ function AlertCard({
                   value={text}
                   onChange={(event) => {
                     setText(event.target.value);
-                    if (pending.current) pending.current = null;
+                    if (draft.pending)
+                      setDraft((value) => ({ ...value, pending: null }));
                   }}
                   minLength={5}
                   maxLength={1000}

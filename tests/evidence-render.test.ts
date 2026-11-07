@@ -54,5 +54,5 @@ it("keeps reading and note provenance distinct when their identities happen to m
     }),
   );
   expect(html).toContain("Reading ·");
-  expect(html).toContain('href="#note-shared"');
+  expect(html).toContain('href="/observations#note-shared"');
 });

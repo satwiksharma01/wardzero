@@ -22,8 +22,8 @@ PlayResX: 1920
 PlayResY: 1080
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Title,Arial,27,&H00D9F0D9,&H00FFFFFF,&H00173E35,&H00173E35,1,0,0,0,100,100,1,0,1,0,0,2,45,45,78,1
-Style: Caption,Arial,29,&H00FFFFFF,&H00FFFFFF,&H00173E35,&H00173E35,0,0,0,0,100,100,0,0,1,0,0,2,80,80,18,1
+Style: Title,Arial,27,&H00F3E6D9,&H00FFFFFF,&H005D3617,&H005D3617,1,0,0,0,100,100,1,0,1,0,0,2,45,45,78,1
+Style: Caption,Arial,29,&H00FFFFFF,&H00FFFFFF,&H005D3617,&H005D3617,0,0,0,0,100,100,0,0,1,0,0,2,80,80,18,1
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 `;
@@ -68,7 +68,7 @@ chapters.forEach((chapter, index) => {
 writeFileSync(".data/demo/captions.ass", ass);
 writeFileSync("documents/submission/wardzero-demo.srt", srt.trimEnd() + "\n");
 const filter = [
-  "[0:v]scale=1536:960,pad=1920:1080:192:0:color=0x173e35,ass=.data/demo/captions.ass[v]",
+  "[0:v]scale=1536:960,pad=1920:1080:192:0:color=0x17365d,ass=.data/demo/captions.ass[v]",
   ...audioFilters,
   `${chapters.map((_, index) => `[a${index}]`).join("")}amix=inputs=${chapters.length}:duration=longest:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=11,apad=whole_dur=180[a]`,
 ].join(";");

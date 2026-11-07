@@ -2,8 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 
-import { useSimulator } from "@/client/use-simulator";
-import type { DemoRun } from "@/domain/demo";
+import { useSimulation } from "./workspace-state";
 import {
   ArrowUpRight,
   FlaskConical,
@@ -15,13 +14,7 @@ import {
 } from "lucide-react";
 import type { Scenario } from "@/domain/readings";
 
-export function Simulator({
-  onReading,
-  run,
-}: {
-  onReading: () => Promise<void>;
-  run: DemoRun;
-}) {
+export function Simulator() {
   const {
     scenario,
     setScenario,
@@ -35,7 +28,7 @@ export function Simulator({
     send,
     sync,
     toggleTransport,
-  } = useSimulator(onReading, run);
+  } = useSimulation();
 
   return (
     <section

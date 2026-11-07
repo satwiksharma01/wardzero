@@ -3,7 +3,7 @@
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
-import { useRef, useState } from "react";
+import { useWorkspaceDraft } from "./workspace-state";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { FileText } from "lucide-react";
 import type { CareNote } from "@/domain/notes";
@@ -26,14 +26,21 @@ export function CaregiverNotes({
   assessment?: Assessment;
   serverTime?: string;
 }) {
-  const [text, setText] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  const pending = useRef<{ id: string; text: string } | null>(null);
+  const [draft, setDraft] = useWorkspaceDraft<{
+    text: string;
+    busy: boolean;
+    error: string;
+    pending: { id: string; text: string } | null;
+  }>(`note/${runId}`, { text: "", busy: false, error: "", pending: null });
+  const { text, busy, error } = draft;
+  const setText = (text: string) => setDraft((value) => ({ ...value, text }));
+  const setBusy = (busy: boolean) => setDraft((value) => ({ ...value, busy }));
+  const setError = (error: string) =>
+    setDraft((value) => ({ ...value, error }));
   async function save(input: { id: string; text: string }, retry = false) {
     setBusy(true);
     setError("");
-    if (!retry) pending.current = input;
+    if (!retry) setDraft((value) => ({ ...value, pending: input }));
     try {
       const response = await fetch("/api/notes", {
         method: "POST",
@@ -43,11 +50,12 @@ export function CaregiverNotes({
       });
       const result = await response.json();
       if (!response.ok) {
-        if (response.status < 500) pending.current = null;
+        if (response.status < 500)
+          setDraft((value) => ({ ...value, pending: null }));
         throw new Error(result.error);
       }
       if (!retry) {
-        pending.current = null;
+        setDraft((value) => ({ ...value, pending: null }));
         setText("");
       }
       await onChange();
@@ -77,13 +85,13 @@ export function CaregiverNotes({
       </div>
       <p className="section-description">
         Record what you notice between readings. Activate a caregiver identity
-        in Care response before saving.
+        above before saving.
       </p>
       <form
         onSubmit={(event) => {
           event.preventDefault();
           void save(
-            pending.current ?? { id: crypto.randomUUID(), text: text.trim() },
+            draft.pending ?? { id: crypto.randomUUID(), text: text.trim() },
           );
         }}
         className="care-action-form"
@@ -102,7 +110,7 @@ export function CaregiverNotes({
               disabled={busy || disconnected}
               onChange={(event) => {
                 setText(event.target.value);
-                pending.current = null;
+                setDraft((value) => ({ ...value, pending: null }));
               }}
               placeholder="For example: More tired today and barely ate lunch."
             />
@@ -121,7 +129,12 @@ export function CaregiverNotes({
         <p className="notes-empty">No caregiver observations recorded yet.</p>
       )}
       {notes.map((note) => (
-        <article className="note-entry" key={note.id} id={`note-${note.id}`}>
+        <article
+          className="note-entry"
+          key={note.id}
+          id={`note-${note.id}`}
+          tabIndex={-1}
+        >
           <div className="section-heading">
             <strong>{note.authorName}</strong>
             <time dateTime={note.recordedAt} title={note.recordedAt}>

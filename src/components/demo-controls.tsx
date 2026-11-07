@@ -1,7 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { useWorkspaceDraft } from "./workspace-state";
 import { History, RotateCcw, Timer } from "lucide-react";
 import type { DemoRun, DemoRunSummary } from "@/domain/demo";
 import { timeLabel } from "./vital-chart";
@@ -27,10 +28,23 @@ export function DemoControls({
   onChange: () => Promise<void>;
 }) {
   const [runs, setRuns] = useState<DemoRunSummary[]>([]);
-  const [scenario, setScenario] = useState("stable");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  const pending = useRef<Command | null>(null);
+  const [draft, setDraft] = useWorkspaceDraft<{
+    scenario: string;
+    busy: boolean;
+    error: string;
+    pending: Command | null;
+  }>("demo-command", {
+    scenario: "stable",
+    busy: false,
+    error: "",
+    pending: null,
+  });
+  const { scenario, busy, error } = draft;
+  const setScenario = (scenario: string) =>
+    setDraft((value) => ({ ...value, scenario }));
+  const setBusy = (busy: boolean) => setDraft((value) => ({ ...value, busy }));
+  const setError = (error: string) =>
+    setDraft((value) => ({ ...value, error }));
   useEffect(() => {
     let active = true;
     void listRuns().then(
@@ -44,7 +58,7 @@ export function DemoControls({
     };
   }, [run?.id]);
   async function execute(command: Command) {
-    pending.current = command;
+    setDraft((value) => ({ ...value, pending: command }));
     setBusy(true);
     setError("");
     try {
@@ -56,7 +70,7 @@ export function DemoControls({
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error);
-      pending.current = null;
+      setDraft((value) => ({ ...value, pending: null }));
       await onChange();
       setRuns(await listRuns());
     } catch (failure) {
@@ -188,7 +202,7 @@ export function DemoControls({
             variant="outline"
             disabled={busy}
             onClick={() => {
-              if (pending.current) void execute(pending.current);
+              if (draft.pending) void execute(draft.pending);
             }}
           >
             Retry demo action

@@ -36,7 +36,14 @@ const cue = async (seconds) => {
 const button = (name) => page.getByRole("button", { name, exact: true });
 const overview = async () =>
   page.getByRole("link", { name: "WardZero home" }).click();
+const go = async (name) => {
+  await page
+    .getByRole("navigation", { name: "Workspace" })
+    .getByRole("link", { name, exact: true })
+    .click();
+};
 const newRun = async (scenario) => {
+  await go("Simulation");
   await page
     .getByRole("combobox", { name: "New run scenario" })
     .selectOption(scenario);
@@ -45,7 +52,7 @@ const newRun = async (scenario) => {
 };
 const checkpoints = [];
 try {
-  await page.goto("/");
+  await page.goto("/simulation");
   await expect(
     page.getByText("Awaiting first reading", { exact: true }),
   ).toBeVisible();
@@ -60,6 +67,7 @@ try {
   checkpoints.push({ at: 26, concern: "Low", readings: 3 });
 
   await cue(33);
+  await go("Observations");
   await page
     .getByLabel("Patient observation", { exact: true })
     .fill("More tired today and barely ate lunch.");
@@ -74,12 +82,14 @@ try {
   await page.getByText("Inspect assessment evidence", { exact: true }).click();
   checkpoints.push({ at: 46, concern: "Medium", liveAI: true });
   await cue(54);
+  await go("Simulation");
   await button("Load deterioration").click();
   await expect(page.getByTestId("concern-level")).toHaveText("High");
   await cue(59);
   await overview();
 
   await cue(65);
+  await go("Care response");
   await button("Acknowledge alert").click();
   await expect(
     page.getByLabel("Caregiver action", { exact: true }),
@@ -114,11 +124,9 @@ try {
   }
   await cue(113);
   await button("Advance 35 seconds").click();
-  await overview();
   await expect(page.getByText("Delayed", { exact: true })).toBeVisible();
   await cue(118);
   await button("Advance 130 seconds").click();
-  await overview();
   await expect(page.getByText("Offline", { exact: true })).toBeVisible();
   await cue(122);
   await page.reload();
@@ -144,6 +152,7 @@ try {
   await expect(page.getByTestId("concern-level")).toHaveText("High");
   await cue(143);
   await button("Advance 130 seconds").click();
+  await go("Care response");
   await page
     .getByText(/Escalated in-app to Ravi Menon at/)
     .scrollIntoViewIfNeeded();

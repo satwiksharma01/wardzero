@@ -1,3 +1,4 @@
+import { go } from "./navigation-helpers";
 import { expect, test } from "@playwright/test";
 
 test("simulator persists readings through the API and survives browser reload", async ({
@@ -8,7 +9,7 @@ test("simulator persists readings through the API and survives browser reload", 
   page.on("console", (message) => {
     if (message.text().includes("same key")) failures.push(message.text());
   });
-  await page.goto("/");
+  await page.goto("/simulation");
   await expect(
     page.getByText("Awaiting first reading", { exact: true }),
   ).toBeVisible();
@@ -27,12 +28,14 @@ test("simulator persists readings through the API and survives browser reload", 
   await expect(
     page.getByText("4 recent / 4 stored", { exact: true }),
   ).toBeVisible();
+  await go(page, "Vitals");
   await page
     .getByRole("combobox", { name: "Chart measurement" })
     .selectOption("pulseBpm");
   await expect(
     page.getByRole("img", { name: /Heart rate, 4 readings/ }).last(),
   ).toBeVisible();
+  await go(page, "Simulation");
   await page.getByRole("button", { name: "Stream every 5s" }).click();
   await expect(page.getByRole("status")).toContainText("Reading 1 stored", {
     timeout: 12000,
@@ -55,7 +58,7 @@ test("compact screens retain care status and have no page overflow", async ({
 }) => {
   for (const width of [320, 768]) {
     await page.setViewportSize({ width, height: 900 });
-    await page.goto("/");
+    await page.goto("/simulation");
     await expect(page.getByTestId("concern-level")).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Send one reading" }),
@@ -116,7 +119,7 @@ test("API reports duplicate/conflict and rejects cross-origin mutations", async 
 test("caregiver notes pass through the HTTP adapter and contribute evidence to concern", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/observations");
   await expect(page.getByTestId("concern-level")).toHaveText("Low");
   await page.getByRole("button", { name: "Activate identity" }).click();
   await expect(
@@ -153,7 +156,7 @@ test("deterioration opens one alert and the assigned caregiver completes a persi
 }) => {
   const failures: string[] = [];
   page.on("pageerror", (error) => failures.push(error.message));
-  await page.goto("/");
+  await page.goto("/simulation");
   await page
     .getByRole("combobox", { name: "Patient scenario" })
     .selectOption("deteriorating");
@@ -164,6 +167,7 @@ test("deterioration opens one alert and the assigned caregiver completes a persi
     );
   }
   await expect(page.getByTestId("concern-level")).toHaveText("High");
+  await go(page, "Care response");
   await expect(page.getByText("1 active", { exact: true })).toBeVisible();
   await page.setViewportSize({ width: 320, height: 900 });
   expect(
@@ -251,7 +255,7 @@ test("durable sensor queue survives refresh and actual transport failure without
   page,
   context,
 }) => {
-  await page.goto("/");
+  await page.goto("/simulation");
   const before = (await (await context.request.get("/api/patient")).json())
     .total;
   await page
@@ -327,13 +331,14 @@ test("two repeatable demo cycles isolate history and synchronize the accelerated
   page,
   context,
 }) => {
-  await page.goto("/");
+  await page.goto("/simulation");
   await page.getByRole("button", { name: "Activate identity" }).click();
   await expect(
     page.getByText("Ananya Shah · Primary caregiver", { exact: true }),
   ).toBeVisible();
   let previousRun = "local";
   for (let cycle = 0; cycle < 2; cycle++) {
+    await go(page, "Simulation");
     await page
       .getByRole("combobox", { name: "New run scenario" })
       .selectOption("no-response");
@@ -349,9 +354,12 @@ test("two repeatable demo cycles isolate history and synchronize the accelerated
       .getByRole("button", { name: "Load deterioration", exact: true })
       .click();
     await expect(page.getByTestId("concern-level")).toHaveText("High");
+    await go(page, "Care response");
     await expect(page.getByText("1 active", { exact: true })).toBeVisible();
+    await go(page, "Simulation");
     await page.getByRole("button", { name: "Advance 130 seconds" }).click();
     await expect(page.getByTestId("concern-level")).toHaveText("Unknown");
+    await go(page, "Care response");
     await expect(
       page.getByText(/Escalated in-app to Ravi Menon at/),
     ).toBeVisible();
@@ -380,6 +388,7 @@ test("two repeatable demo cycles isolate history and synchronize the accelerated
     (run: { active: boolean; id: string }) => !run.active && run.id !== "local",
   );
   expect(archived.readingCount).toBe(6);
+  await go(page, "Simulation");
   await page.getByText("Previous runs", { exact: true }).click();
   const archive = context.waitForEvent("page");
   await page.getByRole("link", { name: "View archived run" }).first().click();
