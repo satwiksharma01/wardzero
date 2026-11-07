@@ -63,11 +63,11 @@ test("live Gemini observations raise concern and reach a recorded caregiver resp
   ).toBe(true);
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
   await page.screenshot({
-    path: "documents/verification/live-gemini-care-loop.png",
+    path: ".data/verification/live-gemini-care-loop.png",
     fullPage: true,
   });
   await writeFile(
-    "documents/verification/gemini-live-journey.json",
+    ".data/verification/gemini-live-journey.json",
     JSON.stringify(
       {
         verifiedAt: new Date().toISOString(),

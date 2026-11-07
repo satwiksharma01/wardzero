@@ -41,9 +41,9 @@ it("extracts grounded caregiver observations with the configured live Gemini mod
       observations: result.observations,
     });
   }
-  await mkdir("documents/verification", { recursive: true });
+  await mkdir(".data/verification", { recursive: true });
   await writeFile(
-    "documents/verification/gemini-live.json",
+    ".data/verification/gemini-live.json",
     JSON.stringify(
       {
         verifiedAt: new Date().toISOString(),

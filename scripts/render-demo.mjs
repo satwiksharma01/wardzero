@@ -8,9 +8,7 @@ const ffprobe = path.join(
   path.dirname(ffmpeg),
   process.platform === "win32" ? "ffprobe.exe" : "ffprobe",
 );
-const chapters = JSON.parse(
-  readFileSync("documents/submission/narration.json", "utf8"),
-);
+const chapters = JSON.parse(readFileSync("demo/narration.json", "utf8"));
 const assTime = (seconds) =>
   `0:${String(Math.floor(seconds / 60)).padStart(2, "0")}:${(seconds % 60).toFixed(2).padStart(5, "0")}`;
 const srtTime = (seconds) =>
@@ -66,7 +64,7 @@ chapters.forEach((chapter, index) => {
   }
 });
 writeFileSync(".data/demo/captions.ass", ass);
-writeFileSync("documents/submission/wardzero-demo.srt", srt.trimEnd() + "\n");
+writeFileSync("demo/wardzero-demo.srt", srt.trimEnd() + "\n");
 const filter = [
   "[0:v]scale=1536:960,pad=1920:1080:192:0:color=0x17365d,ass=.data/demo/captions.ass[v]",
   ...audioFilters,
@@ -106,7 +104,7 @@ execFileSync(
     "128k",
     "-movflags",
     "+faststart",
-    "documents/submission/wardzero-demo.mp4",
+    "demo/wardzero-demo.mp4",
   ],
   { stdio: "inherit" },
 );

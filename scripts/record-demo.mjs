@@ -168,12 +168,10 @@ try {
   await button("Acknowledge alert").click();
   checkpoints.push({ at: 157, escalatedInApp: true, backupAcknowledged: true });
   await cue(163);
-  await page.goto(
-    pathToFileURL(path.resolve("documents/submission/closing.svg")).href,
-  );
+  await page.goto(pathToFileURL(path.resolve("demo/closing.svg")).href);
   await cue(180);
   await writeFile(
-    "documents/submission/recording-evidence.json",
+    ".data/demo/recording-evidence.json",
     JSON.stringify(
       {
         recordedAt: new Date().toISOString(),

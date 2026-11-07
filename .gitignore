@@ -12,33 +12,10 @@ coverage/
 *.log
 __pycache__/
 *.py[cod]
-/documents/submission/wardzero-source.zip
-/documents/submission/ARTIFACTS.json
 
 # Local assistant instructions and the unselected motion-video candidate.
 /AGENTS.md
 /scripts/motion-demo/
 
-# Publish only the core guides, one verification summary, and one demo package.
-# Working plans and detailed evidence remain local; history links retain audits.
-/documents/*
-!/documents/README.md
-!/documents/JUDGE_GUIDE.md
-!/documents/SETUP.md
-!/documents/ARCHITECTURE.md
-!/documents/AI_USE.md
-!/documents/THIRD_PARTY_NOTICES.md
-!/documents/shadcn-LICENSE.txt
-!/documents/verification/
-!/documents/submission/
-
-/documents/verification/*
-!/documents/verification/README.md
-
-/documents/submission/*
-!/documents/submission/closing.svg
-!/documents/submission/narration.json
-!/documents/submission/wardzero-cover.png
-!/documents/submission/wardzero-demo.mp4
-!/documents/submission/wardzero-demo.mp4.sha256
-!/documents/submission/wardzero-demo.srt
+# Documentation is consolidated in the root README; reports are generated in .data.
+/documents/

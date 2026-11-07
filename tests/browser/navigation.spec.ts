@@ -172,14 +172,14 @@ test("every blue workspace page is accessible and fits compact and desktop width
           window.scrollTo({ top: 0, behavior: "instant" }),
         );
         await page.screenshot({
-          path: `documents/verification/blue-${name.toLowerCase().replaceAll(" ", "-")}-${width}.png`,
+          path: `.data/verification/blue-${name.toLowerCase().replaceAll(" ", "-")}-${width}.png`,
           fullPage: true,
         });
       }
     }
   }
   await writeFile(
-    "documents/verification/blue-pages-accessibility.json",
+    ".data/verification/blue-pages-accessibility.json",
     JSON.stringify({ verifiedAt: new Date().toISOString(), reports }, null, 2),
   );
 });

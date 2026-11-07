@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 
 test("production worker retries a lost acceptance without duplicate logical delivery or caregiver acknowledgement", async ({
   request,
@@ -44,8 +44,9 @@ test("production worker retries a lost acceptance without duplicate logical deli
   });
   expect(JSON.stringify(snapshot)).not.toContain("recipient@example.invalid");
   expect(JSON.stringify(snapshot)).not.toContain("fixture-email-key");
+  await mkdir(".data/verification", { recursive: true });
   await writeFile(
-    "documents/verification/email-loopback.json",
+    ".data/verification/email-loopback.json",
     JSON.stringify(
       {
         verifiedAt: new Date().toISOString(),

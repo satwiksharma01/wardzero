@@ -53,11 +53,11 @@ test("deadline worker escalates while every browser page is closed", async ({
     reopened.getByLabel("Caregiver action", { exact: true }),
   ).toBeVisible();
   await reopened.screenshot({
-    path: "documents/verification/coordinator-escalation.png",
+    path: ".data/verification/coordinator-escalation.png",
     fullPage: true,
   });
   await writeFile(
-    "documents/verification/closed-browser-worker.json",
+    ".data/verification/closed-browser-worker.json",
     JSON.stringify(
       {
         verifiedAt: new Date().toISOString(),

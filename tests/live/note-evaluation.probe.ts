@@ -107,9 +107,9 @@ it("measures independently authored synthetic English notes with live Gemini", a
     ),
     cases: outcomes,
   };
-  await mkdir("documents/verification", { recursive: true });
+  await mkdir(".data/verification", { recursive: true });
   await writeFile(
-    `documents/verification/note-evaluation-${NOTE_PROMPT_VERSION}.json`,
+    `.data/verification/note-evaluation-${NOTE_PROMPT_VERSION}.json`,
     JSON.stringify(report, null, 2),
   );
   expect(summary.completed).toBeGreaterThan(0);

@@ -1,14 +1,12 @@
 import { chromium, expect } from "@playwright/test";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 
 const browser = await chromium.launch({ channel: "chrome" });
 try {
   const page = await browser.newPage();
-  await page.goto(
-    pathToFileURL(path.resolve("documents/submission/wardzero-demo.mp4")).href,
-  );
+  await page.goto(pathToFileURL(path.resolve("demo/wardzero-demo.mp4")).href);
   const video = page.locator("video");
   await expect(video).toBeVisible();
   await expect
@@ -34,8 +32,9 @@ try {
     .poll(() => video.evaluate((element) => element.currentTime))
     .toBeGreaterThan(152);
   expect(await video.evaluate((element) => element.error)).toBeNull();
+  await mkdir(".data/verification", { recursive: true });
   await writeFile(
-    "documents/verification/video-playback.json",
+    ".data/verification/video-playback.json",
     JSON.stringify(
       {
         verifiedAt: new Date().toISOString(),

@@ -47,7 +47,7 @@ test("simulator persists readings through the API and survives browser reload", 
   await page.evaluate(() => document.fonts.ready);
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
   await page.screenshot({
-    path: "documents/verification/care-loop-overview.png",
+    path: ".data/verification/care-loop-overview.png",
     fullPage: true,
   });
   expect(failures).toEqual([]);
@@ -71,7 +71,7 @@ test("compact screens retain care status and have no page overflow", async ({
     ).toBe(true);
     if (width === 320)
       await page.screenshot({
-        path: "documents/verification/care-loop-mobile.png",
+        path: ".data/verification/care-loop-mobile.png",
         fullPage: true,
       });
   }
@@ -179,7 +179,7 @@ test("deterioration opens one alert and the assigned caregiver completes a persi
     page.getByRole("button", { name: "Acknowledge alert" }),
   ).toBeVisible();
   await page.screenshot({
-    path: "documents/verification/care-loop-alert-mobile.png",
+    path: ".data/verification/care-loop-alert-mobile.png",
     fullPage: true,
   });
   await page.setViewportSize({ width: 1440, height: 1050 });
@@ -245,7 +245,7 @@ test("deterioration opens one alert and the assigned caregiver completes a persi
   ).toBeVisible();
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
   await page.screenshot({
-    path: "documents/verification/care-loop-completed.png",
+    path: ".data/verification/care-loop-completed.png",
     fullPage: true,
   });
   expect(failures).toEqual([]);
@@ -322,7 +322,7 @@ test("durable sensor queue survives refresh and actual transport failure without
     page.getByRole("alert").filter({ hasText: "Connection unavailable" }),
   ).toHaveCount(0);
   await page.screenshot({
-    path: "documents/verification/recovered-queue.png",
+    path: ".data/verification/recovered-queue.png",
     fullPage: true,
   });
 });
@@ -401,7 +401,7 @@ test("two repeatable demo cycles isolate history and synchronize the accelerated
   ).toBeVisible();
   await archivePage.close();
   await page.screenshot({
-    path: "documents/verification/repeatable-demo.png",
+    path: ".data/verification/repeatable-demo.png",
     fullPage: true,
   });
 });

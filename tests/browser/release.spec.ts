@@ -1,7 +1,7 @@
 import { go } from "./navigation-helpers";
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 
 test("caregiver can navigate by keyboard, preserve failed drafts, and read compact alerts", async ({
   page,
@@ -122,8 +122,9 @@ test("caregiver can navigate by keyboard, preserve failed drafts, and read compa
       })),
     ).toEqual([]);
   }
+  await mkdir(".data/verification", { recursive: true });
   await writeFile(
-    "documents/verification/accessibility.json",
+    ".data/verification/accessibility.json",
     JSON.stringify({ verifiedAt: new Date().toISOString(), reports }, null, 2),
   );
 });

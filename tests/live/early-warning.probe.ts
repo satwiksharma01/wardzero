@@ -40,9 +40,9 @@ it("records actual live-note early warning and its synthetic control runs", asyn
       providerMode: result.noteModel ? "live-request" : "not-called",
     });
   }
-  await mkdir("documents/verification", { recursive: true });
+  await mkdir(".data/verification", { recursive: true });
   await writeFile(
-    "documents/verification/early-warning-live.json",
+    ".data/verification/early-warning-live.json",
     JSON.stringify(
       {
         verifiedAt: new Date().toISOString(),
