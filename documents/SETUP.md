@@ -75,7 +75,7 @@ The backup identity can inspect but cannot respond to an alert assigned to the p
 
 `GET/POST /api/demo/session` reads/activates the local demo session. `POST /api/alerts/:id/events` accepts a unique eventId with action `acknowledge`, `record-action`, or `resolve`; the last two require text. The actor comes from the HttpOnly session cookie. Errors distinguish malformed input (400), missing/expired session (401), unassigned actor (403), missing alert (404), and transition/idempotency conflicts (409).
 
-Schema migrations run automatically on store initialization and preserve readings from the first milestone. Assessment parameters and limitations are recorded in [CARE_LOOP_PLAN.md](CARE_LOOP_PLAN.md).
+Schema migrations run automatically on store initialization and preserve readings from the first milestone. Assessment parameters and limitations are recorded in [CARE_LOOP_PLAN.md](https://github.com/satwiksharma01/wardzero/blob/11cfc25d368033332e2a15d7af624e7651ff8f73/documents/CARE_LOOP_PLAN.md).
 
 ## Configure Gemini
 
@@ -111,6 +111,47 @@ The Node server evaluates deadlines every second while it runs, even with no bro
 
 Email is off unless `WARDZERO_EMAIL_ENABLED=true` and `WARDZERO_EMAIL_API_KEY`, `WARDZERO_EMAIL_FROM`, and `WARDZERO_EMAIL_TO` are all configured on the server. Use a verified Resend sender and one authorized recipient. Never enable real delivery merely to run the test suite. This project's checks use fake credentials, reserved `.invalid` addresses, and a loopback HTTP receiver; no real email was sent or verified.
 
-At the first overdue in-app escalation, a job freezes its metadata-only payload and idempotency key. Disabled jobs never activate retroactively. The worker sends outside the database transaction, leases for 30 seconds, retries at most six times within 23 actual wall-clock hours, and cancels due work when the episode/run closes. Demo time advance does not advance retry limits. Provider acceptance is shown separately from unverified delivery/reading and caregiver acknowledgement. See [ADR-006](decisions/006-optional-email-outbox.md).
+At the first overdue in-app escalation, a job freezes its metadata-only payload and idempotency key. Disabled jobs never activate retroactively. The worker sends outside the database transaction, leases for 30 seconds, retries at most six times within 23 actual wall-clock hours, and cancels due work when the episode/run closes. Demo time advance does not advance retry limits. Provider acceptance is shown separately from unverified delivery/reading and caregiver acknowledgement. See [ADR-006](https://github.com/satwiksharma01/wardzero/blob/11cfc25d368033332e2a15d7af624e7651ff8f73/documents/decisions/006-optional-email-outbox.md).
 
 `WARDZERO_EMAIL_ENDPOINT` is an optional test override restricted to Resend's exact HTTPS origin or an HTTP loopback `/emails` receiver. Invalid endpoint configuration disables email without blocking in-app escalation. The production email contract test uses ports 3107/3112 and an isolated database. Run app-owning suites sequentially; each runner stops its own server. Normal app use and tests require no email configuration.
+
+## Reproduce the demo
+
+Optional media tooling requires installed Chrome, FFmpeg/FFprobe and a Windows speech voice. The committed narration and closing card are the inputs; captures/audio and detailed recording reports are generated locally. This repeats actual UI/API transitions and makes live Gemini requests.
+
+Start the production app separately with the documented Gemini configuration:
+
+```powershell
+npm run build
+npm start
+```
+
+For an isolated recording port, set `PORT` on the server and `WARDZERO_DEMO_URL=http://127.0.0.1:<port>` on the recording command. The default remains port 3000. The verified refresh used port 3108 and a separate `WARDZERO_DATA_NAME`, with `WARDZERO_EMAIL_ENABLED=false`.
+
+In a second terminal at the repository root:
+
+```powershell
+npx playwright install ffmpeg
+node scripts/record-demo.mjs
+node scripts/render-demo.mjs "C:/path/to/ffmpeg.exe"
+node scripts/verify-video.mjs
+```
+
+Use an installed FFmpeg distribution with `ffprobe` beside its executable, H.264/AAC encoders, and the ASS subtitle filter. `record-demo.mjs` uses installed Chrome and writes raw capture under ignored `.data/demo/`. The narrator uses the installed Windows speech voice. Rendering overwrites only the generated final MP4/captions; inspect the result before replacing a submitted version.
+
+Before rendering, generate narration from the repository root in an interactive PowerShell session (no script-execution-policy changes are required):
+
+```powershell
+Add-Type -AssemblyName System.Speech
+New-Item -ItemType Directory -Force .data/demo/audio | Out-Null
+$wardzeroChapters = Get-Content documents/submission/narration.json -Raw | ConvertFrom-Json
+for ($wardzeroIndex = 0; $wardzeroIndex -lt $wardzeroChapters.Count; $wardzeroIndex++) {
+    $wardzeroVoice = New-Object System.Speech.Synthesis.SpeechSynthesizer
+    $wardzeroVoice.Rate = 1
+    $wardzeroVoice.SetOutputToWaveFile((Join-Path (Get-Location) ('.data/demo/audio/part-' + $wardzeroIndex + '.wav')))
+    $wardzeroVoice.Speak($wardzeroChapters[$wardzeroIndex].text)
+    $wardzeroVoice.Dispose()
+}
+```
+
+Application assertions abort recording if a concern transition, live analysis, queue recovery, or escalation is missing. The playback check verifies duration/dimensions, actual Chrome playback, seeking, and absence of media errors. It runs muted for automation; the recorded file contains narration.

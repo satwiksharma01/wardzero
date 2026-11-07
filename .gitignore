@@ -19,46 +19,25 @@ __pycache__/
 /AGENTS.md
 /scripts/motion-demo/
 
-# Publish only documentation needed to run, understand, and review the entry.
-# Other documents and upload preparation files remain local.
+# Publish only the core guides, one verification summary, and one demo package.
+# Working plans and detailed evidence remain local; history links retain audits.
 /documents/*
 !/documents/README.md
 !/documents/JUDGE_GUIDE.md
 !/documents/SETUP.md
 !/documents/ARCHITECTURE.md
-!/documents/PRODUCT_SPEC.md
-!/documents/CARE_LOOP_PLAN.md
-!/documents/VALIDATION.md
 !/documents/AI_USE.md
 !/documents/THIRD_PARTY_NOTICES.md
 !/documents/shadcn-LICENSE.txt
-!/documents/decisions/
 !/documents/verification/
 !/documents/submission/
 
 /documents/verification/*
-!/documents/verification/2026-11-07-blue-pages.md
-!/documents/verification/blue-workspace-evidence.json
-!/documents/verification/blue-pages-accessibility.json
-!/documents/verification/blue-public-handoff.json
-!/documents/verification/closed-browser-worker.json
-!/documents/verification/dependency-audit.json
-!/documents/verification/early-warning-live.json
-!/documents/verification/email-loopback.json
-!/documents/verification/gemini-live-journey.json
-!/documents/verification/NOTE_EVALUATION.md
-!/documents/verification/EARLY_WARNING.md
-!/documents/verification/note-evaluation-notes-v1-burst.json
-!/documents/verification/note-evaluation-notes-v1.json
-!/documents/verification/note-evaluation-notes-v2.json
-!/documents/verification/note-evaluation-notes-v3.json
-!/documents/verification/video-playback.json
+!/documents/verification/README.md
 
 /documents/submission/*
-!/documents/submission/RECORDING.md
 !/documents/submission/closing.svg
 !/documents/submission/narration.json
-!/documents/submission/recording-evidence.json
 !/documents/submission/wardzero-cover.png
 !/documents/submission/wardzero-demo.mp4
 !/documents/submission/wardzero-demo.mp4.sha256

@@ -1,6 +1,6 @@
 # WardZero architecture
 
-Status: Next.js/TypeScript/PostgreSQL stack confirmed by the participant on 7 November 2026. Local milestone uses filesystem-backed PGlite (embedded PostgreSQL). Local assessment, live Gemini notes, alerts, demo sessions, caregiver response, autonomous in-app escalation, durable outbox, and isolated demo runs are implemented. Hosted PostgreSQL and production identity remain prerequisites if public interactive hosting is chosen. Actual versions are pinned in package.json/package-lock.json. See [ADR-001](decisions/001-local-postgres.md) and [ADR-002](decisions/002-explained-care-loop.md).
+Status: Next.js/TypeScript/PostgreSQL stack confirmed by the participant on 7 November 2026. Local milestone uses filesystem-backed PGlite (embedded PostgreSQL). Local assessment, live Gemini notes, alerts, demo sessions, caregiver response, autonomous in-app escalation, durable outbox, and isolated demo runs are implemented. Hosted PostgreSQL and production identity remain prerequisites if public interactive hosting is chosen. Actual versions are pinned in package.json/package-lock.json. See [ADR-001](https://github.com/satwiksharma01/wardzero/blob/11cfc25d368033332e2a15d7af624e7651ff8f73/documents/decisions/001-local-postgres.md) and [ADR-002](https://github.com/satwiksharma01/wardzero/blob/11cfc25d368033332e2a15d7af624e7651ff8f73/documents/decisions/002-explained-care-loop.md).
 
 ## Implemented stack
 
