@@ -1,0 +1,86 @@
+{
+  "verifiedAt": "2026-11-07T16:05:06.713645+00:00",
+  "applicationRevision": "2b0e2e76b1403608c0c740bb733e8c048d49d8c8",
+  "baselineRevision": "dd7e18924f5b2280ed7cecb8f84c16d5b5f58801",
+  "routes": [
+    "/",
+    "/vitals",
+    "/care",
+    "/observations",
+    "/simulation"
+  ],
+  "palette": "navy, cobalt, pale blue, slate; amber/red concern retained",
+  "automated": {
+    "passed": 73,
+    "files": 21,
+    "seconds": 24.77
+  },
+  "chromeJourneys": {
+    "passed": 12,
+    "duration": "1.8m",
+    "provider": "local mock, explicitly configured"
+  },
+  "axe": {
+    "pageWidthCombinations": 15,
+    "widths": [
+      320,
+      768,
+      1440
+    ],
+    "taggedViolations": 0,
+    "report": "blue-pages-accessibility.json",
+    "completeConformanceClaimed": false
+  },
+  "typescript": "passed",
+  "eslint": "passed",
+  "prettier": "passed",
+  "productionBuild": {
+    "compiler": "Turbopack",
+    "passed": true,
+    "safeServerTraceManifests": 15
+  },
+  "developmentCompiler": "webpack; repeated Turbopack HMR reproduction documented with exact cause unproven",
+  "impeccableDetector": {
+    "findings": 0,
+    "report": "blue-ui-detector.json"
+  },
+  "liveGeminiJourney": {
+    "verifiedAt": "2026-11-07T16:01:58.509Z",
+    "model": "gemini:gemini-3.5-flash-lite",
+    "elapsedMs": 9391,
+    "initialConcern": "Low",
+    "finalConcern": "Medium",
+    "alertState": "ActionRecorded",
+    "noteStatus": "Complete"
+  },
+  "closedBrowserProductionWorker": {
+    "verifiedAt": "2026-11-07T16:02:10.387Z",
+    "browserClosedForMs": 4000,
+    "deadlineAt": "2026-11-07T16:02:07.586Z",
+    "escalatedAt": "2026-11-07T16:02:08.280Z",
+    "workerLastTickAt": "2026-11-07T16:02:09.293Z",
+    "escalationEvents": 1
+  },
+  "extractorEvaluation": {
+    "cases": 40,
+    "sourceUnchanged": true,
+    "rerunForRouteChange": false,
+    "sourceRevision": "d0bc83cc96eb5a1d7d5abfc76229abd33d22629e"
+  },
+  "freshIndependentReview": "approved after evidence link, pending command state, and identity timeout fixes",
+  "clinicalValidation": false,
+  "humanCaregiverTesting": "unperformed",
+  "cloudEmailDelivery": "unverified",
+  "woobleSubmitted": false,
+  "recordedWalkthrough": {
+    "applicationRevision": "2b0e2e76b1403608c0c740bb733e8c048d49d8c8",
+    "allCheckpointsPassed": true,
+    "liveGemini": true,
+    "seconds": 180,
+    "width": 1920,
+    "height": 1080,
+    "chromePlaybackAndSeek": "passed",
+    "bytes": 8111154,
+    "sha256": "9888a522c0d919f14e7e0521adaf58bc62b4801c2a436ec163568b1a531672dd"
+  }
+}

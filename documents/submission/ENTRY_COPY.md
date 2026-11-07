@@ -26,7 +26,7 @@ Next.js, TypeScript, React, embedded PostgreSQL/PGlite, Zod, Gemini structured o
 
 ## Reliability and verification
 
-73 automated tests, eight Chrome journeys, a 40-case synthetic live Gemini evaluation, a live provider care journey, and browser-closed escalation against the production server. The release audit covers 22 critical scenarios including malformed/future data, late replay, lost acknowledgements, AI failure, unauthorized mutation, restart recovery, and bounded queue capacity. A clean checkout installs, tests, builds, and starts without a key; AI status then shows Unavailable.
+73 automated tests, 12 Chrome journeys, a 40-case synthetic live Gemini evaluation, a live provider care journey, and browser-closed escalation against the production server. The release audit covers 22 critical scenarios including malformed/future data, late replay, lost acknowledgements, AI failure, unauthorized mutation, restart recovery, and bounded queue capacity. A clean checkout installs, tests, builds, and starts without a key; AI status then shows Unavailable.
 
 ## Prototype boundaries
 

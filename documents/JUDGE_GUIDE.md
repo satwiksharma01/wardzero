@@ -4,14 +4,14 @@
 
 WardZero connects simulated home-care vitals and English caregiver observations to explained concern, an assigned alert, and a recorded human response. Its focus is continuity when connectivity fails or nobody acknowledges an alert.
 
-The [current UI refresh](verification/2026-11-07-ui-refresh.md) puts care response and observations alongside one another on wide screens and preserves a stacked keyboard-accessible flow on phones. Measurement, freshness, and care response remain distinct states.
+The [current blue workspace](verification/2026-11-07-blue-pages.md) has distinct Overview, Vitals, Care response, Observations, and Simulation pages. Identity and patient evidence stay shared, sensor streaming continues while inspecting other pages, and route navigation preserves unconfirmed requests and drafts. Measurement, freshness, and care response remain distinct states.
 
 ## See the working chain
 
-1. Follow [SETUP.md](SETUP.md). Start the app, activate the primary caregiver, and create a new demo run.
+1. Follow [SETUP.md](SETUP.md). Start the app, activate the primary caregiver in the shared identity bar, open Simulation, and create a new demo run.
 2. Send three stable readings in Simulation lab, or load a stable baseline. Concern becomes Low after sufficient distinct observations.
-3. Save “More tired today and barely ate lunch.” With configured Gemini, grounded observations raise Low to Medium. Inspect the exact excerpts and evidence references.
-4. Load deterioration. The alert rises to High while remaining one active episode. Acknowledge, record an action, then resolve with a reason.
+3. Open Observations and save “More tired today and barely ate lunch.” With configured Gemini, grounded observations raise Low to Medium. Inspect the exact excerpts and evidence references; note links navigate directly to their original evidence.
+4. Load deterioration in Simulation. The alert rises to High while remaining one active episode. In Care response, acknowledge, record an action, then resolve with a reason.
 5. Disconnect sensor transport, generate three readings, and refresh. The queue survives. Reconnect and inspect the original timestamps and counts.
 6. Create an unanswered-alert run, load deterioration, and advance 130 labeled demo seconds. Switch to the backup identity; the coordinator can acknowledge the escalated alert.
 
@@ -29,7 +29,7 @@ Use new runs to repeat safely; prior evidence stays in read-only archives. Demo 
 
 ## Verification you can rerun
 
-The [improvement report](verification/2026-11-07-improvements.md) records 73 automated tests, eight Chrome journeys, a 40-case actual Gemini evaluation, a live care journey, and browser-closed production escalation. The controlled [early-warning replay](verification/EARLY_WARNING.md) measures 45 seconds before the fixture's first individual threshold, with negative/stable controls and inference latency explicitly excluded. [Note results](verification/NOTE_EVALUATION.md) retain baseline errors, earlier provider failures, and final raw cases. Optional email is tested against a loopback HTTP receiver with a lost acceptance and transient conflict, not a real cloud mailbox. The dependency audit reports zero advisories at verification time. These are prototype checks, not clinical validation or a guarantee against undiscovered defects.
+The [blue workspace report](verification/2026-11-07-blue-pages.md) records 73 automated tests, 12 Chrome journeys, all five pages at three accessible widths, a live care journey, and browser-closed production escalation. The [improvement report](verification/2026-11-07-improvements.md) retains the 40-case actual Gemini evaluation for unchanged extraction code. The controlled [early-warning replay](verification/EARLY_WARNING.md) measures 45 seconds before the fixture's first individual threshold, with negative/stable controls and inference latency explicitly excluded. [Note results](verification/NOTE_EVALUATION.md) retain baseline errors, earlier provider failures, and final raw cases. Optional email is tested against a loopback HTTP receiver with a lost acceptance and transient conflict, not a real cloud mailbox. The dependency audit reports zero advisories at verification time. These are prototype checks, not clinical validation or a guarantee against undiscovered defects.
 
 `npm test` is deterministic and needs no AI key. `npm run test:e2e` explicitly uses a local mock HTTP provider. The opt-in live commands require a reviewer-owned Gemini key and make real provider requests. Without AI configuration, notes show Unavailable; reading-based assessment continues. There is no hidden mock fallback in the normal application.
 

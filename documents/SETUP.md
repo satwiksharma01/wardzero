@@ -17,6 +17,10 @@ npm run dev
 
 Open [http://127.0.0.1:3000](http://127.0.0.1:3000). Initial state is intentionally empty. Open Simulation lab, choose a scenario, and send a reading or stream every five seconds. Refresh the page to verify stored history.
 
+The workspace now has real pages: Overview `/`, Vitals `/vitals`, Care response `/care`, Observations `/observations`, and Simulation `/simulation`. Use the persistent sidebar and identity controls. Start synthetic readings in Simulation, inspect them in Overview/Vitals, save notes in Observations, and respond in Care response. The shared concern rail remains available on every page. Sensor streaming and queued retries continue across client navigation; unsaved note/action text and unconfirmed command identities stay in layout memory. Unsaved text is not claimed durable across a full browser refresh.
+
+`npm run dev` uses Next.js's supported `--webpack` development mode. The installed Turbopack development server repeatedly reloaded these routes in the verified Windows environment, before client state settled; restricting CSS scanning did not resolve that run. Webpack passed the same browser assertions. This is an observed development workaround, not a claim about the precise framework defect. Production `npm run build` still uses the default Turbopack compiler. See the [official CLI options](https://nextjs.org/docs/app/api-reference/cli/next).
+
 `.npmrc` disables dependency lifecycle scripts. Installed platform packages supply the Next.js compiler and test tooling; the verified build does not require blanket enabling scripts.
 
 The database persists in `.data/wardzero`, which is ignored by Git. No database account is needed for local storage. Live AI interpretation requires the provider configuration below. Optionally set `WARDZERO_DATA_NAME` in `.env.local` to a name containing letters, digits, underscores, or hyphens. Each name creates a separate database under `.data/`.

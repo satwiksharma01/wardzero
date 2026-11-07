@@ -13,6 +13,10 @@ Status: Next.js/TypeScript/PostgreSQL stack confirmed by the participant on 7 No
 
 PGlite owns one database per Node process. This release binds to loopback and persists under ignored `.data/`. Public interactive hosting requires a separately reviewed identity system, hosted database, and supported background worker. Ephemeral serverless storage is unsuitable for this deployment.
 
+## Workspace routes
+
+The shared Next.js `(workspace)` layout serves Overview (`/`), Vitals (`/vitals`), Care response (`/care`), Observations (`/observations`) and Simulation (`/simulation`). It owns snapshot polling, demo identity, simulation timers and in-memory drafts/pending command identities. Client navigation preserves those states; full refresh restores durable database/outbox data but does not promise to preserve unsaved text. Run-scoped evidence links navigate to focusable original notes. The route split changes presentation and client ownership, not care rules or the API.
+
 ## Data flow
 
 ```mermaid

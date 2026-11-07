@@ -14,7 +14,7 @@ Upload the actual files; Wooble says an external link alone is insufficient.
 
 | Slot | File in this folder | Purpose |
 |---|---|---|
-| Walkthrough | `wardzero-demo.mp4` | Exactly 3 minutes, 1920×1080, H.264/AAC; about 9.9 MB. The form accepts MP4/MOV/WebM up to 5 minutes and 500 MB; the challenge's stricter 3-minute requirement is met. |
+| Walkthrough | `wardzero-demo.mp4` | Exactly 3 minutes, 1920×1080, H.264/AAC; about 8.1 MB. The form accepts MP4/MOV/WebM up to 5 minutes and 500 MB; the challenge's stricter 3-minute requirement is met. |
 | Cover | `wardzero-cover.png` | 1920×1080, 16:9 project thumbnail. |
 | Gallery 1 | `gallery/01-stable-overview.png` | Actual stable readings and explained Low concern. |
 | Gallery 2 | `gallery/02-gemini-observations.png` | Completed live Gemini extraction with source excerpts. |
@@ -30,7 +30,7 @@ Simulation lab generates stable and deteriorating synthetic vitals: pulse, oxyge
 
 ### Full Stack Platform, AI/ML Risk Detection
 
-The Next.js dashboard displays readings and trends, explains Low/Medium/High concern, and records assigned caregiver responses. Live Gemini extracts allowlisted observations from English notes with literal excerpts, negation, and time context. Deterministic engineering rules combine those observations with fresh vitals; a tiredness/intake note raises Low to Medium in the video. Deterioration raises the same episode to High. Missing/stale evidence is Unknown. Acknowledge → record action → resolve preserves the human audit trail. Unanswered alerts escalate in-app to a backup coordinator. This is a synthetic prototype, not a validated clinical predictor.
+The blue Next.js workspace separates Overview, Vitals, Care response, Observations, and Simulation. Shared identity, drafts and sensor streaming continue across page navigation. It displays readings and trends, explains Low/Medium/High concern, and records assigned caregiver responses. Live Gemini extracts allowlisted observations from English notes with literal excerpts, negation, and time context. Deterministic engineering rules combine those observations with fresh vitals; a tiredness/intake note raises Low to Medium in the video. Deterioration raises the same episode to High. Missing/stale evidence is Unknown. Acknowledge → record action → resolve preserves the human audit trail. Unanswered alerts escalate in-app to a backup coordinator. This is a synthetic prototype, not a validated clinical predictor.
 
 ### Technical Documentation
 
@@ -76,7 +76,7 @@ The running walkthrough shows three stable readings establish Low concern, a liv
 
 In the recorded outage run, three baseline readings were stored before disconnect. Three more readings stayed queued across refresh, then reconnect produced six stored readings and zero queued entries, preserving original observation times. Separate tests cover actual request failure and a lost acknowledgement; retries do not duplicate persistence. This is a measured synthetic demonstration, not a patient-outcome or field-reliability result.
 
-The current application revision passes 73 automated tests and eight Chrome journeys. The final 40-case synthetic English-note Gemini run matched all expected cases, with zero failed requests or unsupported current positives; earlier imperfect runs remain in the repository. These are development examples, not clinical accuracy evidence. A controlled storage-backed replay measures 45 seconds before its authored individual-threshold marker, excluding inference wall time; negative/historical/stable controls are included. A production-server test verifies escalation while every browser page is closed. Clean installation, tests, TypeScript, lint, and production build pass; the pinned dependency audit reports zero known advisories at verification time. Reports and executable checks are included in the repository.
+The current application revision passes 73 automated tests and 12 Chrome journeys. The final 40-case synthetic English-note Gemini run matched all expected cases, with zero failed requests or unsupported current positives; earlier imperfect runs remain in the repository. These are development examples, not clinical accuracy evidence. A controlled storage-backed replay measures 45 seconds before its authored individual-threshold marker, excluding inference wall time; negative/historical/stable controls are included. A production-server test verifies escalation while every browser page is closed. Clean installation, tests, TypeScript, lint, and production build pass; the pinned dependency audit reports zero known advisories at verification time. Reports and executable checks are included in the repository.
 
 ### Reflection
 
@@ -96,7 +96,7 @@ The prototype remains local, single-patient, and synthetic. Its engineering thre
 |---|---|
 | 3/3 | Queued readings recovered in the recorded outage |
 | 73 | Automated behavior checks passed |
-| 8 | Chrome journeys passed |
+| 12 | Chrome journeys passed |
 
 These describe prototype evidence, not clinical impact. The story records the measurement setup and baseline.
 

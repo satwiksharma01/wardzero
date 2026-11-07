@@ -1,0 +1,80 @@
+{
+  "verifiedAt": "2026-11-07T16:03:08.606Z",
+  "reports": [
+    {
+      "page": "Overview",
+      "width": 320,
+      "violations": []
+    },
+    {
+      "page": "Vitals",
+      "width": 320,
+      "violations": []
+    },
+    {
+      "page": "Care response",
+      "width": 320,
+      "violations": []
+    },
+    {
+      "page": "Observations",
+      "width": 320,
+      "violations": []
+    },
+    {
+      "page": "Simulation",
+      "width": 320,
+      "violations": []
+    },
+    {
+      "page": "Overview",
+      "width": 768,
+      "violations": []
+    },
+    {
+      "page": "Vitals",
+      "width": 768,
+      "violations": []
+    },
+    {
+      "page": "Care response",
+      "width": 768,
+      "violations": []
+    },
+    {
+      "page": "Observations",
+      "width": 768,
+      "violations": []
+    },
+    {
+      "page": "Simulation",
+      "width": 768,
+      "violations": []
+    },
+    {
+      "page": "Overview",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "page": "Vitals",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "page": "Care response",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "page": "Observations",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "page": "Simulation",
+      "width": 1440,
+      "violations": []
+    }
+  ]
+}

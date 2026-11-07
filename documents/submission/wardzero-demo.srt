@@ -100,7 +100,7 @@ every browser page closed.
 
 26
 00:02:43,000 --> 00:02:47,952
-The repository includes seventy-three automated tests, eight browser journeys, forty synthetic Gemini cases,
+The repository includes seventy-three automated tests, twelve browser journeys, forty synthetic Gemini cases,
 
 27
 00:02:47,952 --> 00:02:52,905
