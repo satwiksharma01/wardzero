@@ -14,7 +14,7 @@ Upload the actual files; Wooble says an external link alone is insufficient.
 
 | Slot | File in this folder | Purpose |
 |---|---|---|
-| Walkthrough | `wardzero-demo.mp4` | Exactly 3 minutes, 1920×1080, H.264/AAC; about 8.7 MB. The form accepts MP4/MOV/WebM up to 5 minutes and 500 MB; the challenge's stricter 3-minute requirement is met. |
+| Walkthrough | `wardzero-demo.mp4` | Exactly 3 minutes, 1920×1080, H.264/AAC; about 9.9 MB. The form accepts MP4/MOV/WebM up to 5 minutes and 500 MB; the challenge's stricter 3-minute requirement is met. |
 | Cover | `wardzero-cover.png` | 1920×1080, 16:9 project thumbnail. |
 | Gallery 1 | `gallery/01-stable-overview.png` | Actual stable readings and explained Low concern. |
 | Gallery 2 | `gallery/02-gemini-observations.png` | Completed live Gemini extraction with source excerpts. |
