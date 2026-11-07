@@ -10,7 +10,7 @@
 | Source package | Final ZIP and its revision/hash are recorded in local `submission/ARTIFACTS.json` after export. |
 | Demo | Local `submission/wardzero-demo.mp4`, 180 seconds, 1920×1080; captions included. |
 | Repository URL | [satwiksharma01/wardzero](https://github.com/satwiksharma01/wardzero), verified **PUBLIC** after participant authorization; default branch `main`. |
-| Remote video | [Public GitHub video file](https://github.com/satwiksharma01/wardzero/blob/main/documents/submission/wardzero-demo.mp4). Blue workspace 2b0e2e7 encode: 8,111,154 bytes, SHA256 `9888a522c0d919f14e7e0521adaf58bc62b4801c2a436ec163568b1a531672dd`. Anonymous HTTP200/hash verification is recorded in verification/blue-public-handoff.json after publication. |
+| Remote video | [Public GitHub video file](https://github.com/satwiksharma01/wardzero/blob/main/documents/submission/wardzero-demo.mp4). Blue workspace 2b0e2e7 encode: 8,111,154 bytes, SHA256 `9888a522c0d919f14e7e0521adaf58bc62b4801c2a436ec163568b1a531672dd`. Anonymous HTTP200/hash verification is recorded in verification/blue-public-handoff.json. |
 | Public interactive demo | Not deployed; loopback preview only. Public brief does not establish a hosting requirement. |
 | Closing date | Saved page displays 8 November 2026; exact cutoff/timezone unverified. |
 | Form and declarations | Five participant-supplied saved MHTML steps were inspected; field-ready answers and upload limits are in submission/FORM_ANSWERS.md. Current authenticated server state, final declarations, and cutoff/timezone remain unverified. No live draft save is claimed. |
@@ -21,3 +21,5 @@ Submission route: [Wooble entry form](https://wooble.org/companies/nursio-innova
 Initial private upload was verified at `d32996db6d506cb31ddcba8ad0317d04ae5b4eae`. The participant subsequently authorized public publication; GitHub metadata now reports PUBLIC/isPrivate=false. The local source export manifest identifies the exact ZIP revision. Public upload does not establish a Wooble submission.
 
 Reviewed code/evidence/refreshed media were published at `62cd88d8e4ed773d9b8e223e25ec867cd3be703f`, including application d0bc83c. [Anonymous public checks](verification/public-handoff.json) verify the documentation, application source, and exact video bytes without authentication. Subsequent handoff-only commits preserve the same application/media; the final local export manifest records their exact source revision. All improvement work is reviewable; real caregiver feedback and final submission remain external/pending.
+
+Blue five-page source/media published at `2006cdec2887685e947b8c3b5fa1f01268d3e31b`, with application `2b0e2e7`. [Anonymous current checks](verification/blue-public-handoff.json) match the public documentation, workspace source and exact video bytes. The final local export manifest identifies the source ZIP revision; Wooble has not been submitted.

@@ -16,4 +16,4 @@ Replace brand/surface/focus/chart-blue accents throughout app/archive/submission
 - [x] Extract shared snapshot/simulation/draft/identity state and shell; create five page routes and focused vitals components. Preserve API/domain/storage logic.
 - [x] Apply blue tokens and coherent compact navigation; remove obsolete single-page layout rules.
 - [x] Adapt existing journeys, live browser/worker checks and recording to actual page navigation without dropping recovery/auth/failure assertions. Verify unit/type/lint/build, Chrome/axe and a fresh independent review; run Impeccable detector.
-- [ ] Commit/publish verified code, refresh three-minute media and field-ready documentation/source export, verify anonymous hashes, restore preview. No Wooble submission or real email is authorized.
+- [x] Commit/publish verified code, refresh three-minute media and field-ready documentation/source export, verify anonymous hashes, restore preview. No Wooble submission or real email is authorized.

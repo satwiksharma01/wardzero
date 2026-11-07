@@ -1,6 +1,6 @@
 # Blue multi-page workspace verification
 
-7 November 2026. Requested by the participant after the single-page UI refresh. Baseline dd7e189. Implementation separates the application into five actual Next.js file routes with a blue palette, while preserving the care engine. Verified implementation revision: `2b0e2e76b1403608c0c740bb733e8c048d49d8c8`. Publication and exact refreshed media hashes are recorded below after publication.
+7 November 2026. Requested by the participant after the single-page UI refresh. Baseline dd7e189. Implementation separates the application into five actual Next.js file routes with a blue palette, while preserving the care engine. Verified implementation revision: `2b0e2e76b1403608c0c740bb733e8c048d49d8c8`. Published source/media revision: `2006cdec2887685e947b8c3b5fa1f01268d3e31b`; exact refreshed media hashes are recorded below.
 
 ## Routes and shared behavior
 
@@ -42,3 +42,7 @@ Synthetic data only. No clinical validation, real caregiver usability results, r
 ## Recorded walkthrough
 
 All real UI/API checkpoints passed against application 2b0e2e7 with live Gemini and an isolated run/database. The refreshed 180-second 1920x1080 H.264/AAC file passed Chrome playback and seek checks. Gallery frames, blue cover, narration and captions were refreshed. MP4: 8,111,154 bytes, SHA256 `9888a522c0d919f14e7e0521adaf58bc62b4801c2a436ec163568b1a531672dd`. The port 3000 preview was restored with existing data; all five pages and the patient API returned HTTP 200.
+
+## Public handoff
+
+[Anonymous checks](blue-public-handoff.json) returned HTTP 200 and exact Git blob matches for the documentation, workspace source and video at `2006cdec2887685e947b8c3b5fa1f01268d3e31b`. The video also matched the local binary. Handoff-only documentation commits retain that application/media; the final local source export revision and hashes are in submission/ARTIFACTS.json. Both unrelated draft screenshots were preserved and excluded. Wooble remains unsubmitted.
